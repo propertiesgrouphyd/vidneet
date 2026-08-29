@@ -3,24 +3,18 @@ import path from "node:path";
 
 const ROOT = process.cwd();
 
-const SYLLABUS_FILE = path.join(
-  ROOT,
-  "syllabus.json"
-);
+const SYLLABUS_FILE = path.join(ROOT, "syllabus.json");
+const CONFIG_FILE = path.join(ROOT, "config", "app-config.json");
+const DATA_DIR = path.join(ROOT, "public", "data");
 
-const CONFIG_FILE = path.join(
-  ROOT,
-  "config",
-  "app-config.json"
-);
+const GROQ_URL =
+  "https://api.groq.com/openai/v1/chat/completions";
 
-const DATA_DIR = path.join(
-  ROOT,
-  "public",
-  "data"
-);
+const DEFAULT_MODEL =
+  process.env.GROQ_MODEL || "openai/gpt-oss-120b";
 
-const MIN_MCQS = 40;
+const REQUEST_TIMEOUT_MS = 120000;
+const MAX_RETRIES = 4;
 
 function fail(message) {
   console.error("");
@@ -34,9 +28,7 @@ function fail(message) {
 
 function readJson(file) {
   try {
-    return JSON.parse(
-      fs.readFileSync(file, "utf8")
-    );
+    return JSON.parse(fs.readFileSync(file, "utf8"));
   } catch (error) {
     fail(
       `Invalid JSON file:\n${file}\n${error.message}`
@@ -45,9 +37,7 @@ function readJson(file) {
 }
 
 function getDays(root) {
-  if (Array.isArray(root)) {
-    return root;
-  }
+  if (Array.isArray(root)) return root;
 
   if (Array.isArray(root?.days)) {
     return root.days;
@@ -81,33 +71,26 @@ function lastGeneratedDay() {
   return highest;
 }
 
-function courseDate(
-  startDate,
-  dayNumber
-) {
-  if (typeof startDate !== "string") {
-    fail(
-      "courseStartDate must be YYYY-MM-DD."
-    );
-  }
+function courseDate(startDate, dayNumber) {
+  const parts = String(startDate)
+    .split("-")
+    .map(Number);
 
-  const parts =
-    startDate.split("-").map(Number);
+  const [year, month, day] = parts;
 
   if (
-    parts.length !== 3 ||
-    parts.some(Number.isNaN)
+    !year ||
+    !month ||
+    !day ||
+    month < 1 ||
+    month > 12 ||
+    day < 1 ||
+    day > 31
   ) {
     fail(
       `Invalid courseStartDate: ${startDate}`
     );
   }
-
-  const [
-    year,
-    month,
-    day
-  ] = parts;
 
   const date = new Date(
     Date.UTC(
@@ -117,18 +100,8 @@ function courseDate(
     )
   );
 
-  if (
-    Number.isNaN(date.getTime())
-  ) {
-    fail(
-      `Invalid courseStartDate: ${startDate}`
-    );
-  }
-
   date.setUTCDate(
-    date.getUTCDate() +
-    dayNumber -
-    1
+    date.getUTCDate() + dayNumber - 1
   );
 
   return date
@@ -136,52 +109,63 @@ function courseDate(
     .slice(0, 10);
 }
 
-function extractJson(text) {
-  let cleaned =
-    String(text).trim();
+function sleep(ms) {
+  return new Promise(resolve =>
+    setTimeout(resolve, ms)
+  );
+}
 
-  if (
-    cleaned.startsWith("```")
-  ) {
-    cleaned =
-      cleaned
-        .replace(
-          /^```json\s*/i,
-          ""
-        )
-        .replace(
-          /^```\s*/i,
-          ""
-        )
-        .replace(
-          /\s*```$/i,
-          ""
-        )
-        .trim();
+function extractJson(text) {
+  let cleaned = String(text)
+    .trim();
+
+  if (cleaned.startsWith("```")) {
+    cleaned = cleaned
+      .replace(/^```json\s*/i, "")
+      .replace(/^```\s*/i, "")
+      .replace(/\s*```$/i, "")
+      .trim();
   }
 
   try {
     return JSON.parse(cleaned);
   } catch (error) {
     throw new Error(
-      "Groq did not return valid JSON.\n" +
-      error.message +
-      "\n\nRAW RESPONSE:\n" +
-      text
+      `Groq did not return valid JSON.\n` +
+      `${error.message}\n\nRAW RESPONSE:\n${text}`
     );
+  }
+}
+
+async function fetchWithTimeout(
+  url,
+  options,
+  timeoutMs
+) {
+  const controller =
+    new AbortController();
+
+  const timer = setTimeout(
+    () => controller.abort(),
+    timeoutMs
+  );
+
+  try {
+    return await fetch(url, {
+      ...options,
+      signal: controller.signal
+    });
+  } finally {
+    clearTimeout(timer);
   }
 }
 
 async function generateWithGroq(
   prompt,
-  temperature = 0.2
+  purpose
 ) {
   const key =
     process.env.GROQ_API_KEY;
-
-  const model =
-    process.env.GROQ_MODEL ||
-    "openai/gpt-oss-120b";
 
   if (!key) {
     throw new Error(
@@ -189,160 +173,247 @@ async function generateWithGroq(
     );
   }
 
-  const response =
-    await fetch(
-      "https://api.groq.com/openai/v1/chat/completions",
-      {
-        method: "POST",
+  let lastError = null;
 
-        headers: {
-          "Authorization":
-            `Bearer ${key}`,
-          "Content-Type":
-            "application/json"
-        },
-
-        body: JSON.stringify({
-          model,
-
-          temperature,
-
-          response_format: {
-            type: "json_object"
-          },
-
-          messages: [
-            {
-              role: "system",
-
-              content:
-                "You are an expert NEET " +
-                "preparation content author. " +
-                "Generate accurate, comprehensive, " +
-                "student-friendly content. " +
-                "Follow the supplied syllabus exactly. " +
-                "Return ONLY valid JSON."
+  for (
+    let attempt = 1;
+    attempt <= MAX_RETRIES;
+    attempt++
+  ) {
+    try {
+      const response =
+        await fetchWithTimeout(
+          GROQ_URL,
+          {
+            method: "POST",
+            headers: {
+              Authorization:
+                `Bearer ${key}`,
+              "Content-Type":
+                "application/json"
             },
+            body: JSON.stringify({
+              model: DEFAULT_MODEL,
+              temperature: 0.15,
+              max_tokens: 12000,
+              response_format: {
+                type: "json_object"
+              },
+              messages: [
+                {
+                  role: "system",
+                  content:
+                    "You are a senior NEET examination " +
+                    "question-paper author and medical/science " +
+                    "education content expert. " +
+                    "Create scientifically accurate, syllabus-aligned " +
+                    "NEET-level content. " +
+                    "Never invent facts. " +
+                    "Never use information outside the supplied syllabus " +
+                    "when the prompt restricts the content. " +
+                    "Return ONLY valid JSON."
+                },
+                {
+                  role: "user",
+                  content: prompt
+                }
+              ]
+            })
+          },
+          REQUEST_TIMEOUT_MS
+        );
 
-            {
-              role: "user",
-              content: prompt
-            }
-          ]
-        })
+      const body =
+        await response.text();
+
+      if (response.ok) {
+        const result =
+          JSON.parse(body);
+
+        const content =
+          result?.choices?.[0]?.message
+            ?.content;
+
+        if (!content) {
+          throw new Error(
+            `${purpose}: Groq returned no message content.`
+          );
+        }
+
+        return content;
       }
-    );
 
-  const body =
-    await response.text();
+      const retryable =
+        response.status === 408 ||
+        response.status === 429 ||
+        response.status >= 500;
 
-  if (!response.ok) {
-    throw new Error(
-      `Groq HTTP ${response.status}: ${body}`
-    );
+      lastError = new Error(
+        `${purpose}: Groq HTTP ${response.status}: ${body}`
+      );
+
+      if (!retryable) {
+        throw lastError;
+      }
+
+      let waitMs =
+        Math.min(
+          30000,
+          2000 * 2 ** (attempt - 1)
+        );
+
+      const retryAfter =
+        response.headers.get(
+          "retry-after"
+        );
+
+      if (retryAfter) {
+        const seconds =
+          Number(retryAfter);
+
+        if (
+          Number.isFinite(seconds) &&
+          seconds >= 0
+        ) {
+          waitMs =
+            Math.min(
+              60000,
+              Math.ceil(seconds * 1000)
+            );
+        }
+      }
+
+      console.log(
+        `${purpose}: retry ${attempt}/${MAX_RETRIES} ` +
+        `after ${waitMs}ms...`
+      );
+
+      await sleep(waitMs);
+    } catch (error) {
+      lastError = error;
+
+      if (
+        attempt === MAX_RETRIES
+      ) {
+        break;
+      }
+
+      const waitMs =
+        Math.min(
+          30000,
+          2000 * 2 ** (attempt - 1)
+        );
+
+      console.log(
+        `${purpose}: retry ${attempt}/${MAX_RETRIES} ` +
+        `after ${waitMs}ms...`
+      );
+
+      await sleep(waitMs);
+    }
   }
 
-  let result;
-
-  try {
-    result =
-      JSON.parse(body);
-  } catch (error) {
-    throw new Error(
-      `Invalid Groq API response:\n${error.message}`
+  throw lastError ||
+    new Error(
+      `${purpose}: Groq request failed.`
     );
-  }
-
-  const content =
-    result
-      ?.choices?.[0]
-      ?.message
-      ?.content;
-
-  if (!content) {
-    throw new Error(
-      "Groq returned no message content."
-    );
-  }
-
-  return content;
 }
 
 /*
- * ============================================================
- * LESSON GENERATION
- * ============================================================
+ * Extract every meaningful syllabus topic.
+ *
+ * We deliberately use the existing syllabus as the
+ * source of truth. We do not invent topics.
  */
+function extractTopics(day) {
+  const topics = [];
+
+  if (Array.isArray(day.topics)) {
+    for (const topic of day.topics) {
+      if (
+        typeof topic === "string" &&
+        topic.trim()
+      ) {
+        topics.push({
+          name: topic.trim(),
+          source: topic.trim()
+        });
+      } else if (
+        topic &&
+        typeof topic === "object"
+      ) {
+        const name =
+          topic.name ||
+          topic.topic ||
+          topic.title ||
+          topic.heading;
+
+        if (
+          typeof name === "string" &&
+          name.trim()
+        ) {
+          topics.push({
+            name: name.trim(),
+            source: topic
+          });
+        }
+      }
+    }
+  }
+
+  /*
+   * If topics is empty, use sections only as a fallback.
+   * This does NOT invent syllabus content.
+   */
+  if (
+    topics.length === 0 &&
+    Array.isArray(day.subtopics)
+  ) {
+    for (const item of day.subtopics) {
+      if (
+        typeof item === "string" &&
+        item.trim()
+      ) {
+        topics.push({
+          name: item.trim(),
+          source: item.trim()
+        });
+      }
+    }
+  }
+
+  return topics;
+}
 
 function buildLessonPrompt(day) {
   return `
-Create the COMPLETE English NEET study lesson
-for EXACTLY this syllabus day.
+Create the complete English study lesson for EXACTLY this NEET syllabus day.
 
-============================================================
-STRICT SYLLABUS
-============================================================
+SOURCE OF TRUTH:
+Use ONLY the supplied syllabus for this day.
 
-Use ONLY the supplied syllabus.
+STRICT REQUIREMENTS:
 
-This is ONE daily lesson.
+1. Cover EVERY topic and subtopic supplied.
+2. Do not generate content belonging to another day.
+3. Do not add unrelated chapters.
+4. Explain concepts accurately and clearly.
+5. Make the lesson useful for serious NEET preparation.
+6. Include important definitions.
+7. Include mechanisms/processes where applicable.
+8. Include formulas and relationships where applicable.
+9. Include important factual points.
+10. Include common student mistakes.
+11. Include NEET-focused points.
+12. Include concise examples where genuinely useful.
+13. Do not fabricate facts.
+14. English only.
+15. Return ONLY valid JSON.
 
-Do NOT:
+The lesson should be detailed enough that a student can study
+this day's syllabus without requiring a second explanation.
 
-- generate another day
-- generate another chapter
-- generate unrelated topics
-- add future syllabus content
-- skip any supplied topic
-- skip any supplied subtopic
-
-Every topic and subtopic supplied below must be covered.
-
-============================================================
-LESSON QUALITY
-============================================================
-
-Create a comprehensive NEET preparation lesson.
-
-Explain concepts clearly enough for a weak student.
-
-Where applicable include:
-
-- definitions
-- core concepts
-- important facts
-- mechanisms
-- processes
-- relationships
-- formulas
-- units
-- important values
-- examples
-- comparisons
-- exceptions
-- common mistakes
-- NEET-focused points
-- frequently tested facts
-
-Do not add unrelated syllabus content.
-
-============================================================
-IMPORTANT
-============================================================
-
-This call is ONLY for the lesson.
-
-DO NOT generate MCQs.
-
-The MCQs will be generated separately.
-
-============================================================
-JSON ONLY
-============================================================
-
-Return ONLY valid JSON.
-
-Required structure:
+Required JSON shape:
 
 {
   "day": number,
@@ -356,7 +427,7 @@ Required structure:
     {
       "topic": "string",
       "heading": "string",
-      "content": "complete clear explanation",
+      "content": "clear detailed explanation",
       "subsections": [
         {
           "heading": "string",
@@ -369,175 +440,249 @@ Required structure:
   ]
 }
 
-============================================================
-SYLLABUS FOR THIS DAY
-============================================================
-
-${JSON.stringify(
-  day,
-  null,
-  2
-)}
+Syllabus:
+${JSON.stringify(day, null, 2)}
 `;
 }
 
-/*
- * ============================================================
- * MCQ GENERATION
- * ============================================================
- */
-
 function buildMcqPrompt(
   day,
-  lesson
+  topics
 ) {
   return `
-Create a LARGE, HIGH-QUALITY NEET MCQ BANK
-for EXACTLY this syllabus day.
+Create the NEET practice MCQ bank for EXACTLY this syllabus day.
 
-============================================================
-STRICT SYLLABUS RULE
-============================================================
+This is for a serious NEET preparation application.
 
-Use ONLY the supplied syllabus and lesson.
+SOURCE OF TRUTH:
+Use ONLY the supplied day's syllabus and supplied topics.
 
-Do NOT generate questions from another day.
+IMPORTANT:
+- Every supplied topic MUST be covered.
+- Generate approximately 3 to 5 high-quality MCQs PER TOPIC.
+- Do NOT force an exact total number of questions.
+- Do NOT pad the response with weak or repetitive questions.
+- If a topic naturally supports only 3 strong questions, generate 3.
+- If a topic supports 4 strong questions, generate 4.
+- If a topic supports 5 strong questions, generate 5.
+- Quality is more important than quantity.
+- Every question must test a real concept from that topic.
+- Questions must be original.
+- Do not repeat the same question in different wording.
+- Do not make trivial questions just to increase the count.
+- Do not use information outside the supplied syllabus.
 
-Do NOT introduce unrelated chapters.
+NEET LEVEL:
+Questions must resemble the conceptual level and style expected
+in the NEET-UG public examination.
 
-Every important topic and subtopic must be represented.
+Use a realistic mixture of:
+- direct conceptual questions
+- application-based questions
+- statement-based questions
+- assertion/reasoning-style conceptual thinking where appropriate
+- numerical/application questions where the syllabus supports them
+- diagram/process interpretation concepts where applicable
+- exception/fact-based questions where genuinely important
 
-============================================================
-MCQ COUNT
-============================================================
+Difficulty should naturally vary:
+- easy
+- moderate
+- difficult
 
-Generate AT LEAST ${MIN_MCQS} MCQs.
+But DO NOT make questions artificially difficult.
 
-You may generate more than ${MIN_MCQS}
-when the syllabus contains enough distinct
-concepts to justify additional questions.
+IMPORTANT NEET MCQ RULES:
 
-DO NOT create filler questions.
+1. Exactly 4 options.
+2. Exactly ONE correct answer.
+3. No ambiguous answers.
+4. No two options may both be correct.
+5. The correct answer must be scientifically accurate.
+6. Distractors must be plausible but clearly incorrect.
+7. Avoid clues from option length or wording.
+8. Avoid "all of the above" unless absolutely necessary.
+9. Avoid "none of the above".
+10. Avoid negative wording unless it tests an important concept.
+11. Avoid unnecessarily complicated language.
+12. Do not depend on information outside the supplied syllabus.
+13. Every answer explanation must explain WHY the answer is correct.
+14. Explanations must be concise but educational.
+15. Do not copy textbook wording unnecessarily.
+16. Do not create questions from topics not supplied.
 
-============================================================
-COMPLETE CONCEPT COVERAGE
-============================================================
+For each topic, aim for 3–5 strong questions.
+The final number may therefore vary naturally.
 
-The MCQ bank must collectively test:
+Return ONLY JSON.
 
-- definitions
-- fundamental concepts
-- conceptual understanding
-- mechanisms
-- processes
-- relationships
-- applications
-- formulas where applicable
-- numerical problems where applicable
-- important factual information
-- comparisons
-- cause and effect
-- exceptions
-- common mistakes
-- NEET traps
-- higher-order conceptual thinking
-
-Distribute questions across the COMPLETE syllabus.
-
-Do not put most questions on only one topic.
-
-============================================================
-STRICT MCQ RULES
-============================================================
-
-Every question MUST:
-
-- be based only on this day's syllabus
-- have exactly 4 options
-- have exactly one correct answer
-- have a clear unambiguous answer
-- have an explanation
-- use accurate scientific terminology
-
-Do NOT:
-
-- duplicate questions
-- create near-duplicate questions
-- use "All of the above"
-- use "None of the above"
-- create ambiguous options
-- create two correct options
-- create questions outside the syllabus
-
-correctAnswer MUST be exactly:
-
-"A"
-"B"
-"C"
-"D"
-
-============================================================
-JSON ONLY
-============================================================
-
-Return ONLY valid JSON.
-
-Required structure:
+Required JSON:
 
 {
   "mcqs": [
     {
+      "topic": "exact supplied topic",
       "question": "string",
       "options": [
-        "option A",
-        "option B",
-        "option C",
-        "option D"
+        "option 1",
+        "option 2",
+        "option 3",
+        "option 4"
       ],
       "correctAnswer": "A",
-      "explanation": "clear explanation"
+      "explanation": "Why A is correct."
     }
   ]
 }
 
-Before returning JSON, internally verify:
+DAY:
+${JSON.stringify(day, null, 2)}
 
-- at least ${MIN_MCQS} questions
-- every major topic covered
-- every meaningful subtopic covered
-- exactly four options per question
-- exactly one correct answer
-- no duplicate questions
-- every question has an explanation
-- correctAnswer is A/B/C/D
-
-============================================================
-TODAY'S SYLLABUS
-============================================================
-
-${JSON.stringify(
-  day,
-  null,
-  2
-)}
-
-============================================================
-GENERATED LESSON
-============================================================
-
-${JSON.stringify(
-  lesson,
-  null,
-  2
-)}
+TOPICS TO COVER:
+${JSON.stringify(topics, null, 2)}
 `;
 }
 
-/*
- * ============================================================
- * LESSON VALIDATION
- * ============================================================
- */
+function normaliseAnswer(answer) {
+  if (
+    typeof answer !== "string"
+  ) {
+    return "";
+  }
+
+  const value =
+    answer.trim().toUpperCase();
+
+  if (
+    ["A", "B", "C", "D"].includes(
+      value
+    )
+  ) {
+    return value;
+  }
+
+  /*
+   * Accept forms such as:
+   * "A."
+   * "(A)"
+   * "Option A"
+   */
+  const match =
+    value.match(
+      /\b([ABCD])\b/
+    );
+
+  return match
+    ? match[1]
+    : "";
+}
+
+function cleanMcq(q) {
+  if (
+    !q ||
+    typeof q !== "object"
+  ) {
+    return null;
+  }
+
+  const question =
+    typeof q.question === "string"
+      ? q.question.trim()
+      : "";
+
+  const explanation =
+    typeof q.explanation === "string"
+      ? q.explanation.trim()
+      : "";
+
+  const topic =
+    typeof q.topic === "string"
+      ? q.topic.trim()
+      : "";
+
+  const options =
+    Array.isArray(q.options)
+      ? q.options
+          .map(x =>
+            typeof x === "string"
+              ? x.trim()
+              : String(x ?? "").trim()
+          )
+          .filter(Boolean)
+      : [];
+
+  const correctAnswer =
+    normaliseAnswer(
+      q.correctAnswer
+    );
+
+  if (!question) {
+    return null;
+  }
+
+  if (
+    options.length !== 4
+  ) {
+    return null;
+  }
+
+  if (
+    new Set(
+      options.map(x =>
+        x.toLowerCase()
+      )
+    ).size !== 4
+  ) {
+    return null;
+  }
+
+  if (!correctAnswer) {
+    return null;
+  }
+
+  if (!explanation) {
+    return null;
+  }
+
+  return {
+    topic,
+    question,
+    options,
+    correctAnswer,
+    explanation
+  };
+}
+
+function questionKey(question) {
+  return String(question)
+    .toLowerCase()
+    .replace(/\s+/g, " ")
+    .replace(/[^\p{L}\p{N} ]/gu, "")
+    .trim();
+}
+
+function deduplicateMcqs(mcqs) {
+  const seen = new Set();
+  const result = [];
+
+  for (const mcq of mcqs) {
+    const key =
+      questionKey(mcq.question);
+
+    if (!key) {
+      continue;
+    }
+
+    if (seen.has(key)) {
+      continue;
+    }
+
+    seen.add(key);
+    result.push(mcq);
+  }
+
+  return result;
+}
 
 function validateLesson(
   data,
@@ -545,11 +690,10 @@ function validateLesson(
 ) {
   if (
     !data ||
-    typeof data !== "object" ||
-    Array.isArray(data)
+    typeof data !== "object"
   ) {
     throw new Error(
-      "Generated lesson is not a valid object."
+      "Generated lesson is not an object."
     );
   }
 
@@ -563,279 +707,284 @@ function validateLesson(
     );
   }
 
-  if (
-    typeof data.title !==
-      "string" ||
-    !data.title.trim()
-  ) {
+  if (!data.title) {
     throw new Error(
-      "Missing title."
+      "Generated lesson is missing title."
     );
   }
 
   if (
-    !Array.isArray(
-      data.sections
-    ) ||
+    !Array.isArray(data.sections) ||
     data.sections.length === 0
   ) {
     throw new Error(
-      "Missing lesson sections."
+      "Generated lesson contains no sections."
     );
-  }
-
-  for (
-    const [
-      index,
-      section
-    ] of data.sections.entries()
-  ) {
-    if (
-      !section ||
-      typeof section !==
-        "object"
-    ) {
-      throw new Error(
-        `Section ${index + 1}: invalid object.`
-      );
-    }
-
-    if (
-      !section.topic ||
-      typeof section.topic !==
-        "string"
-    ) {
-      throw new Error(
-        `Section ${index + 1}: missing topic.`
-      );
-    }
-
-    if (
-      !section.heading ||
-      typeof section.heading !==
-        "string"
-    ) {
-      throw new Error(
-        `Section ${index + 1}: missing heading.`
-      );
-    }
-
-    if (
-      !section.content ||
-      typeof section.content !==
-        "string"
-    ) {
-      throw new Error(
-        `Section ${index + 1}: missing content.`
-      );
-    }
-
-    if (
-      section.subsections !==
-        undefined &&
-      !Array.isArray(
-        section.subsections
-      )
-    ) {
-      throw new Error(
-        `Section ${index + 1}: subsections must be an array.`
-      );
-    }
-
-    if (
-      section.keyPoints !==
-        undefined &&
-      !Array.isArray(
-        section.keyPoints
-      )
-    ) {
-      throw new Error(
-        `Section ${index + 1}: keyPoints must be an array.`
-      );
-    }
-
-    if (
-      section.neetTips !==
-        undefined &&
-      !Array.isArray(
-        section.neetTips
-      )
-    ) {
-      throw new Error(
-        `Section ${index + 1}: neetTips must be an array.`
-      );
-    }
   }
 }
 
-/*
- * ============================================================
- * MCQ VALIDATION
- * ============================================================
- */
-
 function validateMcqs(
-  data
+  mcqs,
+  expectedTopics
 ) {
-  if (
-    !data ||
-    typeof data !== "object" ||
-    Array.isArray(data)
-  ) {
+  if (!Array.isArray(mcqs)) {
     throw new Error(
-      "Generated MCQ response is not a valid object."
+      "MCQ result is not an array."
     );
   }
 
-  if (
-    !Array.isArray(data.mcqs)
-  ) {
+  if (mcqs.length === 0) {
     throw new Error(
-      "Generated MCQ response does not contain an mcqs array."
+      "Groq returned zero valid MCQs."
     );
   }
-
-  if (
-    data.mcqs.length <
-    MIN_MCQS
-  ) {
-    throw new Error(
-      `Insufficient MCQs. ` +
-      `Expected at least ${MIN_MCQS}, ` +
-      `got ${data.mcqs.length}.`
-    );
-  }
-
-  const questions =
-    new Set();
 
   for (
-    const [
-      index,
-      q
-    ] of data.mcqs.entries()
+    let i = 0;
+    i < mcqs.length;
+    i++
   ) {
-    const number =
-      index + 1;
+    const q = mcqs[i];
 
-    if (
-      !q ||
-      typeof q !==
-        "object" ||
-      Array.isArray(q)
-    ) {
+    if (!q.question) {
       throw new Error(
-        `MCQ ${number}: invalid object.`
+        `MCQ ${i + 1}: missing question.`
       );
     }
 
     if (
-      typeof q.question !==
-        "string" ||
-      !q.question.trim()
-    ) {
-      throw new Error(
-        `MCQ ${number}: missing question.`
-      );
-    }
-
-    const normalized =
-      q.question
-        .trim()
-        .toLowerCase()
-        .replace(
-          /\s+/g,
-          " "
-        );
-
-    if (
-      questions.has(
-        normalized
-      )
-    ) {
-      throw new Error(
-        `MCQ ${number}: duplicate question detected.`
-      );
-    }
-
-    questions.add(
-      normalized
-    );
-
-    if (
-      !Array.isArray(
-        q.options
-      ) ||
+      !Array.isArray(q.options) ||
       q.options.length !== 4
     ) {
       throw new Error(
-        `MCQ ${number}: must have exactly 4 options.`
+        `MCQ ${i + 1}: must have exactly 4 options.`
       );
     }
 
     if (
-      q.options.some(
-        option =>
-          typeof option !==
-            "string" ||
-          !option.trim()
-      )
-    ) {
-      throw new Error(
-        `MCQ ${number}: all options must contain text.`
-      );
-    }
-
-    const uniqueOptions =
-      new Set(
-        q.options.map(
-          option =>
-            option
-              .trim()
-              .toLowerCase()
-        )
-      );
-
-    if (
-      uniqueOptions.size !== 4
-    ) {
-      throw new Error(
-        `MCQ ${number}: options must be unique.`
-      );
-    }
-
-    if (
-      ![
-        "A",
-        "B",
-        "C",
-        "D"
-      ].includes(
+      !["A", "B", "C", "D"].includes(
         q.correctAnswer
       )
     ) {
       throw new Error(
-        `MCQ ${number}: correctAnswer must be A, B, C, or D.`
+        `MCQ ${i + 1}: invalid correctAnswer.`
       );
     }
 
-    if (
-      typeof q.explanation !==
-        "string" ||
-      !q.explanation.trim()
-    ) {
+    if (!q.explanation) {
       throw new Error(
-        `MCQ ${number}: missing explanation.`
+        `MCQ ${i + 1}: missing explanation.`
       );
     }
   }
+
+  /*
+   * Topic coverage is reported, but we DO NOT fail the day
+   * simply because Groq returned fewer questions for a topic.
+   *
+   * This is intentional.
+   */
+  const covered =
+    new Set(
+      mcqs
+        .map(q =>
+          String(q.topic || "")
+            .trim()
+            .toLowerCase()
+        )
+        .filter(Boolean)
+    );
+
+  console.log("");
+  console.log(
+    `Topics supplied : ${expectedTopics.length}`
+  );
+  console.log(
+    `MCQs accepted   : ${mcqs.length}`
+  );
+  console.log(
+    `Topics tagged   : ${covered.size}`
+  );
 }
 
-/*
- * ============================================================
- * MAIN
- * ============================================================
- */
+async function generateLesson(day) {
+  console.log(
+    "STEP 1/2 — Generating complete lesson..."
+  );
+
+  const raw =
+    await generateWithGroq(
+      buildLessonPrompt(day),
+      "Lesson generation"
+    );
+
+  const lesson =
+    extractJson(raw);
+
+  validateLesson(
+    lesson,
+    Number(day.day)
+  );
+
+  console.log(
+    `Lesson sections: ${lesson.sections.length}`
+  );
+
+  return lesson;
+}
+
+async function generateMcqs(
+  day,
+  topics
+) {
+  console.log(
+    "STEP 2/2 — Generating topic-based NEET MCQs..."
+  );
+
+  if (topics.length === 0) {
+    throw new Error(
+      "No syllabus topics were found for this day."
+    );
+  }
+
+  /*
+   * Send topics in controlled batches.
+   *
+   * This prevents one enormous MCQ request while also avoiding
+   * one API request for every individual topic.
+   */
+  const TOPICS_PER_REQUEST = 5;
+
+  const batches = [];
+
+  for (
+    let i = 0;
+    i < topics.length;
+    i += TOPICS_PER_REQUEST
+  ) {
+    batches.push(
+      topics.slice(
+        i,
+        i + TOPICS_PER_REQUEST
+      )
+    );
+  }
+
+  const allMcqs = [];
+
+  for (
+    let i = 0;
+    i < batches.length;
+    i++
+  ) {
+    const batch =
+      batches[i];
+
+    console.log(
+      `MCQ batch ${i + 1}/${batches.length} ` +
+      `— topics ${i * TOPICS_PER_REQUEST + 1}-` +
+      `${Math.min(
+        (i + 1) * TOPICS_PER_REQUEST,
+        topics.length
+      )}`
+    );
+
+    let parsed;
+
+    try {
+      const raw =
+        await generateWithGroq(
+          buildMcqPrompt(
+            day,
+            batch
+          ),
+          `MCQ batch ${i + 1}`
+        );
+
+      parsed =
+        extractJson(raw);
+    } catch (error) {
+      /*
+       * A failed individual batch must not silently create
+       * a corrupt lesson.
+       *
+       * We fail the generation, so GitHub Actions retries the
+       * same day on the next run.
+       */
+      throw new Error(
+        `MCQ batch ${i + 1} failed: ` +
+        error.message
+      );
+    }
+
+    const returned =
+      Array.isArray(parsed)
+        ? parsed
+        : Array.isArray(parsed?.mcqs)
+          ? parsed.mcqs
+          : [];
+
+    const cleaned =
+      returned
+        .map(cleanMcq)
+        .filter(Boolean);
+
+    console.log(
+      `  Returned : ${returned.length}`
+    );
+
+    console.log(
+      `  Valid    : ${cleaned.length}`
+    );
+
+    allMcqs.push(
+      ...cleaned
+    );
+  }
+
+  const uniqueMcqs =
+    deduplicateMcqs(
+      allMcqs
+    );
+
+  console.log(
+    `Total valid MCQs    : ${allMcqs.length}`
+  );
+
+  console.log(
+    `After deduplication : ${uniqueMcqs.length}`
+  );
+
+  validateMcqs(
+    uniqueMcqs,
+    topics
+  );
+
+  return uniqueMcqs;
+}
+
+function writeJsonAtomic(
+  file,
+  data
+) {
+  const temp =
+    `${file}.tmp`;
+
+  fs.writeFileSync(
+    temp,
+    JSON.stringify(
+      data,
+      null,
+      2
+    ) + "\n",
+    "utf8"
+  );
+
+  fs.renameSync(
+    temp,
+    file
+  );
+}
 
 async function main() {
   const syllabus =
@@ -849,25 +998,10 @@ async function main() {
     );
 
   const days =
-    getDays(
-      syllabus
-    );
+    getDays(syllabus);
 
   const totalDays =
-    Number(
-      config.totalDays
-    );
-
-  if (
-    !Number.isInteger(
-      totalDays
-    ) ||
-    totalDays <= 0
-  ) {
-    fail(
-      `Invalid totalDays: ${config.totalDays}`
-    );
-  }
+    Number(config.totalDays);
 
   if (
     days.length !==
@@ -908,13 +1042,16 @@ async function main() {
     `Start date     : ${config.courseStartDate}`
   );
   console.log(
-    "Language       : English"
+    `Model          : ${DEFAULT_MODEL}`
   );
   console.log(
-    `Minimum MCQs   : ${MIN_MCQS}`
+    "MCQ strategy   : 3–5 per syllabus topic"
   );
   console.log(
-    "Generation     : Lesson + MCQ separate calls"
+    "MCQ minimum    : NONE"
+  );
+  console.log(
+    "MCQ maximum    : NONE"
   );
   console.log(
     "=============================================="
@@ -924,9 +1061,20 @@ async function main() {
     next > totalDays
   ) {
     console.log(
-      "All lessons are already generated."
+      "All 365 lessons are already generated."
     );
     return;
+  }
+
+  if (
+    !fs.existsSync(DATA_DIR)
+  ) {
+    fs.mkdirSync(
+      DATA_DIR,
+      {
+        recursive: true
+      }
+    );
   }
 
   const output =
@@ -965,6 +1113,15 @@ async function main() {
   const publishAt =
     `${date}T06:00:00+05:30`;
 
+  const topics =
+    extractTopics(day);
+
+  if (topics.length === 0) {
+    fail(
+      `Day ${next} has no usable syllabus topics.`
+    );
+  }
+
   console.log(
     `Syllabus       : Day ${next}`
   );
@@ -977,205 +1134,53 @@ async function main() {
     `Publish at     : ${publishAt}`
   );
 
-  /*
-   * ----------------------------------------------------------
-   * STEP 1 — LESSON
-   * ----------------------------------------------------------
-   */
+  console.log(
+    `Topics         : ${topics.length}`
+  );
 
   console.log("");
-  console.log(
-    "STEP 1/2 — Generating complete lesson..."
-  );
 
-  let lesson;
-
-  try {
-    const response =
-      await generateWithGroq(
-        buildLessonPrompt(day),
-        0.2
-      );
-
-    lesson =
-      extractJson(response);
-
-    validateLesson(
-      lesson,
-      next
+  const lesson =
+    await generateLesson(
+      day
     );
-  } catch (error) {
-    fail(
-      error?.stack ||
-      error?.message ||
-      String(error)
-    );
-  }
 
-  console.log(
-    `Lesson sections: ${lesson.sections.length}`
-  );
+  const mcqs =
+    await generateMcqs(
+      day,
+      topics
+    );
 
   /*
-   * ----------------------------------------------------------
-   * STEP 2 — MCQS
-   * ----------------------------------------------------------
+   * Only now create the final production object.
+   * Nothing is written to day-NNN.json until everything
+   * has successfully passed validation.
    */
-
-  console.log("");
-  console.log(
-    "STEP 2/2 — Generating comprehensive MCQ bank..."
-  );
-
-  let mcqData;
-
-  try {
-    const response =
-      await generateWithGroq(
-        buildMcqPrompt(
-          day,
-          lesson
-        ),
-        0.15
-      );
-
-    mcqData =
-      extractJson(response);
-
-    validateMcqs(
-      mcqData
-    );
-  } catch (error) {
-    fail(
-      error?.stack ||
-      error?.message ||
-      String(error)
-    );
-  }
-
-  console.log(
-    `MCQs generated  : ${mcqData.mcqs.length}`
-  );
-
-  /*
-   * ----------------------------------------------------------
-   * MERGE
-   * ----------------------------------------------------------
-   */
-
   const generated = {
     ...lesson,
-
     day: next,
-
     courseDate: date,
-
     publishAt,
-
-    mcqs:
-      mcqData.mcqs
+    mcqs
   };
 
   /*
-   * ----------------------------------------------------------
-   * FINAL VALIDATION
-   * ----------------------------------------------------------
+   * Final safety checks.
    */
-
-  try {
-    validateLesson(
-      generated,
-      next
-    );
-
-    validateMcqs(
-      generated
-    );
-  } catch (error) {
-    fail(
-      `FINAL VALIDATION FAILED:\n${error.message}`
-    );
-  }
-
-  /*
-   * ----------------------------------------------------------
-   * CREATE DIRECTORY
-   * ----------------------------------------------------------
-   */
-
-  fs.mkdirSync(
-    DATA_DIR,
-    {
-      recursive: true
-    }
+  validateLesson(
+    generated,
+    next
   );
 
-  /*
-   * ----------------------------------------------------------
-   * FINAL OVERWRITE PROTECTION
-   * ----------------------------------------------------------
-   */
+  validateMcqs(
+    generated.mcqs,
+    topics
+  );
 
-  if (
-    fs.existsSync(output)
-  ) {
-    fail(
-      `Safety stop: ${output} appeared before write.`
-    );
-  }
-
-  /*
-   * ----------------------------------------------------------
-   * WRITE
-   * ----------------------------------------------------------
-   */
-
-  fs.writeFileSync(
+  writeJsonAtomic(
     output,
-    JSON.stringify(
-      generated,
-      null,
-      2
-    ) + "\n",
-    "utf8"
+    generated
   );
-
-  /*
-   * ----------------------------------------------------------
-   * VERIFY FILE
-   * ----------------------------------------------------------
-   */
-
-  if (
-    !fs.existsSync(output)
-  ) {
-    fail(
-      `Output file was not created:\n${output}`
-    );
-  }
-
-  try {
-    const written =
-      JSON.parse(
-        fs.readFileSync(
-          output,
-          "utf8"
-        )
-      );
-
-    validateLesson(
-      written,
-      next
-    );
-
-    validateMcqs(
-      written
-    );
-  } catch (error) {
-    fail(
-      `Written file verification failed:\n${error.message}`
-    );
-  }
 
   console.log("");
   console.log(
@@ -1201,6 +1206,9 @@ async function main() {
   );
   console.log(
     `Sections  : ${generated.sections.length}`
+  );
+  console.log(
+    `Topics    : ${topics.length}`
   );
   console.log(
     `MCQs      : ${generated.mcqs.length}`
