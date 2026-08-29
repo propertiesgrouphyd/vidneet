@@ -1,4 +1,4 @@
-name: VIDHWAAN NEET — Production CDN Deploy
+name: VIDHWAAN NEET — Production Cloudflare Pages
 
 on:
   push:
@@ -15,8 +15,9 @@ concurrency:
 
 jobs:
   deploy:
-    name: Build, Optimize and Deploy NEET
+    name: Build, Optimize and Deploy
     runs-on: ubuntu-latest
+    timeout-minutes: 20
 
     env:
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
@@ -30,7 +31,7 @@ jobs:
       # ============================================================
 
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 1
 
@@ -39,23 +40,17 @@ jobs:
       # ============================================================
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: 24
           cache: npm
 
       # ============================================================
-      # INSTALL PROJECT DEPENDENCIES
-      # ============================================================
-
-      - name: Install dependencies
-        run: npm ci
-
-      # ============================================================
       # SOURCE VALIDATION
       # ============================================================
 
-      - name: Validate syllabus
+      - name: Validate source
+        shell: bash
         run: |
           set -euo pipefail
 
@@ -63,99 +58,66 @@ jobs:
           echo " VIDHWAAN NEET — SOURCE VALIDATION"
           echo "============================================================"
 
+          npm ci
           npm run validate
 
-      # ============================================================
-      # VERIFY REAL PRODUCTION STRUCTURE
-      # ============================================================
+          test -f public/index.html
+          test -f public/manifest.json
+          test -f public/sw.js
+          test -f public/js/app.js
+          test -f public/css/main.css
+          test -f public/data/app-config.json
+          test -f public/data/syllabus.json
 
-      - name: Verify production files
-        run: |
-          set -euo pipefail
-
-          echo "============================================================"
-          echo " PRODUCTION FILE VERIFICATION"
-          echo "============================================================"
-
-          required_files=(
-            "public/index.html"
-            "public/manifest.json"
-            "public/sw.js"
-            "public/js/app.js"
-            "public/css/main.css"
-            "public/data/app-config.json"
-            "public/data/syllabus.json"
-          )
-
-          for file in "${required_files[@]}"; do
-            if [ ! -f "$file" ]; then
-              echo "ERROR: Missing production file: $file"
-              exit 1
-            fi
-
-            echo "OK: $file"
-          done
-
-          if [ ! -d "public/icons" ]; then
-            echo "ERROR: Missing public/icons directory"
-            exit 1
-          fi
-
-          echo "OK: public/icons"
+          test -d public/icons
 
           echo
-          echo "Production structure verified."
+          echo "Production source structure: VALID"
 
       # ============================================================
-      # VERIFY NO DAILY LESSONS ARE REQUIRED FOR DEPLOYMENT
+      # JAVASCRIPT SYNTAX CHECK
       # ============================================================
 
-      - name: Verify frontend does not require generated day files
-        run: |
-          set -euo pipefail
-
-          echo "============================================================"
-          echo " DAILY LESSON DEPLOYMENT CHECK"
-          echo "============================================================"
-
-          echo "Daily day-XXX.json files are NOT required for frontend deployment."
-          echo "They are generated separately by the daily AI lesson workflow."
-
-          echo
-          echo "Existing public/data files:"
-          find public/data -maxdepth 1 -type f -printf '%f\n' | sort
-
-      # ============================================================
-      # INSTALL BUILD OPTIMIZATION TOOLS
-      # ============================================================
-
-      - name: Install production optimization tools
-        run: |
-          npm install --no-save \
-            html-minifier-terser \
-            terser \
-            javascript-obfuscator \
-            lightningcss
-
-      # ============================================================
-      # BUILD PRODUCTION DIRECTORY
-      # ============================================================
-
-      - name: Build production CDN directory
+      - name: Validate JavaScript
         shell: bash
         run: |
           set -euo pipefail
 
-          echo "============================================================"
-          echo " VIDHWAAN NEET — PRODUCTION BUILD"
-          echo "============================================================"
+          node --check public/js/app.js
+          node --check public/sw.js
+
+          echo "JavaScript syntax: VALID"
+
+      # ============================================================
+      # INSTALL BUILD TOOLS
+      #
+      # IMPORTANT:
+      # Do not rely on npx finding javascript-obfuscator.
+      # Install the CLI packages explicitly.
+      # ============================================================
+
+      - name: Install production build tools
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          npm install --no-save \
+            html-minifier-terser \
+            javascript-obfuscator \
+            terser \
+            lightningcss
+
+      # ============================================================
+      # CREATE CLEAN DIST
+      # ============================================================
+
+      - name: Create production directory
+        shell: bash
+        run: |
+          set -euo pipefail
 
           rm -rf dist
           mkdir -p dist
-
-          # --------------------------------------------------------
-          # COPY STATIC APPLICATION
-          # --------------------------------------------------------
 
           cp public/index.html dist/index.html
           cp public/manifest.json dist/manifest.json
@@ -167,34 +129,46 @@ jobs:
           mkdir -p dist/js
           mkdir -p dist/css
 
-          # --------------------------------------------------------
-          # MINIFY HTML
-          # --------------------------------------------------------
+      # ============================================================
+      # MINIFY HTML
+      # ============================================================
 
-          npx html-minifier-terser \
+      - name: Minify HTML
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          npx --no-install html-minifier-terser \
+            public/index.html \
             --collapse-whitespace \
             --remove-comments \
             --remove-redundant-attributes \
             --remove-script-type-attributes \
             --remove-style-link-type-attributes \
             --use-short-doctype \
-            --minify-css true \
-            --minify-js true \
-            public/index.html \
-            -o dist/index.html
+            --minify-css \
+            --minify-js \
+            --output dist/index.html
 
-          # --------------------------------------------------------
-          # MINIFY + OBFUSCATE MAIN APP
-          # --------------------------------------------------------
+      # ============================================================
+      # OBFUSCATE + MINIFY APPLICATION JAVASCRIPT
+      #
+      # app.js remains functionally the same.
+      # ============================================================
 
-          npx javascript-obfuscator \
+      - name: Minify and obfuscate app.js
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          npx --no-install javascript-obfuscator \
             public/js/app.js \
             --output dist/js/app.js \
             --compact true \
             --control-flow-flattening false \
             --dead-code-injection false \
             --debug-protection false \
-            --disable-console-output true \
+            --disable-console-output false \
             --identifier-names-generator hexadecimal \
             --rename-globals false \
             --self-defending false \
@@ -202,171 +176,207 @@ jobs:
             --string-array-encoding base64 \
             --string-array-threshold 0.75
 
-          # --------------------------------------------------------
-          # MINIFY SERVICE WORKER
-          #
-          # sw.js MUST remain named sw.js because index/app
-          # register it using ./sw.js.
-          # --------------------------------------------------------
+      # ============================================================
+      # MINIFY SERVICE WORKER
+      #
+      # sw.js MUST remain named sw.js.
+      # ============================================================
 
-          npx terser public/sw.js \
+      - name: Minify service worker
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          npx --no-install terser \
+            public/sw.js \
             --compress \
             --mangle \
             --format comments=false \
-            -o dist/sw.js
+            --output dist/sw.js
 
-          # --------------------------------------------------------
-          # MINIFY CSS
-          # --------------------------------------------------------
+      # ============================================================
+      # MINIFY CSS
+      # ============================================================
 
-          npx lightningcss \
+      - name: Minify CSS
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          npx --no-install lightningcss \
             --minify \
             public/css/main.css \
             -o dist/css/main.css
 
-          # --------------------------------------------------------
-          # HASH CACHEABLE JS/CSS ASSETS
-          # --------------------------------------------------------
+      # ============================================================
+      # HASH JS + CSS
+      #
+      # Cache busting:
+      # app.js  -> app.<hash>.js
+      # main.css -> main.<hash>.css
+      # ============================================================
 
-          APP_HASH=$(
-            sha256sum dist/js/app.js |
-            cut -c1-12
-          )
+      - name: Hash production assets
+        shell: bash
+        run: |
+          set -euo pipefail
 
-          CSS_HASH=$(
-            sha256sum dist/css/main.css |
-            cut -c1-12
-          )
+          APP_HASH="$(sha256sum dist/js/app.js | cut -c1-12)"
+          CSS_HASH="$(sha256sum dist/css/main.css | cut -c1-12)"
 
           mv dist/js/app.js "dist/js/app.${APP_HASH}.js"
           mv dist/css/main.css "dist/css/main.${CSS_HASH}.css"
 
-          # --------------------------------------------------------
-          # UPDATE INDEX.HTML TO HASHED ASSETS
-          # --------------------------------------------------------
+          echo "APP_HASH=${APP_HASH}"
+          echo "CSS_HASH=${CSS_HASH}"
 
-          python3 - <<'PY'
+          echo "${APP_HASH}" > dist/js/.app-hash
+          echo "${CSS_HASH}" > dist/css/.css-hash
+
+      # ============================================================
+      # UPDATE HTML REFERENCES
+      # ============================================================
+
+      - name: Update hashed asset references
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          APP_HASH="$(cat dist/js/.app-hash)"
+          CSS_HASH="$(cat dist/css/.css-hash)"
+
+          python3 - <<PY
           from pathlib import Path
-          import re
 
-          html = Path("dist/index.html").read_text()
+          index = Path("dist/index.html")
 
-          js_files = list(Path("dist/js").glob("app.*.js"))
-          css_files = list(Path("dist/css").glob("main.*.css"))
+          text = index.read_text()
 
-          if len(js_files) != 1:
-              raise SystemExit("Expected exactly one hashed app.js")
-
-          if len(css_files) != 1:
-              raise SystemExit("Expected exactly one hashed main.css")
-
-          js_name = js_files[0].name
-          css_name = css_files[0].name
-
-          html = re.sub(
-              r'(src=["\'])\.?/js/app\.js(["\'])',
-              rf'\1./js/{js_name}\2',
-              html
+          text = text.replace(
+              "./js/app.js",
+              "./js/app.${APP_HASH}.js"
           )
 
-          html = re.sub(
-              r'(href=["\'])\.?/css/main\.css(["\'])',
-              rf'\1./css/{css_name}\2',
-              html
+          text = text.replace(
+              "./css/main.css",
+              "./css/main.${CSS_HASH}.css"
           )
 
-          Path("dist/index.html").write_text(html)
-
-          print(f"Hashed JS : {js_name}")
-          print(f"Hashed CSS: {css_name}")
+          index.write_text(text)
           PY
 
-          # --------------------------------------------------------
-          # VERIFY REFERENCES
-          # --------------------------------------------------------
+          rm -f dist/js/.app-hash
+          rm -f dist/css/.css-hash
 
-          if ! grep -q 'js/app\.' dist/index.html; then
-            echo "ERROR: Hashed app.js not referenced by index.html"
-            exit 1
-          fi
+      # ============================================================
+      # VERIFY HASHED REFERENCES
+      # ============================================================
 
-          if ! grep -q 'css/main\.' dist/index.html; then
-            echo "ERROR: Hashed main.css not referenced by index.html"
-            exit 1
-          fi
+      - name: Verify production asset references
+        shell: bash
+        run: |
+          set -euo pipefail
 
-          # --------------------------------------------------------
-          # VERIFY PWA FILES
-          # --------------------------------------------------------
+          APP_FILE="$(find dist/js -maxdepth 1 -type f -name 'app.*.js' | head -1)"
+          CSS_FILE="$(find dist/css -maxdepth 1 -type f -name 'main.*.css' | head -1)"
+
+          test -n "$APP_FILE"
+          test -n "$CSS_FILE"
+
+          APP_NAME="$(basename "$APP_FILE")"
+          CSS_NAME="$(basename "$CSS_FILE")"
+
+          grep -Fq "./js/${APP_NAME}" dist/index.html
+          grep -Fq "./css/${CSS_NAME}" dist/index.html
+
+          test ! -f dist/js/app.js
+          test ! -f dist/css/main.css
+
+          echo "JavaScript: ${APP_NAME}"
+          echo "CSS       : ${CSS_NAME}"
+          echo "HTML asset references: VALID"
+
+      # ============================================================
+      # VERIFY PWA
+      # ============================================================
+
+      - name: Verify PWA production files
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          echo "============================================================"
+          echo " PWA VERIFICATION"
+          echo "============================================================"
 
           test -f dist/index.html
           test -f dist/manifest.json
           test -f dist/sw.js
+
           test -f dist/data/app-config.json
           test -f dist/data/syllabus.json
 
           test -d dist/icons
           test -n "$(find dist/icons -type f | head -1)"
 
+          grep -Fq './manifest.json' dist/index.html
+          grep -Fq './sw.js' dist/index.html
+
+          echo "index.html : OK"
+          echo "manifest   : OK"
+          echo "sw.js      : OK"
+          echo "data       : OK"
+          echo "icons      : OK"
+          echo "PWA files  : VALID"
+
+      # ============================================================
+      # IMPORTANT:
+      # DO NOT REQUIRE DAY JSON FILES.
+      #
+      # They are generated later by the daily AI workflow.
+      # Deployment must work even when zero day files exist.
+      # ============================================================
+
+      - name: Verify daily lesson files are not required
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          echo "Daily lesson JSON files are NOT required for deployment."
+
+          if find dist/data -maxdepth 1 -type f -name 'day-*.json' | grep -q .; then
+            echo "Existing daily lesson files detected; preserving them."
+          else
+            echo "No daily lesson files currently present — this is valid."
+          fi
+
+      # ============================================================
+      # FINAL DIST INSPECTION
+      # ============================================================
+
+      - name: Production build summary
+        shell: bash
+        run: |
+          set -euo pipefail
+
           echo
           echo "============================================================"
-          echo " PRODUCTION BUILD COMPLETE"
+          echo " VIDHWAAN NEET — PRODUCTION BUILD COMPLETE"
           echo "============================================================"
+          echo
 
+          echo "Production files:"
           find dist -type f | sort
 
-      # ============================================================
-      # FINAL DIST VALIDATION
-      # ============================================================
-
-      - name: Validate production build
-        run: |
-          set -euo pipefail
-
-          echo "============================================================"
-          echo " FINAL CDN BUILD VALIDATION"
-          echo "============================================================"
-
-          test -f dist/index.html
-          test -f dist/manifest.json
-          test -f dist/sw.js
-          test -f dist/data/app-config.json
-          test -f dist/data/syllabus.json
-
-          test -n "$(find dist/js -name 'app.*.js' -type f)"
-          test -n "$(find dist/css -name 'main.*.css' -type f)"
-          test -n "$(find dist/icons -type f | head -1)"
-
-          if find dist -name '*.backup*' -o -name '*.before-*'; then
-            echo "WARNING: backup files found in dist."
-          fi
-
-          echo "CDN build is valid."
+          echo
+          echo "Production size:"
+          du -sh dist
 
       # ============================================================
-      # CLOUDFLARE AUTHENTICATION
-      # ============================================================
-
-      - name: Verify Cloudflare credentials
-        run: |
-          set -euo pipefail
-
-          if [ -z "${CLOUDFLARE_ACCOUNT_ID:-}" ]; then
-            echo "ERROR: CLOUDFLARE_ACCOUNT_ID secret is missing."
-            exit 1
-          fi
-
-          if [ -z "${CLOUDFLARE_API_TOKEN:-}" ]; then
-            echo "ERROR: CLOUDFLARE_API_TOKEN secret is missing."
-            exit 1
-          fi
-
-          echo "Cloudflare credentials detected."
-
-          npx wrangler whoami
-
-      # ============================================================
-      # CREATE CLOUDFLARE PAGES PROJECT IF NECESSARY
+      # ENSURE CLOUDFLARE PAGES PROJECT EXISTS
+      #
+      # This prevents:
+      # "The Pages project does not exist."
       # ============================================================
 
       - name: Ensure Cloudflare Pages project exists
@@ -374,39 +384,73 @@ jobs:
         run: |
           set -euo pipefail
 
-          echo "============================================================"
-          echo " CLOUDFLARE PAGES PROJECT"
-          echo "============================================================"
+          echo "Checking Cloudflare Pages project..."
 
-          if npx wrangler pages project list | grep -Fq "$CF_PAGES_PROJECT"; then
-            echo "Pages project exists: $CF_PAGES_PROJECT"
+          if npx wrangler pages project list --json \
+              | node -e '
+                let data="";
+                process.stdin.on("data",c=>data+=c);
+                process.stdin.on("end",()=>{
+                  try {
+                    const projects=JSON.parse(data);
+                    const found=projects.some(
+                      p => p.name === process.argv[1]
+                    );
+                    process.exit(found ? 0 : 1);
+                  } catch(e) {
+                    process.exit(2);
+                  }
+                });
+              ' "$CF_PAGES_PROJECT"
+          then
+            echo "Cloudflare Pages project exists: $CF_PAGES_PROJECT"
           else
-            echo "Pages project does not exist."
-            echo "Creating: $CF_PAGES_PROJECT"
+            echo "Creating Cloudflare Pages project: $CF_PAGES_PROJECT"
 
             npx wrangler pages project create "$CF_PAGES_PROJECT" \
               --production-branch main
 
-            echo "Pages project created."
+            echo "Cloudflare Pages project created."
           fi
 
       # ============================================================
-      # DEPLOY TO CLOUDFLARE PAGES CDN
+      # DEPLOY TO CLOUDFLARE PAGES
+      #
+      # NOT Workers.
+      # NOT wrangler deploy.
+      #
+      # Only dist/ is uploaded.
       # ============================================================
 
-      - name: Deploy production build to Cloudflare Pages
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=${{ env.CF_PAGES_PROJECT }} --branch=main
+
+      # ============================================================
+      # COMPLETE
+      # ============================================================
+
+      - name: Deployment complete
+        shell: bash
         run: |
-          set -euo pipefail
-
-          echo "============================================================"
-          echo " VIDHWAAN NEET — CLOUDFLARE CDN DEPLOY"
-          echo "============================================================"
-
-          npx wrangler pages deploy dist \
-            --project-name "$CF_PAGES_PROJECT" \
-            --branch main
-
           echo
           echo "============================================================"
-          echo " DEPLOYMENT SUCCESSFUL"
+          echo " VIDHWAAN NEET — DEPLOYMENT SUCCESSFUL"
+          echo "============================================================"
+          echo
+          echo "Cloudflare Pages project:"
+          echo "$CF_PAGES_PROJECT"
+          echo
+          echo "Production branch:"
+          echo "main"
+          echo
+          echo "Deployment directory:"
+          echo "dist/"
+          echo
+          echo "Daily AI lesson generation:"
+          echo "SEPARATE WORKFLOW"
+          echo
           echo "============================================================"
