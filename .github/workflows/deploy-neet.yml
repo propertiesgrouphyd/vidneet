@@ -88,7 +88,7 @@ jobs:
             "public/css/main.css"
             "public/data/app-config.json"
             "public/data/syllabus.json"
-            "public/icons/icons-198.png"
+            "public/icons/icons-192.png"
             "public/icons/icons-512.png"
           )
 
@@ -227,7 +227,7 @@ jobs:
           assets = [
               root / "js" / "app.js",
               root / "css" / "main.css",
-              root / "icons" / "icons-198.png",
+              root / "icons" / "icons-192.png",
               root / "icons" / "icons-512.png",
           ]
 
@@ -358,7 +358,7 @@ jobs:
 
           test "$(find dist/js -maxdepth 1 -name 'app.*.js' | wc -l)" -eq 1
           test "$(find dist/css -maxdepth 1 -name 'main.*.css' | wc -l)" -eq 1
-          test "$(find dist/icons -maxdepth 1 -name 'icons-198.*.png' | wc -l)" -eq 1
+          test "$(find dist/icons -maxdepth 1 -name 'icons-192.*.png' | wc -l)" -eq 1
           test "$(find dist/icons -maxdepth 1 -name 'icons-512.*.png' | wc -l)" -eq 1
 
           python3 <<'PY'
