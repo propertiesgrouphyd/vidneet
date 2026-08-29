@@ -7,7 +7,7 @@
     "en"
   ],
   "totalDays": 365,
-  "programStartDateIST": "2026-08-30"
+  "programStartDateIST": "2026-08-30",
   "dailyGenerationHourIST": 1,
   "dailyActivationHourIST": 6,
   "contentDirectory": "data/days",
