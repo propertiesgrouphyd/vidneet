@@ -9,7 +9,7 @@ const IST_OFFSET_MINUTES = 330;
 //
 // For the current build we use today's IST date if no explicit
 // value is supplied by app-config.json.
-const DEFAULT_START_DATE = "2026-08-29";
+const DEFAULT_START_DATE = "2026-08-30";
 
 let syllabus = null;
 let config = null;
