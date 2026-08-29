@@ -1,4 +1,4 @@
-name: VIDHWAAN NEET — Production CI/CD
+name: VIDHWAAN NEET — Production Cloudflare Deploy
 
 on:
   push:
@@ -14,15 +14,19 @@ concurrency:
   group: vidhwaan-neet-production
   cancel-in-progress: true
 
+env:
+  NODE_VERSION: "24"
+  WORKER_NAME: "vidhwaan-neet"
+
 jobs:
   deploy:
-    name: Build, Optimize and Deploy
+    name: Validate, Optimize and Deploy
     runs-on: ubuntu-latest
 
     steps:
 
       # ============================================================
-      # 1. CHECKOUT
+      # CHECKOUT
       # ============================================================
 
       - name: Checkout repository
@@ -30,75 +34,45 @@ jobs:
         with:
           fetch-depth: 1
 
-
       # ============================================================
-      # 2. NODE.JS
+      # NODE
       # ============================================================
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: ${{ env.NODE_VERSION }}
           cache: npm
 
-
       # ============================================================
-      # 3. INSTALL DEPENDENCIES
+      # INSTALL
       # ============================================================
 
       - name: Install dependencies
-        run: |
-          set -e
-
-          echo "============================================================"
-          echo " INSTALLING DEPENDENCIES"
-          echo "============================================================"
-
-          npm ci
-
-          echo "Dependencies installed."
-
+        run: npm ci
 
       # ============================================================
-      # 4. VALIDATE 365-DAY SYLLABUS
+      # SOURCE VALIDATION
       # ============================================================
 
       - name: Validate syllabus
         run: |
-          set -e
-
           echo "============================================================"
           echo " VIDHWAAN NEET — SOURCE VALIDATION"
           echo "============================================================"
 
           npm run validate
 
-          echo
-          echo "Syllabus validation: PASS"
-
-
-      # ============================================================
-      # 5. VALIDATE GENERATOR JAVASCRIPT
-      # ============================================================
-
-      - name: Validate generator syntax
+      - name: Validate generator
         run: |
-          set -e
-
-          echo "============================================================"
-          echo " GENERATOR SYNTAX VALIDATION"
-          echo "============================================================"
-
           node --check generator/generate-day.js
 
-          echo "Generator syntax: PASS"
-
-
       # ============================================================
-      # 6. VERIFY PRODUCTION APPLICATION
+      # VERIFY PRODUCTION SOURCE
       # ============================================================
 
       - name: Verify production files
+        shell: bash
         run: |
           set -e
 
@@ -106,19 +80,19 @@ jobs:
           echo " PRODUCTION FILE VERIFICATION"
           echo "============================================================"
 
-          required_files="
-          public/index.html
-          public/manifest.json
-          public/sw.js
-          public/js/app.js
-          public/css/main.css
-          public/data/app-config.json
-          public/data/syllabus.json
-          public/icons/icons-198.png
-          public/icons/icons-512.png
-          "
+          required_files=(
+            "public/index.html"
+            "public/manifest.json"
+            "public/sw.js"
+            "public/js/app.js"
+            "public/css/main.css"
+            "public/data/app-config.json"
+            "public/data/syllabus.json"
+            "public/icons/icons-198.png"
+            "public/icons/icons-512.png"
+          )
 
-          for file in $required_files; do
+          for file in "${required_files[@]}"; do
             if [ ! -f "$file" ]; then
               echo "ERROR: Missing production file: $file"
               exit 1
@@ -128,318 +102,327 @@ jobs:
           done
 
           echo
-          echo "Production file verification: PASS"
-
+          echo "Production source verification PASSED."
 
       # ============================================================
-      # 7. CREATE CLEAN DEPLOYMENT DIRECTORY
+      # CREATE BUILD DIRECTORY
       # ============================================================
 
-      - name: Create clean production build
+      - name: Prepare production build
+        shell: bash
         run: |
           set -e
-
-          echo "============================================================"
-          echo " CREATING CLEAN PRODUCTION BUILD"
-          echo "============================================================"
 
           rm -rf dist
           mkdir -p dist
 
           cp -R public/. dist/
 
-          echo "Clean production directory created."
-
+          echo "Production source copied to dist/."
 
       # ============================================================
-      # 8. REMOVE BACKUP / DEVELOPMENT FILES
+      # INSTALL BUILD OPTIMIZATION TOOLS
       # ============================================================
 
-      - name: Remove backup and development files
+      - name: Install production optimization tools
         run: |
-          set -e
-
-          echo "============================================================"
-          echo " REMOVING BACKUP / DEVELOPMENT FILES"
-          echo "============================================================"
-
-          find dist -type f \( \
-            -name "*.backup*" \
-            -o -name "*.before-*" \
-            -o -name "*.bak" \
-            -o -name "*.tmp" \
-            -o -name "*~" \
-          \) -print -delete
-
-          echo "Backup/development cleanup complete."
-
+          npm install --no-save \
+            terser \
+            javascript-obfuscator \
+            clean-css-cli \
+            html-minifier-terser
 
       # ============================================================
-      # 9. MINIFY HTML
+      # MINIFY HTML
       # ============================================================
 
       - name: Minify HTML
         run: |
-          set -e
-
-          echo "============================================================"
-          echo " HTML MINIFICATION"
-          echo "============================================================"
-
-          npx --yes html-minifier-terser \
-            dist/index.html \
+          npx html-minifier-terser \
             --collapse-whitespace \
             --remove-comments \
             --remove-redundant-attributes \
             --remove-script-type-attributes \
-            --remove-style-link-type-attributes \
+            --remove-tag-whitespace \
             --use-short-doctype \
             --minify-css true \
             --minify-js true \
+            dist/index.html \
             -o dist/index.html
 
-          echo "HTML minification: PASS"
-
+          echo "HTML minified."
 
       # ============================================================
-      # 10. MINIFY + MANGLE JAVASCRIPT
+      # MINIFY + OBFUSCATE JAVASCRIPT
       # ============================================================
 
-      - name: Minify and mangle JavaScript
+      - name: Minify and obfuscate JavaScript
+        shell: bash
         run: |
           set -e
 
-          echo "============================================================"
-          echo " JAVASCRIPT MINIFICATION + MANGLE"
-          echo "============================================================"
+          mkdir -p build-tmp
 
-          find dist -type f -name "*.js" \
-            ! -name "sw.js" \
-            -print0 |
-          while IFS= read -r -d '' file; do
+          npx terser \
+            dist/js/app.js \
+            --compress \
+            --mangle \
+            --comments false \
+            -o build-tmp/app.min.js
 
-            echo "Optimizing: $file"
+          npx javascript-obfuscator \
+            build-tmp/app.min.js \
+            --output dist/js/app.js \
+            --compact true \
+            --control-flow-flattening true \
+            --control-flow-flattening-threshold 0.35 \
+            --dead-code-injection true \
+            --dead-code-injection-threshold 0.10 \
+            --identifier-names-generator hexadecimal \
+            --rename-globals false \
+            --self-defending false \
+            --string-array true \
+            --string-array-encoding base64 \
+            --string-array-threshold 0.75 \
+            --transform-object-keys true \
+            --unicode-escape-sequence false
 
-            npx --yes terser "$file" \
-              --compress \
-              --mangle \
-              --format comments=false \
-              -o "$file"
+          rm -rf build-tmp
 
-          done
-
-          echo "JavaScript optimization: PASS"
-
+          echo "JavaScript minified and obfuscated."
 
       # ============================================================
-      # 11. MINIFY CSS
+      # MINIFY CSS
       # ============================================================
 
       - name: Minify CSS
         run: |
-          set -e
+          npx cleancss \
+            -O2 \
+            -o dist/css/main.css \
+            dist/css/main.css
 
-          echo "============================================================"
-          echo " CSS MINIFICATION"
-          echo "============================================================"
-
-          find dist -type f -name "*.css" \
-            -print0 |
-          while IFS= read -r -d '' file; do
-
-            echo "Optimizing: $file"
-
-            npx --yes clean-css-cli \
-              -o "$file" \
-              "$file"
-
-          done
-
-          echo "CSS minification: PASS"
-
+          echo "CSS minified."
 
       # ============================================================
-      # 12. HASH JS + CSS ASSETS
+      # CONTENT HASH JS / CSS / ICONS
+      #
+      # JSON files are intentionally NOT renamed because the
+      # application dynamically loads lesson/data URLs.
       # ============================================================
 
-      - name: Hash static assets
+      - name: Content hash static assets
+        shell: bash
         run: |
           set -e
 
-          echo "============================================================"
-          echo " STATIC ASSET HASHING"
-          echo "============================================================"
-
           python3 <<'PY'
-          from pathlib import Path
           import hashlib
+          import json
+          import re
+          from pathlib import Path
 
           root = Path("dist")
 
-          files = []
-
-          for pattern in ("**/*.js", "**/*.css"):
-              files.extend(root.glob(pattern))
-
-          files = [
-              p for p in files
-              if p.name != "sw.js"
+          assets = [
+              root / "js" / "app.js",
+              root / "css" / "main.css",
+              root / "icons" / "icons-198.png",
+              root / "icons" / "icons-512.png",
           ]
 
           replacements = {}
 
-          for file in files:
-              data = file.read_bytes()
+          for path in assets:
+              if not path.exists():
+                  raise SystemExit(f"Missing asset: {path}")
 
-              digest = hashlib.sha256(data).hexdigest()[:12]
+              digest = hashlib.sha256(
+                  path.read_bytes()
+              ).hexdigest()[:16]
 
-              new_file = file.with_name(
-                  f"{file.stem}.{digest}{file.suffix}"
+              new_name = f"{path.stem}.{digest}{path.suffix}"
+              new_path = path.with_name(new_name)
+
+              path.rename(new_path)
+
+              replacements[
+                  path.relative_to(root).as_posix()
+              ] = new_path.relative_to(root).as_posix()
+
+              print(
+                  f"HASHED: {path.relative_to(root)}"
+                  f" -> {new_path.relative_to(root)}"
               )
 
-              file.rename(new_file)
+          # ----------------------------------------------------------
+          # Rewrite references in index.html
+          # ----------------------------------------------------------
 
-              old_path = file.relative_to(root).as_posix()
-              new_path = new_file.relative_to(root).as_posix()
+          index = root / "index.html"
+          text = index.read_text(encoding="utf-8")
 
-              replacements[old_path] = new_path
+          for old, new in replacements.items():
+              text = text.replace(
+                  f"./{old}",
+                  f"./{new}"
+              )
 
-          # --------------------------------------------------------
-          # Update HTML references
-          # --------------------------------------------------------
+              text = text.replace(
+                  old,
+                  new
+              )
 
-          for html in root.rglob("*.html"):
-              text = html.read_text(encoding="utf-8")
+          index.write_text(text, encoding="utf-8")
 
-              for old, new in replacements.items():
-                  text = text.replace(old, new)
+          # ----------------------------------------------------------
+          # Rewrite manifest icon references
+          # ----------------------------------------------------------
 
-              html.write_text(text, encoding="utf-8")
+          manifest = root / "manifest.json"
 
-          # --------------------------------------------------------
-          # Update service worker references if present
-          # --------------------------------------------------------
+          if manifest.exists():
+              data = json.loads(
+                  manifest.read_text(encoding="utf-8")
+              )
+
+              for icon in data.get("icons", []):
+                  src = icon.get("src")
+
+                  if not src:
+                      continue
+
+                  normalized = src.lstrip("./")
+
+                  if normalized in replacements:
+                      icon["src"] = "./" + replacements[normalized]
+
+              manifest.write_text(
+                  json.dumps(
+                      data,
+                      ensure_ascii=False,
+                      separators=(",", ":")
+                  ) + "\n",
+                  encoding="utf-8"
+              )
+
+          # ----------------------------------------------------------
+          # Rewrite service worker references if present.
+          # ----------------------------------------------------------
 
           sw = root / "sw.js"
 
           if sw.exists():
-              text = sw.read_text(encoding="utf-8")
+              sw_text = sw.read_text(encoding="utf-8")
 
               for old, new in replacements.items():
-                  text = text.replace(old, new)
+                  sw_text = sw_text.replace(
+                      f"./{old}",
+                      f"./{new}"
+                  )
 
-              sw.write_text(text, encoding="utf-8")
+                  sw_text = sw_text.replace(
+                      old,
+                      new
+                  )
 
-          print("")
-          print("Hashed assets:")
+              sw.write_text(
+                  sw_text,
+                  encoding="utf-8"
+              )
 
-          for old, new in replacements.items():
-              print(f"{old} -> {new}")
+          print("Asset references rewritten successfully.")
           PY
 
-          echo
-          echo "Static asset hashing: PASS"
-
-
       # ============================================================
-      # 13. VERIFY NO SENSITIVE FILES
+      # FINAL PWA / DATA CHECK
       # ============================================================
 
-      - name: Production security check
+      - name: Verify optimized production build
+        shell: bash
         run: |
           set -e
 
           echo "============================================================"
-          echo " PRODUCTION SECURITY CHECK"
+          echo " FINAL PRODUCTION BUILD VERIFICATION"
           echo "============================================================"
 
-          forbidden=$(find dist -type f \( \
-            -name "*.env" \
-            -name ".env" \
-            -name ".env.*" \
-            -name "*.pem" \
-            -name "*.key" \
-            -name "*.secret" \
-            -name "*.backup*" \
-            -name "*.before-*" \
-          \))
-
-          if [ -n "$forbidden" ]; then
-            echo "ERROR: Forbidden files detected:"
-            echo "$forbidden"
-            exit 1
-          fi
-
-          echo "No sensitive/development files found."
-          echo "Security check: PASS"
-
-
-      # ============================================================
-      # 14. VERIFY PWA
-      # ============================================================
-
-      - name: Verify PWA
-        run: |
-          set -e
-
-          echo "============================================================"
-          echo " PWA VERIFICATION"
-          echo "============================================================"
-
+          test -f dist/index.html
           test -f dist/manifest.json
           test -f dist/sw.js
 
-          grep -q 'rel="manifest"' dist/index.html
-          grep -q 'serviceWorker' dist/js/*.js 2>/dev/null || true
+          test -d dist/js
+          test -d dist/css
+          test -d dist/icons
+          test -d dist/data
 
-          echo "Manifest: OK"
-          echo "Service worker: OK"
-          echo "PWA verification: PASS"
+          test "$(find dist/js -maxdepth 1 -name 'app.*.js' | wc -l)" -eq 1
+          test "$(find dist/css -maxdepth 1 -name 'main.*.css' | wc -l)" -eq 1
+          test "$(find dist/icons -maxdepth 1 -name 'icons-198.*.png' | wc -l)" -eq 1
+          test "$(find dist/icons -maxdepth 1 -name 'icons-512.*.png' | wc -l)" -eq 1
 
+          python3 <<'PY'
+          import json
+          from pathlib import Path
+
+          manifest = json.loads(
+              Path("dist/manifest.json").read_text(
+                  encoding="utf-8"
+              )
+          )
+
+          if not manifest.get("name"):
+              raise SystemExit("manifest.json missing name")
+
+          if manifest.get("display") != "standalone":
+              raise SystemExit(
+                  "manifest.json must use display=standalone"
+              )
+
+          for icon in manifest.get("icons", []):
+              src = icon.get("src", "")
+
+              if not Path("dist", src.lstrip("./")).exists():
+                  raise SystemExit(
+                      f"Manifest icon missing: {src}"
+                  )
+
+          print("PWA manifest verification PASSED.")
+          PY
+
+          echo
+          echo "Production build verification PASSED."
 
       # ============================================================
-      # 15. SHOW FINAL DEPLOYMENT CONTENT
+      # CLOUDFLARE WRANGLER CONFIG
       # ============================================================
 
-      - name: Inspect final deployment
+      - name: Create Wrangler configuration
+        shell: bash
         run: |
-          set -e
+          cat > wrangler.jsonc <<'EOF'
+          {
+            "$schema": "./node_modules/wrangler/config-schema.json",
+            "name": "vidhwaan-neet",
+            "compatibility_date": "2026-08-29",
+            "assets": {
+              "directory": "./dist"
+            }
+          }
+          EOF
 
-          echo "============================================================"
-          echo " FINAL DEPLOYMENT CONTENT"
-          echo "============================================================"
-
-          find dist -type f | sort
-
-          echo
-          echo "============================================================"
-          echo " DEPLOYMENT SIZE"
-          echo "============================================================"
-
-          du -sh dist
-
-          echo
-          echo "============================================================"
-          echo " FILE COUNT"
-          echo "============================================================"
-
-          find dist -type f | wc -l
-
+          echo "Wrangler configuration created."
 
       # ============================================================
-      # 16. CLOUDFLARE CREDENTIAL CHECK
+      # CLOUDFLARE AUTHENTICATION CHECK
       # ============================================================
 
-      - name: Validate Cloudflare credentials
+      - name: Verify Cloudflare credentials
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: |
           set -e
-
-          echo "============================================================"
-          echo " CLOUDFLARE CREDENTIAL CHECK"
-          echo "============================================================"
 
           if [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then
             echo "ERROR: CLOUDFLARE_ACCOUNT_ID secret is missing."
@@ -451,99 +434,31 @@ jobs:
             exit 1
           fi
 
-          echo "CLOUDFLARE_ACCOUNT_ID: configured"
-          echo "CLOUDFLARE_API_TOKEN : configured"
-
+          echo "Cloudflare credentials detected."
 
       # ============================================================
-      # 17. CREATE CLOUDFLARE PAGES PROJECT IF NECESSARY
+      # CLOUDFLARE WORKERS DEPLOYMENT
       # ============================================================
 
-      - name: Ensure Cloudflare Pages project exists
+      - name: Deploy to Cloudflare Workers
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: |
-          set -e
-
-          PROJECT_NAME="vidhwaan-neet"
-
-          echo "============================================================"
-          echo " CLOUDFLARE PAGES PROJECT CHECK"
-          echo "============================================================"
-
-          echo "Project: $PROJECT_NAME"
-
-          if npx --yes wrangler pages project list | \
-             grep -Fq "$PROJECT_NAME"; then
-
-            echo "Pages project already exists."
-
-          else
-
-            echo "Pages project does not exist."
-            echo "Creating Pages project..."
-
-            set +e
-
-            CREATE_OUTPUT=$(
-              npx --yes wrangler pages project create "$PROJECT_NAME" \
-                --production-branch=main 2>&1
-            )
-
-            CREATE_EXIT=$?
-
-            set -e
-
-            echo "$CREATE_OUTPUT"
-
-            if [ "$CREATE_EXIT" -ne 0 ]; then
-
-              echo
-              echo "Project creation command returned an error."
-              echo "Checking whether the project now exists..."
-
-              if npx --yes wrangler pages project list | \
-                 grep -Fq "$PROJECT_NAME"; then
-
-                echo "Project exists. Continuing deployment."
-
-              else
-
-                echo "ERROR: Could not create or locate Cloudflare Pages project."
-                exit "$CREATE_EXIT"
-
-              fi
-
-            else
-
-              echo "Pages project created successfully."
-
-            fi
-
-          fi
-
+          npx wrangler@4.127.1 deploy
 
       # ============================================================
-      # 18. CLOUDFLARE PRODUCTION DEPLOYMENT
+      # COMPLETE
       # ============================================================
 
-      - name: Deploy to Cloudflare Pages
-        env:
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      - name: Deployment complete
         run: |
-          set -e
-
           echo "============================================================"
-          echo " VIDHWAAN NEET — CLOUDFLARE PRODUCTION DEPLOY"
+          echo " VIDHWAAN NEET — DEPLOYMENT SUCCESSFUL"
           echo "============================================================"
-
-          npx --yes wrangler pages deploy dist \
-            --project-name=vidhwaan-neet \
-            --branch=main
-
           echo
-          echo "============================================================"
-          echo " VIDHWAAN NEET — DEPLOYMENT SUCCESS"
+          echo "Worker : vidhwaan-neet"
+          echo "Assets : dist/"
+          echo
+          echo "Cloudflare Workers Static Assets deployment completed."
           echo "============================================================"
