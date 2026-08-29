@@ -1,32 +1,37 @@
-name: VIDHWAAN NEET — Cloudflare Production Deploy
+name: VIDHWAAN NEET — Production PWA DEPLOY
 
 on:
   push:
     branches:
       - main
+
   workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
-  group: vidhwaan-neet-production
+  group: vidhwaan-neet-deploy
   cancel-in-progress: true
 
 jobs:
+
   deploy:
-    name: Build, Optimize and Deploy
+
     runs-on: ubuntu-latest
 
+    env:
+      PROJECT_NAME: vidhwaan-neet
+
     steps:
+
       # ============================================================
       # CHECKOUT
       # ============================================================
 
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
+
 
       # ============================================================
       # NODE
@@ -38,88 +43,177 @@ jobs:
           node-version: 24
           cache: npm
 
-      - name: Install dependencies
-        run: npm ci
 
       # ============================================================
-      # SOURCE VALIDATION
+      # INSTALL DEPLOYMENT / PROTECTION TOOLS
       # ============================================================
 
-      - name: Validate syllabus
+      - name: Install Production Build Tools
         run: |
+          npm install -g wrangler
+          npm install -g terser
+          npm install -g javascript-obfuscator
+          npm install -g clean-css-cli
+          npm install -g html-minifier-terser
+
+
+      # ============================================================
+      # VALIDATE SOURCE
+      # ============================================================
+
+      - name: Validate NEET Source
+        run: |
+
           echo "============================================================"
           echo " VIDHWAAN NEET — SOURCE VALIDATION"
           echo "============================================================"
 
-          npm run validate
+          npm ci
 
-      - name: Validate generator syntax
-        run: |
-          echo "============================================================"
-          echo " GENERATOR SYNTAX VALIDATION"
-          echo "============================================================"
+          npm run validate
 
           node --check generator/generate-day.js
 
-      # ============================================================
-      # VERIFY PUBLIC APPLICATION
-      # ============================================================
+          node --check public/js/app.js
 
-      - name: Verify production files
-        run: |
-          set -e
-
-          echo "============================================================"
-          echo " VIDHWAAN NEET — PRODUCTION FILE CHECK"
-          echo "============================================================"
+          node --check public/sw.js
 
           test -f public/index.html
-          test -f public/manifest.json
-          test -f public/sw.js
-          test -f public/js/app.js
           test -f public/css/main.css
+          test -f public/js/app.js
+          test -f public/sw.js
+          test -f public/manifest.json
+
           test -f public/data/app-config.json
           test -f public/data/syllabus.json
 
-          echo "index.html          : OK"
-          echo "manifest.json       : OK"
-          echo "service worker      : OK"
-          echo "app.js              : OK"
-          echo "main.css            : OK"
-          echo "app-config.json     : OK"
-          echo "syllabus.json       : OK"
+          test -f public/icons/icons-198.png
+          test -f public/icons/icons-512.png
+
+          echo
+          echo "Source validation: PASSED"
+
 
       # ============================================================
-      # BUILD CLEAN DEPLOYMENT DIRECTORY
+      # VERIFY LESSON DATA
       # ============================================================
 
-      - name: Prepare production directory
+      - name: Validate Lesson Data
         run: |
-          set -e
+
+          python3 - <<'PY'
+
+          import json
+          import re
+          from pathlib import Path
+
+          data_dir = Path("public/data")
+
+          files = sorted(
+              data_dir.glob("day-*.json"),
+              key=lambda p: int(p.stem.split("-")[1])
+          )
+
+          print(f"Lesson files found: {len(files)}")
+
+          if len(files) > 365:
+              raise SystemExit(
+                  "ERROR: More than 365 lesson files exist."
+              )
+
+          expected = 1
+
+          for f in files:
+
+              m = re.fullmatch(
+                  r"day-(\d{3})",
+                  f.stem
+              )
+
+              if not m:
+                  raise SystemExit(
+                      f"Invalid lesson filename: {f.name}"
+                  )
+
+              day = int(m.group(1))
+
+              if day != expected:
+                  raise SystemExit(
+                      f"Lesson sequence broken: "
+                      f"expected Day {expected}, found Day {day}"
+                  )
+
+              content = json.loads(
+                  f.read_text(encoding="utf-8")
+              )
+
+              if int(content.get("day", 0)) != day:
+                  raise SystemExit(
+                      f"{f}: day metadata mismatch"
+                  )
+
+              if not content.get("courseDate"):
+                  raise SystemExit(
+                      f"{f}: missing courseDate"
+                  )
+
+              if not content.get("publishAt"):
+                  raise SystemExit(
+                      f"{f}: missing publishAt"
+                  )
+
+              expected += 1
+
+          print("Lesson sequence: VALID")
+
+          PY
+
+
+      # ============================================================
+      # PREPARE PRODUCTION DIST
+      # ============================================================
+
+      - name: Prepare Production Dist
+        run: |
 
           rm -rf dist
+
           mkdir -p dist
+          mkdir -p dist/css
+          mkdir -p dist/js
+          mkdir -p dist/data
+          mkdir -p dist/icons
 
-          cp -R public/. dist/
+          # HTML
+          cp public/index.html dist/
 
-          echo "Production directory created."
+          # CSS
+          cp public/css/main.css dist/css/
 
-      # ============================================================
-      # REMOVE DEVELOPMENT / BACKUP FILES
-      # ============================================================
+          # JavaScript
+          cp public/js/app.js dist/js/
+          cp public/sw.js dist/
 
-      - name: Remove backup and development files
-        run: |
-          set -e
+          # PWA metadata
+          cp public/manifest.json dist/
 
-          find dist -type f \( \
-            -name "*.backup*" -o \
-            -name "*.before-*" -o \
-            -name "*.bak" -o \
-            -name "*.tmp" \
-          \) -delete
+          # Data
+          cp public/data/app-config.json dist/data/
+          cp public/data/syllabus.json dist/data/
 
-          echo "Backup/development files removed."
+          # Lessons
+          cp public/data/day-*.json dist/data/
+
+          # Icons
+          cp public/icons/* dist/icons/
+
+          # Optional favicon if present
+          if [ -f public/favicon.ico ]; then
+            cp public/favicon.ico dist/
+          fi
+
+          echo "Production directory prepared."
+
 
       # ============================================================
       # MINIFY HTML
@@ -127,42 +221,17 @@ jobs:
 
       - name: Minify HTML
         run: |
-          npx --yes html-minifier-terser \
-            dist/index.html \
+
+          html-minifier-terser \
             --collapse-whitespace \
             --remove-comments \
             --remove-redundant-attributes \
             --remove-script-type-attributes \
             --remove-style-link-type-attributes \
             --use-short-doctype \
-            --minify-css true \
-            --minify-js true \
+            dist/index.html \
             -o dist/index.html
 
-          echo "HTML minified."
-
-      # ============================================================
-      # MINIFY JAVASCRIPT
-      # ============================================================
-
-      - name: Minify JavaScript
-        run: |
-          set -e
-
-          find dist -type f -name "*.js" \
-            ! -name "sw.js" \
-            -print0 |
-          while IFS= read -r -d '' file; do
-            echo "Minifying: $file"
-
-            npx --yes terser "$file" \
-              --compress \
-              --mangle \
-              --format comments=false \
-              -o "$file"
-          done
-
-          echo "JavaScript minification complete."
 
       # ============================================================
       # MINIFY CSS
@@ -170,160 +239,307 @@ jobs:
 
       - name: Minify CSS
         run: |
-          set -e
 
-          find dist -type f -name "*.css" \
-            -print0 |
-          while IFS= read -r -d '' file; do
-            echo "Minifying: $file"
+          cleancss \
+            -O2 \
+            dist/css/main.css \
+            -o dist/css/main.css
 
-            npx --yes clean-css-cli \
-              -o "$file" \
-              "$file"
-          done
-
-          echo "CSS minification complete."
 
       # ============================================================
-      # HASH STATIC ASSETS
+      # MINIFY JAVASCRIPT
       # ============================================================
 
-      - name: Hash static assets
+      - name: Minify JavaScript
         run: |
-          set -e
 
-          python3 <<'PY'
+          terser \
+            dist/js/app.js \
+            --compress \
+            --mangle \
+            -o dist/js/app.js
+
+
+      # ============================================================
+      # OBFUSCATE APPLICATION JAVASCRIPT
+      # ============================================================
+
+      - name: Obfuscate Application JavaScript
+        run: |
+
+          javascript-obfuscator \
+            dist/js/app.js \
+            --output dist/js/app.js \
+            --compact true \
+            --control-flow-flattening true \
+            --control-flow-flattening-threshold 0.75 \
+            --dead-code-injection true \
+            --dead-code-injection-threshold 0.20 \
+            --disable-console-output true \
+            --identifier-names-generator hexadecimal \
+            --rename-globals false \
+            --self-defending true \
+            --split-strings true \
+            --string-array true \
+            --string-array-encoding base64
+
+          echo "Application JavaScript obfuscated."
+
+
+      # ============================================================
+      # MINIFY JSON DATA
+      # ============================================================
+
+      - name: Minify JSON Data
+        run: |
+
+          python3 - <<'PY'
+
+          import json
           from pathlib import Path
-          import hashlib
-          import re
 
-          root = Path("dist")
+          data_dir = Path("dist/data")
 
-          files = []
+          for path in data_dir.glob("*.json"):
 
-          for pattern in [
-              "**/*.js",
-              "**/*.css"
-          ]:
-              files.extend(root.glob(pattern))
+              try:
 
-          files = [
-              p for p in files
-              if p.name != "sw.js"
-          ]
+                  obj = json.loads(
+                      path.read_text(
+                          encoding="utf-8"
+                      )
+                  )
 
-          replacements = {}
+                  path.write_text(
+                      json.dumps(
+                          obj,
+                          ensure_ascii=False,
+                          separators=(",", ":")
+                      ),
+                      encoding="utf-8"
+                  )
 
-          for file in files:
-              data = file.read_bytes()
+                  print(
+                      f"Minified: {path}"
+                  )
 
-              digest = hashlib.sha256(data).hexdigest()[:12]
+              except Exception as e:
 
-              new_name = f"{file.stem}.{digest}{file.suffix}"
+                  raise SystemExit(
+                      f"Failed JSON validation: "
+                      f"{path}: {e}"
+                  )
 
-              new_file = file.with_name(new_name)
-
-              file.rename(new_file)
-
-              replacements[
-                  file.relative_to(root).as_posix()
-              ] = new_file.relative_to(root).as_posix()
-
-          # Update HTML references.
-          for html in root.rglob("*.html"):
-              text = html.read_text(encoding="utf-8")
-
-              for old, new in replacements.items():
-                  text = text.replace(old, new)
-
-              html.write_text(text, encoding="utf-8")
-
-          # Update service worker references.
-          sw = root / "sw.js"
-
-          if sw.exists():
-              text = sw.read_text(encoding="utf-8")
-
-              for old, new in replacements.items():
-                  text = text.replace(old, new)
-
-              sw.write_text(text, encoding="utf-8")
-
-          print("Hashed assets:")
-          for old, new in replacements.items():
-              print(f"  {old} -> {new}")
           PY
 
-          echo "Static assets hashed."
 
       # ============================================================
-      # VERIFY NO SOURCE FILES ARE BEING DEPLOYED
+      # GENERATE CONTENT HASH / VERSION
       # ============================================================
 
-      - name: Production security check
+      - name: Generate Asset Version
         run: |
-          set -e
 
-          if find dist -type f \( \
-            -name "*.backup*" -o \
-            -name "*.before-*" -o \
-            -name "*.key" -o \
-            -name "*.pem" -o \
-            -name ".env*" \
-          \) | grep -q .; then
-            echo "ERROR: Sensitive/development files found in dist."
-            find dist -type f
-            exit 1
-          fi
+          VERSION=$(date +%s)
 
-          echo "Production security check: PASS."
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+
+          echo "Asset version: $VERSION"
+
 
       # ============================================================
-      # FINAL DEPLOYMENT CONTENT CHECK
+      # CACHE-BUST PRODUCTION ASSETS
       # ============================================================
 
-      - name: Show deployment contents
+      - name: Apply Asset Cache Busting
         run: |
+
+          sed -i \
+            "s|href=\"./css/main.css\"|href=\"./css/main.css?v=$VERSION\"|g" \
+            dist/index.html
+
+          sed -i \
+            "s|src=\"./js/app.js\"|src=\"./js/app.js?v=$VERSION\"|g" \
+            dist/index.html
+
+          sed -i \
+            "s|href=\"./manifest.json\"|href=\"./manifest.json?v=$VERSION\"|g" \
+            dist/index.html
+
+          echo "Cache busting applied."
+
+
+      # ============================================================
+      # PRODUCTION SECURITY HEADERS
+      # ============================================================
+
+      - name: Create Cloudflare Production Headers
+        run: |
+
+          cat > dist/_headers <<'EOF'
+
+          /*
+            X-Content-Type-Options: nosniff
+            X-Frame-Options: SAMEORIGIN
+            Referrer-Policy: strict-origin-when-cross-origin
+            Permissions-Policy: geolocation=(), microphone=(), camera=()
+
+          /index.html
+            Cache-Control: no-cache, max-age=0, must-revalidate
+
+          /manifest.json
+            Cache-Control: no-cache, max-age=0, must-revalidate
+
+          /sw.js
+            Cache-Control: no-cache, max-age=0, must-revalidate
+
+          /data/*
+            Cache-Control: no-store, max-age=0, must-revalidate
+
+          /css/*
+            Cache-Control: public, max-age=31536000, immutable
+
+          /js/*
+            Cache-Control: public, max-age=31536000, immutable
+
+          /icons/*
+            Cache-Control: public, max-age=31536000, immutable
+
+          /favicon.ico
+            Cache-Control: public, max-age=31536000, immutable
+
+          EOF
+
+          echo "Cloudflare production headers created."
+
+
+      # ============================================================
+      # VERIFY PRODUCTION BUILD
+      # ============================================================
+
+      - name: Verify Production Build
+        run: |
+
+          echo
           echo "============================================================"
-          echo " FINAL CLOUDFLARE DEPLOYMENT CONTENT"
+          echo " VIDHWAAN NEET — PRODUCTION BUILD"
           echo "============================================================"
 
           find dist -type f | sort
 
           echo
           echo "============================================================"
-          echo " DEPLOYMENT SIZE"
+          echo " LESSON FILES"
+          echo "============================================================"
+
+          ls -lh dist/data/day-*.json
+
+          echo
+          echo "============================================================"
+          echo " BUILD SIZE"
           echo "============================================================"
 
           du -sh dist
 
+          du -h \
+            dist/index.html \
+            dist/css/main.css \
+            dist/js/app.js \
+            dist/sw.js
+
+          echo
+          echo "============================================================"
+          echo " REQUIRED FILE VALIDATION"
+          echo "============================================================"
+
+          test -f dist/index.html
+          test -f dist/css/main.css
+          test -f dist/js/app.js
+          test -f dist/sw.js
+          test -f dist/manifest.json
+
+          test -f dist/data/app-config.json
+          test -f dist/data/syllabus.json
+
+          test -f dist/icons/icons-198.png
+          test -f dist/icons/icons-512.png
+
+          echo
+          echo "Production build: PASSED"
+
+
       # ============================================================
-      # CLOUDFLARE PAGES DEPLOY
+      # CREATE CLOUDFLARE PAGES PROJECT IF NEEDED
       # ============================================================
 
-      - name: Deploy to Cloudflare Pages
+      - name: Create Cloudflare Pages Project
         env:
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
         run: |
-          set -e
 
-          if [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then
-            echo "ERROR: CLOUDFLARE_ACCOUNT_ID secret is missing."
-            exit 1
+          if ! wrangler pages project list | grep -q "$PROJECT_NAME"
+          then
+
+            echo "Creating Cloudflare Pages project..."
+
+            wrangler pages project create "$PROJECT_NAME" \
+              --production-branch main
+
+          else
+
+            echo "Cloudflare Pages project already exists."
+
           fi
 
-          if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
-            echo "ERROR: CLOUDFLARE_API_TOKEN secret is missing."
-            exit 1
-          fi
 
-          echo "Cloudflare credentials detected."
+      # ============================================================
+      # DEPLOY TO CLOUDFLARE CDN
+      # ============================================================
 
-          npx --yes wrangler pages deploy dist \
-            --project-name=vidhwaan-neet \
-            --branch=main
+      - name: Deploy Cloudflare Pages
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
+        run: |
+
+          wrangler pages deploy dist \
+            --project-name="$PROJECT_NAME"
+
+
+      # ============================================================
+      # SUCCESS
+      # ============================================================
+
+      - name: Deployment Success
+        run: |
+
+          echo
           echo "============================================================"
-          echo " VIDHWAAN NEET — CLOUDFLARE DEPLOYMENT SUCCESS"
+          echo " VIDHWAAN NEET — DEPLOYMENT SUCCESS"
           echo "============================================================"
+
+          echo "Cloudflare Project : $PROJECT_NAME"
+          echo "Asset Version      : $VERSION"
+
+          echo
+          echo "PRODUCTION:"
+          echo "✓ Source validated"
+          echo "✓ Syllabus validated"
+          echo "✓ Lesson sequence validated"
+          echo "✓ HTML minified"
+          echo "✓ CSS minified"
+          echo "✓ JavaScript minified"
+          echo "✓ JavaScript obfuscated"
+          echo "✓ JSON data minified"
+          echo "✓ Cache busting enabled"
+          echo "✓ Production headers created"
+          echo "✓ PWA manifest preserved"
+          echo "✓ PWA service worker preserved"
+          echo "✓ Daily lesson data deployed"
+          echo "✓ Cloudflare CDN deployment complete"
+
+          echo
+          echo "VIDHWAAN NEET IS LIVE."
