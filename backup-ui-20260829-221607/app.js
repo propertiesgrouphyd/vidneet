@@ -1,0 +1,529 @@
+/*
+ * VIDHWAAN NEET — DAILY RELEASE GATE
+ *
+ * Generation: 01:00 IST
+ * Student release: 06:00 IST
+ *
+ * A lesson may exist in /data before 06:00, but it MUST remain
+ * locked in the UI until its exact 06:00 IST release time.
+ */
+function getDayReleaseTime(dayNumber, config) {
+  const startDate = config.courseStartDate || "2026-08-30";
+  const publishTime = config.publishTime || config.releaseTime || "06:00";
+
+  const [hour, minute] = publishTime.split(":").map(Number);
+
+  // Construct the calendar date in Asia/Kolkata without relying
+  // on the browser's local timezone.
+  const start = new Date(`${startDate}T00:00:00+05:30`);
+
+  const release = new Date(
+    start.getTime() +
+    (dayNumber - 1) * 24 * 60 * 60 * 1000
+  );
+
+  release.setUTCHours(
+    release.getUTCHours() + (hour - 5),
+    minute,
+    0,
+    0
+  );
+
+  return release;
+}
+
+function isDayReleased(dayNumber, config, now = new Date()) {
+  if (!Number.isInteger(dayNumber) || dayNumber < 1 || dayNumber > 365) {
+    return false;
+  }
+
+  const releaseTime = getDayReleaseTime(dayNumber, config);
+
+  return now.getTime() >= releaseTime.getTime();
+}
+
+const CONFIG_URL = "./data/app-config.json";
+const SYLLABUS_URL = "./data/syllabus.json";
+
+const IST_OFFSET_MINUTES = 330;
+
+// IMPORTANT:
+// Set this to the actual calendar date on which Day 1 starts.
+// Format: YYYY-MM-DD
+//
+// For the current build we use today's IST date if no explicit
+// value is supplied by app-config.json.
+const DEFAULT_START_DATE = "2026-08-29";
+
+let syllabus = null;
+let config = null;
+let deferredInstallPrompt = null;
+
+
+/* ============================================================
+   DOM
+   ============================================================ */
+
+const dayGrid = document.getElementById("day-grid");
+const loadingState = document.getElementById("loading-state");
+const errorState = document.getElementById("error-state");
+const errorMessage = document.getElementById("error-message");
+
+const syllabusSummary =
+    document.getElementById("syllabus-summary");
+
+const todayBadgeText =
+    document.getElementById("today-badge-text");
+
+const releaseStatusText =
+    document.getElementById("release-status-text");
+
+const retryButton =
+    document.getElementById("retry-button");
+
+const installButton =
+    document.getElementById("install-button");
+
+
+/* ============================================================
+   IST DATE / TIME
+   ============================================================ */
+
+function getISTNow() {
+    const now = new Date();
+
+    const utcMillis =
+        now.getTime() +
+        now.getTimezoneOffset() * 60 * 1000;
+
+    return new Date(
+        utcMillis +
+        IST_OFFSET_MINUTES * 60 * 1000
+    );
+}
+
+
+function formatDateUTC(date) {
+    return [
+        date.getUTCFullYear(),
+        String(date.getUTCMonth() + 1).padStart(2, "0"),
+        String(date.getUTCDate()).padStart(2, "0")
+    ].join("-");
+}
+
+
+function getISTDateString() {
+    return formatDateUTC(getISTNow());
+}
+
+
+function parseDateOnly(dateString) {
+    const [year, month, day] =
+        dateString.split("-").map(Number);
+
+    return new Date(
+        Date.UTC(year, month - 1, day)
+    );
+}
+
+
+function differenceInCalendarDays(
+    startDateString,
+    currentDateString
+) {
+    const start =
+        parseDateOnly(startDateString);
+
+    const current =
+        parseDateOnly(currentDateString);
+
+    return Math.floor(
+        (current.getTime() - start.getTime()) /
+        (24 * 60 * 60 * 1000)
+    );
+}
+
+
+/* ============================================================
+   RELEASE LOGIC
+   ============================================================
+
+   Day N:
+       01:00 AM -> JSON may be generated
+       06:00 AM -> Day N becomes visible/available
+
+   This frontend NEVER treats the existence of JSON alone
+   as proof that the day has been released.
+   ============================================================ */
+
+function getReleaseDay() {
+
+    /*
+     * Course schedule — Asia/Kolkata
+     *
+     * Day N is generated at 01:00 IST.
+     * Day N becomes accessible ONLY at 06:00 IST.
+     *
+     * Day 1 -> 30-Aug-2026 06:00 IST
+     * Day 2 -> 31-Aug-2026 06:00 IST
+     * ...
+     */
+
+    const now = getISTNow();
+
+    const configuredStart =
+        config?.releaseStartDate ||
+        config?.courseStartDate ||
+        DEFAULT_START_DATE;
+
+    const todayString = formatDateUTC(now);
+
+    const dayOffset =
+        differenceInCalendarDays(
+            configuredStart,
+            todayString
+        );
+
+    /*
+     * Course has not started yet.
+     */
+    if (dayOffset < 0) {
+        return 0;
+    }
+
+    /*
+     * Before 06:00 IST, today's lesson is still locked.
+     *
+     * Example:
+     * 30-Aug 01:00 -> dayOffset = 0 -> return 0
+     * 30-Aug 05:59 -> dayOffset = 0 -> return 0
+     */
+    const hour = now.getUTCHours();
+
+    if (hour < 6) {
+        return Math.min(dayOffset, 365);
+    }
+
+    /*
+     * At 06:00 IST and afterwards, today's lesson is released.
+     *
+     * 30-Aug 06:00 -> Day 1
+     * 31-Aug 06:00 -> Day 2
+     */
+    return Math.min(dayOffset + 1, 365);
+}
+
+/* ============================================================
+   RENDER
+   ============================================================ */
+
+function getDays() {
+    return Array.isArray(syllabus)
+        ? syllabus
+        : syllabus.days;
+}
+
+
+function getDayNumber(day) {
+
+    if (typeof day === "number") {
+        return day;
+    }
+
+    return Number(day.day);
+}
+
+
+
+/* ============================================================
+   365-DAY NAVIGATION SHELL
+   ============================================================
+
+   The complete 365-day navigation is always visible.
+
+   Initial state:
+       Day 1  -> locked
+       Day 2  -> locked
+       ...
+       Day 365 -> locked
+
+   Release logic later changes only the appropriate buttons.
+
+   Lesson JSON availability NEVER controls the visibility of
+   the 365-day navigation itself.
+   ============================================================ */
+
+function renderDayShell() {
+
+    if (!dayGrid) {
+        return;
+    }
+
+    dayGrid.innerHTML = "";
+
+    for (let dayNumber = 1; dayNumber <= 365; dayNumber++) {
+
+        const button =
+            document.createElement("button");
+
+        button.type = "button";
+
+        button.className =
+            "day-button locked";
+
+        button.disabled = true;
+
+        button.dataset.day =
+            String(dayNumber);
+
+        button.textContent =
+            String(dayNumber);
+
+        button.setAttribute(
+            "aria-label",
+            `Day ${dayNumber} locked`
+        );
+
+        dayGrid.appendChild(button);
+    }
+}
+
+/* ============================================================
+   END 365-DAY NAVIGATION SHELL
+   ============================================================ */
+
+
+function render() {
+
+    const days = getDays();
+
+    const releasedDay =
+        Math.min(
+            Math.max(getReleaseDay(), 0),
+            365
+        );
+
+    const releaseMessage =
+        getReleaseMessage(releasedDay);
+
+    if (releaseStatusText) { releaseStatusText.textContent =
+        releaseMessage; }
+
+    if (todayBadgeText) { todayBadgeText.textContent =
+        releasedDay > 0
+            ? `Day ${releasedDay} released`
+            : "Day 1 locked"; }
+
+    syllabusSummary.textContent =
+        releasedDay > 0
+            ? `Day ${releasedDay} of 365 released • 0 completed`
+            : "Day 1 of 365 • Begins at 6:00 AM IST";
+
+    dayGrid.innerHTML = "";
+
+    for (const day of days) {
+
+        const dayNumber =
+            getDayNumber(day);
+
+        const button =
+            document.createElement("button");
+
+        button.type = "button";
+
+        button.className = "day-button";
+
+        button.textContent =
+            String(dayNumber);
+
+        button.setAttribute(
+            "aria-label",
+            `Day ${dayNumber}`
+        );
+
+        if (dayNumber <= releasedDay) {
+
+            button.classList.add(
+                "available"
+            );
+
+            if (dayNumber === releasedDay) {
+                button.classList.add("today");
+
+                button.setAttribute(
+                    "aria-current",
+                    "date"
+                );
+            }
+
+            button.addEventListener(
+                "click",
+                () => openDay(dayNumber)
+            );
+
+        } else {
+
+            button.classList.add(
+                "locked"
+            );
+
+            button.disabled = true;
+
+            button.title =
+                `Day ${dayNumber} is not released yet`;
+        }
+
+        dayGrid.appendChild(button);
+    }
+}
+
+
+/* ============================================================
+   DAY NAVIGATION
+   ============================================================ */
+
+function openDay(dayNumber) {
+
+    const releasedDay =
+        Math.min(
+            Math.max(getReleaseDay(), 0),
+            365
+        );
+
+    if (dayNumber > releasedDay) {
+        return;
+    }
+
+    // Lesson route will be implemented in the next phase.
+    // Keeping the route deterministic now makes the final
+    // architecture simple.
+    window.location.href =
+        `./day.html?day=${dayNumber}`;
+}
+
+
+/* ============================================================
+   LOADING / RETRY
+   ============================================================ */
+
+function setLoading(isLoading) {
+
+    if (isLoading) {
+
+        loadingState.style.display =
+            "flex";
+
+        errorState.classList.add(
+            "hidden"
+        );
+
+        dayGrid.innerHTML = "";
+
+    } else {
+
+        loadingState.style.display =
+            "none";
+    }
+}
+
+
+retryButton.addEventListener(
+    "click",
+    () => loadApp()
+);
+
+
+/* ============================================================
+   PWA INSTALL
+   ============================================================ */
+
+window.addEventListener(
+    "beforeinstallprompt",
+    (event) => {
+
+        event.preventDefault();
+
+        deferredInstallPrompt =
+            event;
+
+        installButton.classList.remove(
+            "hidden"
+        );
+    }
+);
+
+
+installButton.addEventListener(
+    "click",
+    async () => {
+
+        if (!deferredInstallPrompt) {
+            return;
+        }
+
+        deferredInstallPrompt.prompt();
+
+        await deferredInstallPrompt.userChoice;
+
+        deferredInstallPrompt = null;
+
+        installButton.classList.add(
+            "hidden"
+        );
+    }
+);
+
+
+window.addEventListener(
+    "appinstalled",
+    () => {
+
+        deferredInstallPrompt = null;
+
+        installButton.classList.add(
+            "hidden"
+        );
+    }
+);
+
+
+/* ============================================================
+   SERVICE WORKER
+   ============================================================ */
+
+if ("serviceWorker" in navigator) {
+
+    window.addEventListener(
+        "load",
+        () => {
+
+            navigator.serviceWorker
+                .register("./sw.js")
+                .then((registration) => {
+
+                    console.log(
+                        "Vidhwaan NEET service worker registered:",
+                        registration.scope
+                    );
+
+                })
+                .catch((error) => {
+
+                    console.error(
+                        "Service worker registration failed:",
+                        error
+                    );
+
+                });
+        }
+    );
+}
+
+
+/* ============================================================
+   START
+   ============================================================ */
+renderDayShell();
+
+
+loadApp();

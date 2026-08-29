@@ -1,0 +1,25 @@
+{
+    "name": "Vidhwaan NEET",
+    "short_name": "Vidhwaan NEET",
+    "description": "365-Day NEET Preparation",
+    "start_url": "./",
+    "scope": "./",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#ffffff",
+    "orientation": "portrait-primary",
+    "icons": [
+        {
+            "src": "./icons/icons-198.png",
+            "sizes": "198x198",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "./icons/icons-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ]
+}
