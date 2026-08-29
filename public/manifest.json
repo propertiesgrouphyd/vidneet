@@ -10,8 +10,8 @@
     "orientation": "portrait-primary",
     "icons": [
         {
-            "src": "./icons/icons-198.png",
-            "sizes": "198x198",
+            "src": "./icons/icons-192.png",
+            "sizes": "192x192",
             "type": "image/png",
             "purpose": "any maskable"
         },
