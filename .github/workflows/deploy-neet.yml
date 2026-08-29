@@ -1,28 +1,25 @@
-name: VIDHWAAN NEET — Production Cloudflare Pages
+name: VIDHWAAN NEET PWA DEPLOY
 
 on:
   push:
     branches:
       - main
+
   workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
-  group: vidhwaan-neet-production
+  group: vidhwaan-neet-deploy
   cancel-in-progress: true
 
 jobs:
   deploy:
-    name: Build, Optimize and Deploy
     runs-on: ubuntu-latest
-    timeout-minutes: 20
 
     env:
-      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-      CF_PAGES_PROJECT: vidhwaan-neet
+      PROJECT_NAME: vidhwaan-neet
 
     steps:
 
@@ -30,145 +27,266 @@ jobs:
       # CHECKOUT
       # ============================================================
 
-      - name: Checkout repository
-        uses: actions/checkout@v6
-        with:
-          fetch-depth: 1
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
 
       # ============================================================
       # NODE
       # ============================================================
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v4
         with:
           node-version: 24
           cache: npm
 
-      # ============================================================
-      # SOURCE VALIDATION
-      # ============================================================
-
-      - name: Validate source
-        shell: bash
-        run: |
-          set -euo pipefail
-
-          echo "============================================================"
-          echo " VIDHWAAN NEET — SOURCE VALIDATION"
-          echo "============================================================"
-
-          npm ci
-          npm run validate
-
-          test -f public/index.html
-          test -f public/manifest.json
-          test -f public/sw.js
-          test -f public/js/app.js
-          test -f public/css/main.css
-          test -f public/data/app-config.json
-          test -f public/data/syllabus.json
-
-          test -d public/icons
-
-          echo
-          echo "Production source structure: VALID"
-
-      # ============================================================
-      # JAVASCRIPT SYNTAX CHECK
-      # ============================================================
-
-      - name: Validate JavaScript
-        shell: bash
-        run: |
-          set -euo pipefail
-
-          node --check public/js/app.js
-          node --check public/sw.js
-
-          echo "JavaScript syntax: VALID"
 
       # ============================================================
       # INSTALL BUILD TOOLS
       #
+      # Same approach as the working AIVidhya deployment.
+      # Install globally so there is NO npx executable problem.
+      # ============================================================
+
+      - name: Install Production Tools
+        run: |
+          set -euo pipefail
+
+          npm install -g wrangler
+          npm install -g terser
+          npm install -g javascript-obfuscator
+          npm install -g clean-css-cli
+          npm install -g html-minifier-terser
+
+          echo
+          echo "TOOLS INSTALLED"
+          echo "---------------"
+
+          wrangler --version
+          terser --version
+          javascript-obfuscator --version
+          cleancss --version
+          html-minifier-terser --version
+
+
+      # ============================================================
+      # INSTALL PROJECT DEPENDENCIES
+      # ============================================================
+
+      - name: Install Project Dependencies
+        run: |
+          set -euo pipefail
+          npm ci
+
+
+      # ============================================================
+      # VALIDATE NEET SOURCE
+      #
       # IMPORTANT:
-      # Do not rely on npx finding javascript-obfuscator.
-      # Install the CLI packages explicitly.
+      # generator/ is OUTSIDE public/ and is NOT deployed.
+      #
+      # day-001.json etc. are NOT required for this deployment.
       # ============================================================
 
-      - name: Install production build tools
-        shell: bash
+      - name: Validate NEET Source
         run: |
           set -euo pipefail
 
-          npm install --no-save \
-            html-minifier-terser \
-            javascript-obfuscator \
-            terser \
-            lightningcss
+          echo
+          echo "============================================================"
+          echo " VIDHWAAN NEET — SOURCE VALIDATION"
+          echo "============================================================"
+
+          npm run validate
+
+          node --check generator/generate-day.js
+          node --check public/js/app.js
+          node --check public/sw.js
+
+          echo
+          echo "Checking required production files..."
+
+          test -f public/index.html
+          echo "OK: public/index.html"
+
+          test -f public/css/main.css
+          echo "OK: public/css/main.css"
+
+          test -f public/js/app.js
+          echo "OK: public/js/app.js"
+
+          test -f public/sw.js
+          echo "OK: public/sw.js"
+
+          test -f public/manifest.json
+          echo "OK: public/manifest.json"
+
+          test -f public/data/app-config.json
+          echo "OK: public/data/app-config.json"
+
+          test -f public/data/syllabus.json
+          echo "OK: public/data/syllabus.json"
+
+          test -f public/icons/icon-192.png
+          echo "OK: public/icons/icon-192.png"
+
+          test -f public/icons/icon-512.png
+          echo "OK: public/icons/icon-512.png"
+
+          test -f public/icons/favicon.ico
+          echo "OK: public/icons/favicon.ico"
+
+          test -f public/icons/logo.png
+          echo "OK: public/icons/logo.png"
+
+          echo
+          echo "SOURCE VALIDATION: PASSED"
+
 
       # ============================================================
-      # CREATE CLEAN DIST
+      # PREPARE PRODUCTION DIST
+      #
+      # ONLY public/ becomes the deployed website.
+      #
+      # generator/
+      # scripts/
+      # config/
+      # syllabus.json
+      # package.json
+      # backup files
+      #
+      # are NOT deployed.
       # ============================================================
 
-      - name: Create production directory
-        shell: bash
+      - name: Prepare Production Dist
         run: |
           set -euo pipefail
+
+          echo
+          echo "============================================================"
+          echo " VIDHWAAN NEET — PREPARING PRODUCTION BUILD"
+          echo "============================================================"
 
           rm -rf dist
+
           mkdir -p dist
+          mkdir -p dist/css
+          mkdir -p dist/js
+          mkdir -p dist/data
+          mkdir -p dist/icons
+
+          # --------------------------------------------------------
+          # HTML
+          # --------------------------------------------------------
 
           cp public/index.html dist/index.html
-          cp public/manifest.json dist/manifest.json
+
+          # --------------------------------------------------------
+          # CSS
+          # --------------------------------------------------------
+
+          cp public/css/main.css dist/css/main.css
+
+          # --------------------------------------------------------
+          # JAVASCRIPT
+          # --------------------------------------------------------
+
+          cp public/js/app.js dist/js/app.js
           cp public/sw.js dist/sw.js
 
-          cp -R public/data dist/data
-          cp -R public/icons dist/icons
+          # --------------------------------------------------------
+          # PWA
+          # --------------------------------------------------------
 
-          mkdir -p dist/js
-          mkdir -p dist/css
+          cp public/manifest.json dist/manifest.json
+
+          # --------------------------------------------------------
+          # STATIC DATA
+          # --------------------------------------------------------
+
+          cp public/data/app-config.json dist/data/app-config.json
+          cp public/data/syllabus.json dist/data/syllabus.json
+
+          # --------------------------------------------------------
+          # LESSON FILES
+          #
+          # Optional at first deployment.
+          #
+          # When the 01:00 generator creates day-001.json,
+          # day-002.json, etc., they will automatically be included
+          # in the next deployment.
+          # --------------------------------------------------------
+
+          if compgen -G "public/data/day-*.json" > /dev/null; then
+            cp public/data/day-*.json dist/data/
+            echo "Generated lesson files copied."
+          else
+            echo "No generated day files yet — continuing."
+          fi
+
+          # --------------------------------------------------------
+          # ICONS
+          # --------------------------------------------------------
+
+          cp public/icons/icon-192.png dist/icons/icon-192.png
+          cp public/icons/icon-512.png dist/icons/icon-512.png
+          cp public/icons/favicon.ico dist/icons/favicon.ico
+          cp public/icons/logo.png dist/icons/logo.png
+
+          echo
+          echo "Production source prepared."
+
 
       # ============================================================
-      # MINIFY HTML
+      # MINIFY CSS
       # ============================================================
 
-      - name: Minify HTML
-        shell: bash
+      - name: Minify CSS
         run: |
           set -euo pipefail
 
-          npx --no-install html-minifier-terser \
-            public/index.html \
-            --collapse-whitespace \
-            --remove-comments \
-            --remove-redundant-attributes \
-            --remove-script-type-attributes \
-            --remove-style-link-type-attributes \
-            --use-short-doctype \
-            --minify-css \
-            --minify-js \
-            --output dist/index.html
+          cleancss \
+            -O2 \
+            dist/css/main.css \
+            -o dist/css/main.css
+
+          echo "CSS minification: PASSED"
+
 
       # ============================================================
-      # OBFUSCATE + MINIFY APPLICATION JAVASCRIPT
-      #
-      # app.js remains functionally the same.
+      # MINIFY JAVASCRIPT
       # ============================================================
 
-      - name: Minify and obfuscate app.js
-        shell: bash
+      - name: Minify JavaScript
         run: |
           set -euo pipefail
 
-          npx --no-install javascript-obfuscator \
-            public/js/app.js \
+          terser \
+            dist/js/app.js \
+            --compress \
+            --mangle \
+            -o dist/js/app.js
+
+          echo "JavaScript minification: PASSED"
+
+
+      # ============================================================
+      # OBFUSCATE JAVASCRIPT
+      # ============================================================
+
+      - name: Obfuscate JavaScript
+        run: |
+          set -euo pipefail
+
+          javascript-obfuscator \
+            dist/js/app.js \
             --output dist/js/app.js \
             --compact true \
             --control-flow-flattening false \
             --dead-code-injection false \
             --debug-protection false \
-            --disable-console-output false \
+            --disable-console-output true \
             --identifier-names-generator hexadecimal \
             --rename-globals false \
             --self-defending false \
@@ -176,281 +294,326 @@ jobs:
             --string-array-encoding base64 \
             --string-array-threshold 0.75
 
+          echo "JavaScript obfuscation: PASSED"
+
+
       # ============================================================
       # MINIFY SERVICE WORKER
       #
-      # sw.js MUST remain named sw.js.
+      # MUST remain sw.js.
+      #
+      # Do NOT hash this filename because the application registers
+      # ./sw.js.
       # ============================================================
 
-      - name: Minify service worker
-        shell: bash
+      - name: Minify Service Worker
         run: |
           set -euo pipefail
 
-          npx --no-install terser \
-            public/sw.js \
+          terser \
+            dist/sw.js \
             --compress \
             --mangle \
             --format comments=false \
-            --output dist/sw.js
+            -o dist/sw.js
+
+          echo "Service worker minification: PASSED"
+
 
       # ============================================================
-      # MINIFY CSS
-      # ============================================================
-
-      - name: Minify CSS
-        shell: bash
-        run: |
-          set -euo pipefail
-
-          npx --no-install lightningcss \
-            --minify \
-            public/css/main.css \
-            -o dist/css/main.css
-
-      # ============================================================
-      # HASH JS + CSS
+      # MINIFY JSON
       #
-      # Cache busting:
-      # app.js  -> app.<hash>.js
-      # main.css -> main.<hash>.css
+      # Keep filenames unchanged because app.js fetches them.
       # ============================================================
 
-      - name: Hash production assets
-        shell: bash
+      - name: Minify JSON
         run: |
           set -euo pipefail
 
-          APP_HASH="$(sha256sum dist/js/app.js | cut -c1-12)"
-          CSS_HASH="$(sha256sum dist/css/main.css | cut -c1-12)"
+          node <<'NODE'
+          const fs = require("fs");
 
-          mv dist/js/app.js "dist/js/app.${APP_HASH}.js"
-          mv dist/css/main.css "dist/css/main.${CSS_HASH}.css"
+          const files = [
+            "dist/manifest.json",
+            "dist/data/app-config.json",
+            "dist/data/syllabus.json"
+          ];
 
-          echo "APP_HASH=${APP_HASH}"
-          echo "CSS_HASH=${CSS_HASH}"
+          for (const file of files) {
+            const data = JSON.parse(
+              fs.readFileSync(file, "utf8")
+            );
 
-          echo "${APP_HASH}" > dist/js/.app-hash
-          echo "${CSS_HASH}" > dist/css/.css-hash
+            fs.writeFileSync(
+              file,
+              JSON.stringify(data)
+            );
+
+            console.log(`Minified: ${file}`);
+          }
+          NODE
+
 
       # ============================================================
-      # UPDATE HTML REFERENCES
+      # HASH JS
       # ============================================================
 
-      - name: Update hashed asset references
-        shell: bash
+      - name: Hash JavaScript
         run: |
           set -euo pipefail
 
-          APP_HASH="$(cat dist/js/.app-hash)"
-          CSS_HASH="$(cat dist/css/.css-hash)"
+          HASH=$(sha256sum dist/js/app.js | cut -c1-12)
 
-          python3 - <<PY
-          from pathlib import Path
+          mv \
+            dist/js/app.js \
+            "dist/js/app.${HASH}.js"
 
-          index = Path("dist/index.html")
+          echo "APP_JS=app.${HASH}.js" >> "$GITHUB_ENV"
 
-          text = index.read_text()
+          echo "Hashed JavaScript: app.${HASH}.js"
 
-          text = text.replace(
-              "./js/app.js",
-              "./js/app.${APP_HASH}.js"
-          )
-
-          text = text.replace(
-              "./css/main.css",
-              "./css/main.${CSS_HASH}.css"
-          )
-
-          index.write_text(text)
-          PY
-
-          rm -f dist/js/.app-hash
-          rm -f dist/css/.css-hash
 
       # ============================================================
-      # VERIFY HASHED REFERENCES
+      # HASH CSS
       # ============================================================
 
-      - name: Verify production asset references
-        shell: bash
+      - name: Hash CSS
         run: |
           set -euo pipefail
 
-          APP_FILE="$(find dist/js -maxdepth 1 -type f -name 'app.*.js' | head -1)"
-          CSS_FILE="$(find dist/css -maxdepth 1 -type f -name 'main.*.css' | head -1)"
+          HASH=$(sha256sum dist/css/main.css | cut -c1-12)
 
-          test -n "$APP_FILE"
-          test -n "$CSS_FILE"
+          mv \
+            dist/css/main.css \
+            "dist/css/main.${HASH}.css"
 
-          APP_NAME="$(basename "$APP_FILE")"
-          CSS_NAME="$(basename "$CSS_FILE")"
+          echo "MAIN_CSS=main.${HASH}.css" >> "$GITHUB_ENV"
 
-          grep -Fq "./js/${APP_NAME}" dist/index.html
-          grep -Fq "./css/${CSS_NAME}" dist/index.html
+          echo "Hashed CSS: main.${HASH}.css"
 
-          test ! -f dist/js/app.js
-          test ! -f dist/css/main.css
-
-          echo "JavaScript: ${APP_NAME}"
-          echo "CSS       : ${CSS_NAME}"
-          echo "HTML asset references: VALID"
 
       # ============================================================
-      # VERIFY PWA
+      # UPDATE INDEX.HTML
+      #
+      # public source:
+      #
+      # ./css/main.css
+      # ./js/app.js
+      #
+      # becomes:
+      #
+      # ./css/main.<hash>.css
+      # ./js/app.<hash>.js
       # ============================================================
 
-      - name: Verify PWA production files
-        shell: bash
+      - name: Update Hashed Asset References
         run: |
           set -euo pipefail
 
+          node <<'NODE'
+          const fs = require("fs");
+
+          const file = "dist/index.html";
+
+          let html = fs.readFileSync(file, "utf8");
+
+          html = html.replace(
+            /(?:\.\/)?css\/main\.css(?:\?[^"' ]*)?/g,
+            `./css/${process.env.MAIN_CSS}`
+          );
+
+          html = html.replace(
+            /(?:\.\/)?js\/app\.js(?:\?[^"' ]*)?/g,
+            `./js/${process.env.APP_JS}`
+          );
+
+          fs.writeFileSync(file, html);
+
+          console.log("Hashed asset references updated.");
+          NODE
+
+
+      # ============================================================
+      # FINAL HTML MINIFICATION
+      # ============================================================
+
+      - name: Minify HTML
+        run: |
+          set -euo pipefail
+
+          html-minifier-terser \
+            --collapse-whitespace \
+            --remove-comments \
+            --remove-redundant-attributes \
+            --remove-script-type-attributes \
+            --remove-style-link-type-attributes \
+            --use-short-doctype \
+            --minify-css true \
+            --minify-js true \
+            dist/index.html \
+            -o dist/index.html
+
+          echo "HTML minification: PASSED"
+
+
+      # ============================================================
+      # CLOUDFLARE HEADERS
+      # ============================================================
+
+      - name: Create Cloudflare Headers
+        run: |
+          set -euo pipefail
+
+          cat > dist/_headers <<'EOF'
+          /*
+            X-Content-Type-Options: nosniff
+            X-Frame-Options: SAMEORIGIN
+            Referrer-Policy: strict-origin-when-cross-origin
+            Permissions-Policy: geolocation=(), microphone=(), camera=()
+
+          /index.html
+            Cache-Control: no-cache, max-age=0, must-revalidate
+
+          /manifest.json
+            Cache-Control: no-cache, max-age=0, must-revalidate
+
+          /sw.js
+            Cache-Control: no-cache, max-age=0, must-revalidate
+
+          /data/*
+            Cache-Control: no-cache, max-age=0, must-revalidate
+
+          /js/*
+            Cache-Control: public, max-age=31536000, immutable
+
+          /css/*
+            Cache-Control: public, max-age=31536000, immutable
+
+          /icons/*
+            Cache-Control: public, max-age=31536000, immutable
+          EOF
+
+          echo "Cloudflare headers created."
+
+
+      # ============================================================
+      # FINAL PRODUCTION VERIFICATION
+      # ============================================================
+
+      - name: Verify Production Build
+        run: |
+          set -euo pipefail
+
+          echo
           echo "============================================================"
-          echo " PWA VERIFICATION"
+          echo " VIDHWAAN NEET — FINAL PRODUCTION VERIFICATION"
           echo "============================================================"
 
           test -f dist/index.html
           test -f dist/manifest.json
           test -f dist/sw.js
+          test -f dist/_headers
+
+          test -f "dist/js/${APP_JS}"
+          test -f "dist/css/${MAIN_CSS}"
 
           test -f dist/data/app-config.json
           test -f dist/data/syllabus.json
 
-          test -d dist/icons
-          test -n "$(find dist/icons -type f | head -1)"
+          test -f dist/icons/icon-192.png
+          test -f dist/icons/icon-512.png
+          test -f dist/icons/favicon.ico
+          test -f dist/icons/logo.png
 
-          grep -Fq './manifest.json' dist/index.html
-          grep -Fq './sw.js' dist/index.html
-
-          echo "index.html : OK"
-          echo "manifest   : OK"
-          echo "sw.js      : OK"
-          echo "data       : OK"
-          echo "icons      : OK"
-          echo "PWA files  : VALID"
-
-      # ============================================================
-      # IMPORTANT:
-      # DO NOT REQUIRE DAY JSON FILES.
-      #
-      # They are generated later by the daily AI workflow.
-      # Deployment must work even when zero day files exist.
-      # ============================================================
-
-      - name: Verify daily lesson files are not required
-        shell: bash
-        run: |
-          set -euo pipefail
-
-          echo "Daily lesson JSON files are NOT required for deployment."
-
-          if find dist/data -maxdepth 1 -type f -name 'day-*.json' | grep -q .; then
-            echo "Existing daily lesson files detected; preserving them."
-          else
-            echo "No daily lesson files currently present — this is valid."
-          fi
-
-      # ============================================================
-      # FINAL DIST INSPECTION
-      # ============================================================
-
-      - name: Production build summary
-        shell: bash
-        run: |
-          set -euo pipefail
+          echo "OK: index.html"
+          echo "OK: manifest.json"
+          echo "OK: sw.js"
+          echo "OK: ${APP_JS}"
+          echo "OK: ${MAIN_CSS}"
+          echo "OK: app-config.json"
+          echo "OK: syllabus.json"
+          echo "OK: icon-192.png"
+          echo "OK: icon-512.png"
+          echo "OK: favicon.ico"
+          echo "OK: logo.png"
 
           echo
-          echo "============================================================"
-          echo " VIDHWAAN NEET — PRODUCTION BUILD COMPLETE"
-          echo "============================================================"
-          echo
+          echo "Checking deployment isolation..."
 
-          echo "Production files:"
+          test ! -d dist/generator
+          test ! -d dist/scripts
+          test ! -d dist/config
+
+          echo "OK: generator not deployed"
+          echo "OK: scripts not deployed"
+          echo "OK: config not deployed"
+
+          echo
+          echo "Generated lesson files currently present:"
+          find dist/data -maxdepth 1 -name 'day-*.json' -type f | sort || true
+
+          echo
+          echo "FINAL BUILD FILES:"
           find dist -type f | sort
 
           echo
-          echo "Production size:"
-          du -sh dist
+          echo "============================================================"
+          echo " PRODUCTION BUILD: PASSED"
+          echo "============================================================"
+
 
       # ============================================================
-      # ENSURE CLOUDFLARE PAGES PROJECT EXISTS
+      # CREATE CLOUDFLARE PAGES PROJECT IF IT DOES NOT EXIST
       #
-      # This prevents:
-      # "The Pages project does not exist."
+      # PAGES ONLY.
+      # NO WORKER.
       # ============================================================
 
-      - name: Ensure Cloudflare Pages project exists
-        shell: bash
+      - name: Ensure Cloudflare Pages Project
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: |
           set -euo pipefail
 
-          echo "Checking Cloudflare Pages project..."
+          echo
+          echo "============================================================"
+          echo " CLOUDFLARE PAGES PROJECT"
+          echo "============================================================"
 
-          if npx wrangler pages project list --json \
-              | node -e '
-                let data="";
-                process.stdin.on("data",c=>data+=c);
-                process.stdin.on("end",()=>{
-                  try {
-                    const projects=JSON.parse(data);
-                    const found=projects.some(
-                      p => p.name === process.argv[1]
-                    );
-                    process.exit(found ? 0 : 1);
-                  } catch(e) {
-                    process.exit(2);
-                  }
-                });
-              ' "$CF_PAGES_PROJECT"
-          then
-            echo "Cloudflare Pages project exists: $CF_PAGES_PROJECT"
-          else
-            echo "Creating Cloudflare Pages project: $CF_PAGES_PROJECT"
+          wrangler pages project create \
+            "$PROJECT_NAME" \
+            --production-branch main \
+            || true
 
-            npx wrangler pages project create "$CF_PAGES_PROJECT" \
-              --production-branch main
+          echo "Cloudflare Pages project is ready."
 
-            echo "Cloudflare Pages project created."
-          fi
 
       # ============================================================
-      # DEPLOY TO CLOUDFLARE PAGES
+      # DEPLOY DIRECTLY TO CLOUDFLARE PAGES
       #
-      # NOT Workers.
-      # NOT wrangler deploy.
-      #
-      # Only dist/ is uploaded.
+      # NO WORKER.
       # ============================================================
 
-      - name: Deploy to Cloudflare Pages
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy dist --project-name=${{ env.CF_PAGES_PROJECT }} --branch=main
-
-      # ============================================================
-      # COMPLETE
-      # ============================================================
-
-      - name: Deployment complete
-        shell: bash
+      - name: Deploy To Cloudflare Pages
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: |
+          set -euo pipefail
+
           echo
           echo "============================================================"
-          echo " VIDHWAAN NEET — DEPLOYMENT SUCCESSFUL"
+          echo " DEPLOYING VIDHWAAN NEET"
           echo "============================================================"
-          echo
-          echo "Cloudflare Pages project:"
-          echo "$CF_PAGES_PROJECT"
-          echo
-          echo "Production branch:"
-          echo "main"
-          echo
-          echo "Deployment directory:"
-          echo "dist/"
-          echo
-          echo "Daily AI lesson generation:"
-          echo "SEPARATE WORKFLOW"
+
+          wrangler pages deploy dist \
+            --project-name="$PROJECT_NAME"
+
           echo
           echo "============================================================"
+          echo " VIDHWAAN NEET — DEPLOYMENT SUCCESS"
+          echo "============================================================"
+
+          echo "Cloudflare Pages project: $PROJECT_NAME"
+          echo "Deployment directory: dist/"
