@@ -1,0 +1,180 @@
+{
+  "day": 1,
+  "title": "The Living World – Day 1",
+  "subject": "Biology",
+  "unit": "Diversity in the Living World",
+  "chapter": "The Living World",
+  "neetFocus": [
+    "NCERT-based definitions and statements",
+    "Characteristics of living organisms",
+    "Consciousness and response to stimuli",
+    "Taxonomic hierarchy order",
+    "Binomial nomenclature",
+    "Taxonomical aids"
+  ],
+  "learningOutcome": [
+    "Explain why organisms are classified as living.",
+    "List and describe the seven characteristics of life.",
+    "Understand the role of consciousness and response to stimuli.",
+    "State the taxonomic hierarchy from species to kingdom.",
+    "Apply the rules of binomial nomenclature.",
+    "Identify major taxonomic aids used by biologists."
+  ],
+  "sections": [
+    {
+      "topic": "What is living",
+      "heading": "Living vs Non‑living",
+      "content": "Life is a set of processes that distinguish living organisms from inanimate matter. Living entities show a combination of traits such as growth, reproduction, metabolism, cellular organization, response to stimuli and consciousness. Non‑living things may exhibit one or two of these traits (e.g., fire shows metabolism) but never the complete set.",
+      "subsections": [
+        {
+          "heading": "Living versus non‑living",
+          "content": "Living: cells, metabolism, growth, reproduction, response, adaptation, consciousness. Non‑living: lack cells, no metabolism, no intrinsic growth or reproduction."
+        },
+        {
+          "heading": "Why no single characteristic independently defines life",
+          "content": "Each characteristic can be found in non‑living systems (e.g., crystals grow, viruses replicate only inside hosts). Therefore, the definition of life relies on the *combined* presence of all characteristics."
+        }
+      ],
+      "keyPoints": [
+        "Life is a *combination* of traits, not a single trait.",
+        "All living organisms are cellular.",
+        "Non‑living entities may mimic one characteristic but never all."
+      ],
+      "neetTips": [
+        "Remember NCERT line: “Living organisms are characterized by a set of seven traits.”",
+        "In MCQs, if an option mentions only one trait, it is usually wrong."
+      ]
+    },
+    {
+      "topic": "Characteristics of living organisms",
+      "heading": "Defining Features",
+      "content": "The seven accepted characteristics of life are: Growth, Reproduction, Metabolism, Cellular organization, Response to stimuli, Adaptation (evolutionary change) and Consciousness. These collectively prove that an entity is alive.",
+      "subsections": [
+        {
+          "heading": "Growth",
+          "content": "Increase in size and number of cells. Example: a seedling elongates and adds new cells."
+        },
+        {
+          "heading": "Reproduction",
+          "content": "Production of new individuals. Can be sexual (gamete fusion) or asexual (binary fission, budding)."
+        },
+        {
+          "heading": "Metabolism",
+          "content": "All chemical reactions that provide energy and building blocks. Includes catabolism (breakdown) and anabolism (synthesis)."
+        },
+        {
+          "heading": "Cellular organization",
+          "content": "All living things are composed of one or more cells, the basic unit of life."
+        },
+        {
+          "heading": "Response to stimuli",
+          "content": "Ability to detect and react to changes in the environment (e.g., phototropism in plants)."
+        },
+        {
+          "heading": "Consciousness",
+          "content": "Awareness and ability to process information; higher animals exhibit it clearly, but even simple organisms show a primitive form of responsiveness."
+        }
+      ],
+      "keyPoints": [
+        "All seven traits must be present for an entity to be considered alive.",
+        "Metabolic reactions are the most direct evidence of life.",
+        "Consciousness is a *defining* property for higher organisms."
+      ],
+      "neetTips": [
+        "NEET often asks to identify the *missing* characteristic in a list; recall the complete set.",
+        "Link response to stimuli with consciousness – both are neuro‑behavioral traits."
+      ]
+    },
+    {
+      "topic": "Taxonomy and Nomenclature",
+      "heading": "Classification of Life",
+      "content": "Classification (taxonomy) groups organisms based on similarities and evolutionary relationships. It provides a universal language (nomenclature) for scientists worldwide.",
+      "subsections": [
+        {
+          "heading": "Need for classification",
+          "content": "Over 8 million known species demand an organized system to study, communicate, and conserve biodiversity."
+        },
+        {
+          "heading": "Taxonomic hierarchy",
+          "content": "Species → Genus → Family → Order → Class → Phylum → Kingdom. This order is fixed and appears in all textbooks."
+        },
+        {
+          "heading": "Binomial nomenclature",
+          "content": "Developed by Linnaeus. Each species gets a two‑part Latin name: *Genus* (capitalised) + *specific epithet* (lowercase). Example: *Homo sapiens*. Rules: italicise or underline, author’s name may follow, no abbreviations in the first mention."
+        },
+        {
+          "heading": "Taxonomical aids",
+          "content": "Herbarium – dried plant specimens; Botanical gardens – living collections; Museums – preserved animal specimens; Zoological parks – live animal collections; Identification keys – dichotomous or multi‑access keys for species determination."
+        }
+      ],
+      "keyPoints": [
+        "Hierarchy always follows the order: Species → Genus → Family → Order → Class → Phylum → Kingdom.",
+        "Binomial name is always italicised; genus capitalised, species lowercase.",
+        "Taxonomic aids help in accurate identification and preservation of biodiversity."
+      ],
+      "neetTips": [
+        "In NEET, the hierarchy is frequently asked as a *sequence* question; memorize the order.",
+        "Remember that the specific epithet alone is *not* a species name."
+      ]
+    }
+  ],
+  "mcqs": [
+    {
+      "question": "Which of the following statements best defines a living organism?",
+      "options": [
+        "It shows at least one characteristic such as growth or metabolism.",
+        "It possesses a cellular organization and exhibits all seven characteristics of life.",
+        "It can reproduce only through sexual means.",
+        "It must be capable of conscious thought."
+      ],
+      "correctAnswer": "B",
+      "explanation": "A living organism must have cells and display all seven traits (growth, reproduction, metabolism, cellular organization, response, adaptation, consciousness)."
+    },
+    {
+      "question": "The correct sequence of taxonomic ranks from the most specific to the most inclusive is:",
+      "options": [
+        "Kingdom, Phylum, Class, Order, Family, Genus, Species",
+        "Species, Genus, Family, Order, Class, Phylum, Kingdom",
+        "Genus, Species, Family, Order, Class, Phylum, Kingdom",
+        "Species, Family, Genus, Order, Class, Phylum, Kingdom"
+      ],
+      "correctAnswer": "B",
+      "explanation": "The hierarchy is Species → Genus → Family → Order → Class → Phylum → Kingdom."
+    },
+    {
+      "question": "In the binomial name *Rosa chinensis*, which part is the specific epithet?",
+      "options": [
+        "Rosa",
+        "chinensis",
+        "Rosa chinensis",
+        "Both words together"
+      ],
+      "correctAnswer": "B",
+      "explanation": "The second word, *chinensis*, is the specific epithet; the first word is the genus."
+    },
+    {
+      "question": "Which of the following is NOT a taxonomic aid used by biologists?",
+      "options": [
+        "Herbarium",
+        "Botanical garden",
+        "Microscope",
+        "Dichotomous key"
+      ],
+      "correctAnswer": "C",
+      "explanation": "A microscope is a tool for observation, not a taxonomic aid for classification or identification."
+    },
+    {
+      "question": "A plant that grows taller when exposed to light is demonstrating:",
+      "options": [
+        "Metabolism",
+        "Consciousness",
+        "Response to stimuli",
+        "Reproduction"
+      ],
+      "correctAnswer": "C",
+      "explanation": "Phototropism is a classic example of response to external stimuli."
+    }
+  ],
+  "courseDate": "2026-08-30",
+  "publishAt": "2026-08-30T06:00:00+05:30"
+}
