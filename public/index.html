@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
     <meta charset="UTF-8">
 
     <meta
         name="viewport"
-        content="width=device-width, initial-scale=1, viewport-fit=cover"
+        content="width=device-width, initial-scale=1.0, viewport-fit=cover"
     >
 
     <meta
@@ -46,21 +45,13 @@
 
     <title>VIDHWAAN NEET — 365-Day Preparation</title>
 
-
-    <!-- =====================================================
-         PWA
-         ===================================================== -->
-
+    <!-- PWA -->
     <link
         rel="manifest"
         href="./manifest.json"
     >
 
-
-    <!-- =====================================================
-         ICONS
-         ===================================================== -->
-
+    <!-- App icon -->
     <link
         rel="icon"
         type="image/png"
@@ -72,23 +63,16 @@
         href="./icons/icon-512.png"
     >
 
-
-    <!-- =====================================================
-         MAIN STYLESHEET
-         ===================================================== -->
-
+    <!-- Main CSS -->
     <link
         rel="stylesheet"
         href="./css/main.css"
     >
-
 </head>
-
 
 <body>
 
-<div id="app" class="app-shell">
-
+<div id="app">
 
     <!-- =====================================================
          HEADER
@@ -98,57 +82,42 @@
 
         <div class="header-inner">
 
-            <a
-                href="./"
+            <button
                 id="brand-home"
                 class="brand"
-                aria-label="VIDHWAAN NEET Home"
+                type="button"
+                aria-label="VIDHWAAN NEET home"
             >
 
-                <div class="brand-logo">
-
+                <span class="brand-logo">
                     <img
                         src="./icons/logo.png"
                         alt="VIDHWAAN NEET"
                         width="52"
                         height="52"
                     >
-
-                </div>
-
-
-                <div class="brand-text">
-
-                    <div class="brand-title">
-                        VIDHWAAN NEET
-                    </div>
-
-                    <div class="brand-subtitle">
-                        365-Day NEET Preparation
-                    </div>
-
-                </div>
-
-            </a>
-
-
-            <!-- DAILY RELEASE STATUS -->
-
-            <div
-                id="release-status"
-                class="release-status"
-                aria-label="Course release status"
-            >
-
-                <span
-                    class="status-dot"
-                    aria-hidden="true"
-                ></span>
-
-                <span id="release-status-text">
-                    Checking today's lesson…
                 </span>
 
+                <span class="brand-text">
+
+                    <span class="brand-title">
+                        VIDHWAAN NEET
+                    </span>
+
+                    <span class="brand-subtitle">
+                        365-Day NEET Preparation
+                    </span>
+
+                </span>
+
+            </button>
+
+            <div
+                id="release-status-text"
+                class="release-status"
+                aria-live="polite"
+            >
+                Loading course...
             </div>
 
         </div>
@@ -156,227 +125,207 @@
     </header>
 
 
-
     <!-- =====================================================
-         MAIN APPLICATION
+         MAIN
          ===================================================== -->
 
     <main class="main-container">
 
 
         <!-- =================================================
-             HERO
+             HOME / 365 DAY GRID
              ================================================= -->
 
         <section
-            class="hero-card"
+            id="days-view"
+            class="days-view"
             aria-labelledby="course-title"
         >
 
-            <div class="hero-content">
+            <!-- HERO -->
 
-                <div class="eyebrow">
-                    VIDHWAAN • NEET PREPARATION
-                </div>
+            <div class="hero-card">
 
+                <div class="hero-content">
 
-                <h1 id="course-title">
-                    Master NEET
-                    <span>One Day at a Time.</span>
-                </h1>
+                    <span class="eyebrow">
+                        VIDHWAAN NEET
+                    </span>
 
-
-                <p>
-                    Learn every concept clearly, strengthen it
-                    with NEET-level practice, and progress through
-                    your complete 365-day preparation journey.
-                </p>
-
-            </div>
-
-
-            <div
-                class="hero-mark"
-                aria-hidden="true"
-            >
-
-                <div class="hero-ring hero-ring-one"></div>
-
-                <div class="hero-ring hero-ring-two"></div>
-
-                <div class="hero-ring hero-ring-three"></div>
-
-                <div class="hero-gold-dot"></div>
-
-            </div>
-
-        </section>
-
-
-
-        <!-- =================================================
-             365-DAY JOURNEY HEADER
-             ================================================= -->
-
-        <section
-            class="section-heading"
-            aria-labelledby="journey-title"
-        >
-
-            <div>
-
-                <h2 id="journey-title">
-                    365-Day Journey
-                </h2>
-
-                <p id="syllabus-summary">
-                    Preparing your daily NEET journey…
-                </p>
-
-            </div>
-
-
-            <div
-                id="today-badge"
-                class="today-badge"
-                aria-live="polite"
-            >
-
-                <span
-                    class="today-badge-dot"
-                    aria-hidden="true"
-                ></span>
-
-                <span id="today-badge-text">
-                    Checking…
-                </span>
-
-            </div>
-
-        </section>
-
-
-
-        <!-- =================================================
-             DAY GRID
-             ================================================= -->
-
-        <section
-            class="course-card"
-            aria-labelledby="days-title"
-        >
-
-            <div class="course-header">
-
-                <div>
-
-                    <h2 id="days-title">
-                        Course Days
-                    </h2>
+                    <h1 id="course-title">
+                        365-Day NEET Preparation
+                    </h1>
 
                     <p>
-                        One lesson becomes available every day
-                        at 6:00 AM IST.
+                        Learn every day. Master the concepts.
+                        Practice with NEET-level MCQs.
                     </p>
 
                 </div>
+
+                <div
+                    id="today-badge"
+                    class="today-badge"
+                    aria-live="polite"
+                >
+                    Loading...
+                </div>
+
+            </div>
+
+
+            <!-- COURSE DAYS -->
+
+            <section
+                class="course-days-section"
+                aria-labelledby="days-title"
+            >
+
+                <div class="section-heading">
+
+                    <div>
+
+                        <span class="section-kicker">
+                            YOUR NEET JOURNEY
+                        </span>
+
+                        <h2 id="days-title">
+                            Course Days
+                        </h2>
+
+                        <p>
+                            A new lesson becomes available every day
+                            at 6:00 AM IST.
+                        </p>
+
+                    </div>
+
+                    <div
+                        id="released-days-count"
+                        class="days-count"
+                        aria-live="polite"
+                    >
+                        0 / 365 available
+                    </div>
+
+                </div>
+
+
+                <!--
+                    app.js will generate ALL 365 circles here.
+
+                    IMPORTANT:
+                    Nothing opens automatically.
+
+                    Example:
+                    30 Aug 2026 → Day 1 enabled
+                    31 Aug 2026 → Day 1 + Day 2 enabled
+                    01 Sep 2026 → Day 1 + Day 2 + Day 3 enabled
+
+                    Future days remain locked.
+                -->
+
+                <div
+                    id="day-grid"
+                    class="day-grid"
+                    aria-label="365 NEET course days"
+                ></div>
+
+
+                <!-- LEGEND -->
+
+                <div class="days-legend">
+
+                    <div class="legend-item">
+
+                        <span
+                            class="legend-dot available"
+                            aria-hidden="true"
+                        ></span>
+
+                        <span>
+                            Available
+                        </span>
+
+                    </div>
+
+                    <div class="legend-item">
+
+                        <span
+                            class="legend-dot locked"
+                            aria-hidden="true"
+                        ></span>
+
+                        <span>
+                            Locked
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </section>
+
+
+        <!-- =================================================
+             LESSON VIEW
+             ================================================= -->
+
+        <section
+            id="lesson-view"
+            class="lesson-view"
+            hidden
+            aria-labelledby="lesson-title"
+        >
+
+            <!-- BACK TO DAYS -->
+
+            <div class="lesson-navigation">
+
+                <button
+                    id="back-button"
+                    class="back-button"
+                    type="button"
+                >
+                    <span aria-hidden="true">←</span>
+                    <span>All Days</span>
+                </button>
+
+                <span
+                    id="lesson-day-badge"
+                    class="lesson-day-badge"
+                >
+                    DAY 1
+                </span>
 
             </div>
 
 
             <!--
-                IMPORTANT
+                app.js will render the COMPLETE selected JSON
+                into this container.
 
-                app.js creates all 365 day circles here.
+                RAW JSON MUST NEVER be displayed.
 
-                Release schedule:
+                The renderer will create:
 
-                30 Aug 2026 06:00 IST → Day 1
-                31 Aug 2026 06:00 IST → Day 2
-                01 Sep 2026 06:00 IST → Day 3
-                ...
-                29 Aug 2027 06:00 IST → Day 365
-
-                Future days are disabled.
-                Released days are clickable.
+                1. Day heading
+                2. Subject / chapter
+                3. Learning outcome
+                4. NEET Focus
+                5. Topic cards
+                6. Concept explanations
+                7. Key points
+                8. NEET tips
+                9. MCQ cards
+                10. Clickable A/B/C/D options
+                11. Green correct state
+                12. Red wrong state
+                13. Correct answer
+                14. Explanation
             -->
-
-            <div
-                id="day-grid"
-                class="days-grid"
-                aria-label="365 NEET course days"
-            ></div>
-
-
-            <!-- =================================================
-                 DAY LEGEND
-                 ================================================= -->
-
-            <div
-                class="days-legend"
-                aria-label="Day availability"
-            >
-
-                <div class="legend-item">
-
-                    <span
-                        class="legend-dot active"
-                        aria-hidden="true"
-                    ></span>
-
-                    <span>
-                        Available
-                    </span>
-
-                </div>
-
-
-                <div class="legend-item">
-
-                    <span
-                        class="legend-dot"
-                        aria-hidden="true"
-                    ></span>
-
-                    <span>
-                        Coming soon
-                    </span>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-
-        <!-- =================================================
-             LESSON VIEW
-             =================================================
-
-             Hidden when the app starts.
-
-             It becomes visible ONLY after the student
-             clicks an available day.
-
-             No day.html is required.
-
-             app.js loads:
-
-                 ./data/day-001.json
-                 ./data/day-002.json
-                 ./data/day-003.json
-                 ...
-
-             and renders the JSON here.
-             ================================================= -->
-
-        <section
-            id="lesson-view"
-            class="lesson-view hidden"
-            aria-live="polite"
-            aria-labelledby="lesson-page-title"
-        >
 
             <div
                 id="lesson-container"
@@ -386,16 +335,15 @@
         </section>
 
 
-
         <!-- =================================================
-             LOADING STATE
+             LOADING
              ================================================= -->
 
-        <div
+        <section
             id="loading-state"
-            class="loading-state hidden"
+            class="loading-state"
+            hidden
             aria-live="polite"
-            aria-busy="true"
         >
 
             <div class="loading-card">
@@ -405,32 +353,27 @@
                     aria-hidden="true"
                 ></div>
 
+                <h2>
+                    Loading lesson
+                </h2>
 
-                <div>
-
-                    <div class="loading-title">
-                        Loading today's lesson…
-                    </div>
-
-                    <div class="loading-text">
-                        Preparing your NEET learning experience.
-                    </div>
-
-                </div>
+                <p>
+                    Preparing your NEET content...
+                </p>
 
             </div>
 
-        </div>
-
+        </section>
 
 
         <!-- =================================================
-             ERROR STATE
+             ERROR
              ================================================= -->
 
-        <div
+        <section
             id="error-state"
-            class="error-state hidden"
+            class="error-state"
+            hidden
             role="alert"
             aria-live="assertive"
         >
@@ -444,38 +387,34 @@
                     !
                 </div>
 
-
                 <h2>
-                    Unable to load today's lesson
+                    Unable to load lesson
                 </h2>
-
 
                 <p id="error-message">
                     Please try again.
                 </p>
 
-
                 <button
                     id="retry-button"
-                    type="button"
                     class="retry-button"
+                    type="button"
                 >
                     Try Again
                 </button>
 
             </div>
 
-        </div>
+        </section>
 
     </main>
-
 
 
     <!-- =====================================================
          FOOTER
          ===================================================== -->
 
-    <footer class="app-footer">
+    <footer class="site-footer">
 
         <div class="footer-inner">
 
@@ -483,44 +422,43 @@
 
                 <img
                     src="./icons/logo.png"
-                    alt=""
-                    width="40"
-                    height="40"
+                    alt="VIDHWAAN"
+                    width="38"
+                    height="38"
                 >
 
                 <div>
 
                     <strong>
-                        VIDHWAAN NEET
+                        VIDHWAAN
                     </strong>
 
                     <span>
-                        365-Day NEET Preparation
+                        NEET Preparation
                     </span>
 
                 </div>
 
             </div>
 
-
-            <div class="footer-copy">
-                © VIDHWAAN
-            </div>
+            <span>
+                365-Day NEET Preparation
+            </span>
 
         </div>
 
     </footer>
 
 
-
     <!-- =====================================================
-         PWA INSTALL BUTTON
+         PWA INSTALL
          ===================================================== -->
 
     <button
         id="install-button"
+        class="install-button"
         type="button"
-        class="install-button hidden"
+        hidden
         aria-label="Install VIDHWAAN NEET"
     >
 
@@ -531,8 +469,16 @@
             ↓
         </span>
 
-        <span>
-            Install App
+        <span class="install-text">
+
+            <strong>
+                Install App
+            </strong>
+
+            <small>
+                Install VIDHWAAN NEET
+            </small>
+
         </span>
 
     </button>
@@ -540,22 +486,14 @@
 </div>
 
 
-
 <!-- =========================================================
      APPLICATION JAVASCRIPT
-     =========================================================
-
-     app.js is intentionally loaded after the complete HTML
-     application structure exists.
-
-     app.js NEVER loads syllabus.json.
      ========================================================= -->
 
 <script
     src="./js/app.js"
     defer
 ></script>
-
 
 </body>
 </html>
