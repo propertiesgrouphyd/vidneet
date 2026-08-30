@@ -47,7 +47,6 @@ const DEFAULT_CONFIG = {
     totalDays: 365,
     programStartDateIST: "2026-08-30",
     dailyActivationHourIST: 6,
-    contentDirectory: "data/days",
     timezone: "Asia/Kolkata"
 };
 
@@ -66,7 +65,7 @@ const state = {
 
     activationHour: 6,
 
-    contentDirectory: "data/days",
+    contentDirectory: "data",
 
     releasedDay: 0,
 
@@ -297,11 +296,7 @@ function applyConfiguration() {
             )
         );
 
-    state.contentDirectory =
-        normalizeDirectory(
-            state.config.contentDirectory ||
-            "data/days"
-        );
+ 
 
     const startDate =
         state.config.programStartDateIST ||
@@ -714,14 +709,9 @@ function renderDayGrid() {
    DAILY JSON FILE PATH
    ============================================================ */
 
-function getPrimaryDayPath(
-    dayNumber
-) {
+function getPrimaryDayPath(dayNumber) {
 
-    const filename =
-        `day-${String(dayNumber).padStart(3, "0")}.json`;
-
-    return `${state.contentDirectory}/${filename}`;
+    return `./data/day-${String(dayNumber).padStart(3, "0")}.json`;
 }
 
 
@@ -847,104 +837,40 @@ async function loadDay(
    FETCH DAILY JSON
    ============================================================ */
 
-async function fetchDayJSON(
-    dayNumber
-) {
+async function fetchDayJSON(dayNumber) {
 
-    const primaryPath =
-        getPrimaryDayPath(
-            dayNumber
-        );
+    const path =
+        `./data/day-${String(dayNumber).padStart(3, "0")}.json`;
 
+    console.log(
+        `[VIDHWAAN NEET] Loading daily JSON: ${path}`
+    );
 
-    /*
-     * PRIMARY PATH
-     *
-     * app-config.json currently points to:
-     *
-     * data/days
-     */
-
-    try {
-
-        const response =
-            await fetch(
-                `${primaryPath}?v=${getCacheVersion()}`,
-                {
-                    cache: "no-store"
-                }
-            );
-
-        if (response.ok) {
-
-            return await response.json();
-        }
-
-        console.warn(
-            `[VIDHWAAN NEET] Primary daily path failed: ${primaryPath}`
-        );
-
-    } catch (error) {
-
-        console.warn(
-            `[VIDHWAAN NEET] Primary daily request failed: ${primaryPath}`,
-            error
-        );
-    }
-
-
-    /*
-     * FALLBACK PATH
-     *
-     * This protects the deployment if the files are stored
-     * directly under data/ instead of data/days/.
-     *
-     * Example:
-     *
-     * data/day-001.json
-     */
-
-    const fallbackPath =
-        `data/day-${String(dayNumber).padStart(3, "0")}.json`;
-
-
-    /*
-     * Do not request the same URL twice.
-     */
-
-    if (
-        fallbackPath ===
-        primaryPath
-    ) {
-
-        throw new Error(
-            `Daily JSON unavailable: ${primaryPath}`
-        );
-    }
-
-
-    const fallbackResponse =
+    const response =
         await fetch(
-            `${fallbackPath}?v=${getCacheVersion()}`,
+            `${path}?v=${getCacheVersion()}`,
             {
                 cache: "no-store"
             }
         );
 
-
-    if (
-        !fallbackResponse.ok
-    ) {
+    if (!response.ok) {
 
         throw new Error(
-            `Daily JSON unavailable: ${primaryPath} and ${fallbackPath}`
+            `Daily JSON HTTP ${response.status}: ${path}`
         );
     }
 
+    const lesson =
+        await response.json();
 
-    return await fallbackResponse.json();
+    console.log(
+        `[VIDHWAAN NEET] Loaded Day ${dayNumber}`,
+        lesson
+    );
+
+    return lesson;
 }
-
 
 /* ============================================================
    VALIDATE LESSON
