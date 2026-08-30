@@ -1,127 +1,172 @@
-/* ============================================================
-   VIDHWAAN NEET
-   365-DAY DAILY LEARNING ENGINE
-   ============================================================
-
-   PRODUCTION RULE
-
-   30 August 2026 06:00 IST  -> Day 1
-   31 August 2026 06:00 IST  -> Day 2
-   01 September 2026 06:00 IST -> Day 3
-   ...
-   29 August 2027 06:00 IST -> Day 365
-
-   DAILY CONTENT
-
-   Day 1  -> day-001.json
-   Day 2  -> day-002.json
-   Day 3  -> day-003.json
-   ...
-   Day 365 -> day-365.json
-
-   IMPORTANT
-
-   - NEVER loads syllabus.json
-   - NEVER requires day.html
-   - Loads daily JSON directly
-   - Future days stay locked
-   - Released days become clickable
-   - Today's released day is automatically loaded
-   - MCQs are fully interactive
-   - Correct answer = green
-   - Wrong answer = red
-   - Correct answer + explanation are revealed
-   - Uses Asia/Kolkata release time
-   ============================================================ */
-
 "use strict";
 
+/*
+============================================================
+VIDHWAAN NEET — PRODUCTION FRONTEND
+============================================================
+
+COURSE
+------------------------------------------------------------
+Day 1   = 30 August 2026, 06:00 IST
+Day 2   = 31 August 2026, 06:00 IST
+Day 3   = 01 September 2026, 06:00 IST
+...
+Day 365 = 29 August 2027, 06:00 IST
+
+FRONTEND DATA
+------------------------------------------------------------
+./data/app-config.json
+./data/day-001.json
+./data/day-002.json
+...
+./data/day-365.json
+
+IMPORTANT
+------------------------------------------------------------
+syllabus.json is NEVER loaded by the student frontend.
+
+USER FLOW
+------------------------------------------------------------
+Open app
+   ↓
+Show 365 numbered circles
+   ↓
+Released days are clickable
+Future days are locked
+   ↓
+User clicks a day
+   ↓
+Load ONLY that day's JSON
+   ↓
+Render beautiful lesson
+   ↓
+Render interactive MCQs
+   ↓
+Answer:
+Correct = GREEN
+Wrong   = RED
+   ↓
+Show correct answer + explanation
+
+No lesson is automatically opened.
+============================================================
+*/
+
 
 /* ============================================================
-   CONFIG
+   CONFIGURATION
    ============================================================ */
 
-const CONFIG_PATH = "./data/app-config.json";
+const DEFAULT_TOTAL_DAYS = 365;
+const DEFAULT_START_DATE = "2026-08-30";
+const DEFAULT_RELEASE_HOUR = 6;
+const DEFAULT_RELEASE_MINUTE = 0;
+const DEFAULT_TIMEZONE = "Asia/Kolkata";
 
-const DEFAULT_CONFIG = {
-    totalDays: 365,
-    programStartDateIST: "2026-08-30",
-    dailyActivationHourIST: 6,
-    timezone: "Asia/Kolkata"
-};
+const CONFIG_URL = "./data/app-config.json";
+const DATA_DIRECTORY = "./data/";
+const DAY_PREFIX = "day-";
+const DAY_SUFFIX = ".json";
 
 
 /* ============================================================
-   APP STATE
+   APPLICATION STATE
    ============================================================ */
 
 const state = {
-
-    config: null,
-
-    totalDays: 365,
-
-    startDate: null,
-
-    activationHour: 6,
-
-    contentDirectory: "data",
+    totalDays: DEFAULT_TOTAL_DAYS,
+    startDate: DEFAULT_START_DATE,
+    releaseHour: DEFAULT_RELEASE_HOUR,
+    releaseMinute: DEFAULT_RELEASE_MINUTE,
+    timezone: DEFAULT_TIMEZONE,
 
     releasedDay: 0,
-
     selectedDay: null,
-
-    currentLesson: null,
+    lesson: null,
 
     loading: false,
-
-    mcqAnswered: new Set(),
-
-    installPrompt: null
+    deferredInstallPrompt: null,
+    releaseTimer: null
 };
 
 
 /* ============================================================
-   DOM
+   DOM REFERENCES
    ============================================================ */
 
-const dom = {
-
-    dayGrid: null,
-
-    lessonView: null,
-
-    lessonContainer: null,
-
-    loadingState: null,
-
-    errorState: null,
-
-    errorMessage: null,
-
-    retryButton: null,
-
-    releaseStatusText: null,
-
-    todayBadgeText: null,
-
-    syllabusSummary: null,
-
-    installButton: null
-};
+const dom = {};
 
 
 /* ============================================================
-   INITIALIZE DOM REFERENCES
+   START APPLICATION
+   ============================================================ */
+
+document.addEventListener("DOMContentLoaded", initialize);
+
+
+async function initialize() {
+
+    cacheDOM();
+
+    try {
+
+        hideError();
+        hideLoading();
+
+        /*
+         * Configuration is useful but NOT allowed to stop
+         * the student application if it is temporarily unavailable.
+         */
+        await loadConfiguration();
+
+        state.releasedDay = calculateReleasedDay();
+
+        renderDayGrid();
+        updateHomeStatus();
+
+        /*
+         * CRITICAL:
+         * Never automatically open a lesson.
+         */
+        showDays();
+
+        setupEvents();
+        setupInstallPrompt();
+        registerServiceWorker();
+
+        scheduleReleaseRefresh();
+
+    } catch (error) {
+
+        console.error(
+            "VIDHWAAN NEET startup error:",
+            error
+        );
+
+        showError(
+            "VIDHWAAN NEET could not start. Please refresh the app."
+        );
+    }
+}
+
+
+/* ============================================================
+   DOM CACHE
    ============================================================ */
 
 function cacheDOM() {
 
-    dom.dayGrid =
-        document.getElementById("day-grid");
+    dom.app =
+        document.getElementById("app");
+
+    dom.daysView =
+        document.getElementById("days-view");
 
     dom.lessonView =
         document.getElementById("lesson-view");
+
+    dom.dayGrid =
+        document.getElementById("day-grid");
 
     dom.lessonContainer =
         document.getElementById("lesson-container");
@@ -141,90 +186,79 @@ function cacheDOM() {
     dom.releaseStatusText =
         document.getElementById("release-status-text");
 
-    dom.todayBadgeText =
-        document.getElementById("today-badge-text");
+    dom.todayBadge =
+        document.getElementById("today-badge");
 
-    dom.syllabusSummary =
-        document.getElementById("syllabus-summary");
+    dom.releasedDaysCount =
+        document.getElementById("released-days-count");
+
+    dom.brandHome =
+        document.getElementById("brand-home");
+
+    dom.backButton =
+        document.getElementById("back-button");
+
+    dom.lessonDayBadge =
+        document.getElementById("lesson-day-badge");
 
     dom.installButton =
         document.getElementById("install-button");
+
+
+    const required = [
+        ["day-grid", dom.dayGrid],
+        ["days-view", dom.daysView],
+        ["lesson-view", dom.lessonView],
+        ["lesson-container", dom.lessonContainer]
+    ];
+
+    for (const [name, element] of required) {
+
+        if (!element) {
+            throw new Error(
+                `Required HTML element missing: #${name}`
+            );
+        }
+    }
 }
 
 
 /* ============================================================
-   START APPLICATION
+   EVENTS
    ============================================================ */
 
-document.addEventListener(
-    "DOMContentLoaded",
-    startApplication
-);
+function setupEvents() {
 
+    if (dom.brandHome) {
 
-async function startApplication() {
-
-    cacheDOM();
-
-    bindEvents();
-
-    showLoading();
-
-    try {
-
-        state.config =
-            await loadConfiguration();
-
-        applyConfiguration();
-
-        calculateReleasedDay();
-
-        renderDayGrid();
-
-        updateReleaseUI();
-
-        hideError();
-
-        /*
-         * IMPORTANT:
-         *
-         * If Day 1 is released, automatically show
-         * Day 1 content.
-         *
-         * Before 06:00 on 30 Aug:
-         * releasedDay = 0.
-         */
-        if (
-            state.releasedDay >= 1
-        ) {
-
-            await loadDay(
-                state.releasedDay,
-                false
-            );
-
-        } else {
-
-            showBeforeRelease();
-
-        }
-
-    } catch (error) {
-
-        console.error(
-            "[VIDHWAAN NEET] Startup error:",
-            error
+        dom.brandHome.addEventListener(
+            "click",
+            showDays
         );
+    }
 
-        showError(
-            "The application could not start. Please refresh the page."
+
+    if (dom.backButton) {
+
+        dom.backButton.addEventListener(
+            "click",
+            showDays
+        );
+    }
+
+
+    if (dom.retryButton) {
+
+        dom.retryButton.addEventListener(
+            "click",
+            retrySelectedDay
         );
     }
 }
 
 
 /* ============================================================
-   LOAD CONFIGURATION
+   CONFIGURATION
    ============================================================ */
 
 async function loadConfiguration() {
@@ -233,351 +267,352 @@ async function loadConfiguration() {
 
         const response =
             await fetch(
-                `${CONFIG_PATH}?v=${Date.now()}`,
+                `${CONFIG_URL}?v=${Date.now()}`,
                 {
-                    cache: "no-store"
+                    method: "GET",
+                    cache: "no-store",
+                    headers: {
+                        "Accept":
+                            "application/json"
+                    }
                 }
             );
 
-        if (!response.ok) {
 
+        if (!response.ok) {
             throw new Error(
                 `Configuration HTTP ${response.status}`
             );
         }
 
-        const config =
+
+        const loaded =
             await response.json();
 
-        return {
-            ...DEFAULT_CONFIG,
-            ...config
-        };
+
+        if (
+            !loaded ||
+            typeof loaded !== "object" ||
+            Array.isArray(loaded)
+        ) {
+            throw new Error(
+                "Invalid app configuration."
+            );
+        }
+
+
+        /*
+         * Use only configuration values relevant
+         * to frontend release behavior.
+         */
+        state.totalDays =
+            safeInteger(
+                loaded.totalDays,
+                DEFAULT_TOTAL_DAYS,
+                1,
+                DEFAULT_TOTAL_DAYS
+            );
+
+
+        state.startDate =
+            firstValid(
+                loaded.courseStartDate,
+                loaded.releaseStartDate,
+                loaded.programStartDateIST,
+                DEFAULT_START_DATE
+            );
+
+
+        state.releaseHour =
+            safeInteger(
+                loaded.dailyActivationHourIST ??
+                loaded.publishHour,
+                DEFAULT_RELEASE_HOUR,
+                0,
+                23
+            );
+
+
+        state.releaseMinute =
+            safeInteger(
+                loaded.publishMinute,
+                DEFAULT_RELEASE_MINUTE,
+                0,
+                59
+            );
+
+
+        state.timezone =
+            firstValid(
+                loaded.timezone,
+                DEFAULT_TIMEZONE
+            );
+
 
     } catch (error) {
 
+        /*
+         * Production fallback.
+         *
+         * The frontend still works using the known
+         * production course schedule.
+         */
         console.warn(
-            "[VIDHWAAN NEET] app-config.json could not be loaded.",
-            "Using safe production defaults.",
+            "app-config.json unavailable. Using production defaults.",
             error
         );
 
-        return {
-            ...DEFAULT_CONFIG
-        };
+
+        state.totalDays =
+            DEFAULT_TOTAL_DAYS;
+
+        state.startDate =
+            DEFAULT_START_DATE;
+
+        state.releaseHour =
+            DEFAULT_RELEASE_HOUR;
+
+        state.releaseMinute =
+            DEFAULT_RELEASE_MINUTE;
+
+        state.timezone =
+            DEFAULT_TIMEZONE;
     }
 }
 
 
 /* ============================================================
-   APPLY CONFIGURATION
+   SAFE CONFIG HELPERS
    ============================================================ */
 
-function applyConfiguration() {
-
-    state.totalDays =
-        toPositiveInteger(
-            state.config.totalDays,
-            365
-        );
-
-    state.activationHour =
-        toInteger(
-            state.config.dailyActivationHourIST,
-            6
-        );
-
-    state.activationHour =
-        Math.max(
-            0,
-            Math.min(
-                23,
-                state.activationHour
-            )
-        );
-
- 
-
-    const startDate =
-        state.config.programStartDateIST ||
-        "2026-08-30";
-
-    state.startDate =
-        parseDateOnly(
-            startDate
-        );
-
-    if (!state.startDate) {
-
-        throw new Error(
-            "Invalid programStartDateIST."
-        );
-    }
-}
-
-
-/* ============================================================
-   INTEGER HELPERS
-   ============================================================ */
-
-function toInteger(
+function safeInteger(
     value,
-    fallback
+    fallback,
+    minimum,
+    maximum
 ) {
 
     const number =
         Number(value);
 
-    return Number.isFinite(number)
-        ? Math.trunc(number)
-        : fallback;
-}
-
-
-function toPositiveInteger(
-    value,
-    fallback
-) {
-
-    const number =
-        toInteger(
-            value,
-            fallback
-        );
-
-    return number > 0
-        ? number
-        : fallback;
-}
-
-
-/* ============================================================
-   DIRECTORY NORMALIZATION
-   ============================================================ */
-
-function normalizeDirectory(
-    value
-) {
-
-    return String(value)
-        .trim()
-        .replace(/^\.\/+/, "")
-        .replace(/\/+$/, "");
-}
-
-
-/* ============================================================
-   DATE-ONLY PARSER
-   ============================================================ */
-
-function parseDateOnly(
-    value
-) {
-
-    const match =
-        String(value).match(
-            /^(\d{4})-(\d{2})-(\d{2})$/
-        );
-
-    if (!match) {
-        return null;
+    if (
+        Number.isInteger(number) &&
+        number >= minimum &&
+        number <= maximum
+    ) {
+        return number;
     }
 
-    return {
+    return fallback;
+}
 
-        year:
-            Number(match[1]),
 
-        month:
-            Number(match[2]),
+function firstValid(...values) {
 
-        day:
-            Number(match[3])
-    };
+    for (const value of values) {
+
+        if (
+            value !== null &&
+            value !== undefined &&
+            String(value).trim() !== ""
+        ) {
+            return String(value).trim();
+        }
+    }
+
+    return "";
 }
 
 
 /* ============================================================
-   CURRENT IST TIME
+   IST CLOCK
    ============================================================ */
 
-function getCurrentIST() {
+function getISTParts() {
 
-    const formatter =
+    const parts =
         new Intl.DateTimeFormat(
             "en-CA",
             {
-                timeZone: "Asia/Kolkata",
-
+                timeZone:
+                    DEFAULT_TIMEZONE,
                 year: "numeric",
                 month: "2-digit",
                 day: "2-digit",
-
                 hour: "2-digit",
                 minute: "2-digit",
                 second: "2-digit",
-
                 hourCycle: "h23"
             }
-        );
-
-    const parts =
-        formatter.formatToParts(
+        ).formatToParts(
             new Date()
         );
 
-    const result = {};
 
-    for (
-        const part of parts
-    ) {
+    const values = {};
+
+
+    for (const part of parts) {
 
         if (
             part.type !== "literal"
         ) {
-
-            result[part.type] =
-                Number(part.value);
+            values[part.type] =
+                part.value;
         }
     }
 
-    return result;
+
+    return {
+        year: Number(values.year),
+        month: Number(values.month),
+        day: Number(values.day),
+        hour: Number(values.hour),
+        minute: Number(values.minute),
+        second: Number(values.second)
+    };
+}
+
+
+function getISTDateString() {
+
+    const now =
+        getISTParts();
+
+
+    return [
+        String(now.year).padStart(4, "0"),
+        String(now.month).padStart(2, "0"),
+        String(now.day).padStart(2, "0")
+    ].join("-");
 }
 
 
 /* ============================================================
-   DATE TO UTC
+   DATE HELPERS
    ============================================================ */
 
-function istDateToUTC(
-    year,
-    month,
-    day,
-    hour = 0,
-    minute = 0,
-    second = 0
-) {
+function parseDateOnly(value) {
 
-    /*
-     * IST = UTC + 05:30
-     *
-     * Therefore:
-     *
-     * UTC = IST - 05:30
-     */
+    const match =
+        /^(\d{4})-(\d{2})-(\d{2})$/
+            .exec(String(value));
 
-    return Date.UTC(
-        year,
-        month - 1,
-        day,
-        hour - 5,
-        minute - 30,
-        second
+
+    if (!match) {
+
+        throw new Error(
+            `Invalid date: ${value}`
+        );
+    }
+
+
+    return new Date(
+        Date.UTC(
+            Number(match[1]),
+            Number(match[2]) - 1,
+            Number(match[3])
+        )
     );
 }
 
 
-/* ============================================================
-   CALENDAR DAY DIFFERENCE
-   ============================================================ */
-
-function calendarDayDifference(
-    start,
-    current
+function daysBetween(
+    startDate,
+    endDate
 ) {
 
-    const startUTC =
-        istDateToUTC(
-            start.year,
-            start.month,
-            start.day
-        );
+    const start =
+        parseDateOnly(startDate);
 
-    const currentUTC =
-        istDateToUTC(
-            current.year,
-            current.month,
-            current.day
-        );
+    const end =
+        parseDateOnly(endDate);
+
 
     return Math.floor(
         (
-            currentUTC -
-            startUTC
-        ) /
-        86400000
+            end.getTime() -
+            start.getTime()
+        ) / 86400000
     );
 }
 
 
 /* ============================================================
-   CALCULATE RELEASED DAY
+   RELEASE CALCULATION
    ============================================================ */
+
+/*
+   30 Aug 2026 05:59 → 0
+   30 Aug 2026 06:00 → Day 1
+
+   31 Aug 2026 05:59 → Day 1
+   31 Aug 2026 06:00 → Day 2
+
+   ...
+*/
 
 function calculateReleasedDay() {
 
-    const now =
-        getCurrentIST();
+    const today =
+        getISTDateString();
 
-    const daysSinceStart =
-        calendarDayDifference(
+
+    const difference =
+        daysBetween(
             state.startDate,
-            now
+            today
         );
 
 
     /*
-     * Before course start date.
+     * Before course start.
      */
-
-    if (
-        daysSinceStart < 0
-    ) {
-
-        state.releasedDay = 0;
-
-        return;
+    if (difference < 0) {
+        return 0;
     }
 
 
-    /*
-     * On the first course day,
-     * Day 1 does not exist until 06:00 IST.
-     */
-
-    if (
-        daysSinceStart === 0 &&
-        now.hour < state.activationHour
-    ) {
-
-        state.releasedDay = 0;
-
-        return;
-    }
+    const now =
+        getISTParts();
 
 
-    /*
-     * Every subsequent calendar day
-     * releases one additional lesson.
-     */
+    const releaseReached =
+        now.hour >
+            state.releaseHour ||
+        (
+            now.hour ===
+                state.releaseHour &&
+            now.minute >=
+                state.releaseMinute
+        );
 
-    const dayNumber =
-        daysSinceStart + 1;
+
+    let released =
+        difference +
+        (
+            releaseReached
+                ? 1
+                : 0
+        );
 
 
-    state.releasedDay =
+    released =
         Math.max(
             0,
             Math.min(
-                dayNumber,
+                released,
                 state.totalDays
             )
         );
+
+
+    return released;
 }
 
 
 /* ============================================================
-   RENDER 365 DAY CIRCLES
+   DAY GRID
    ============================================================ */
 
 function renderDayGrid() {
@@ -586,7 +621,10 @@ function renderDayGrid() {
         return;
     }
 
-    dom.dayGrid.innerHTML = "";
+
+    state.releasedDay =
+        calculateReleasedDay();
+
 
     const fragment =
         document.createDocumentFragment();
@@ -599,7 +637,10 @@ function renderDayGrid() {
     ) {
 
         const button =
-            document.createElement("button");
+            document.createElement(
+                "button"
+            );
+
 
         button.type = "button";
 
@@ -611,7 +652,10 @@ function renderDayGrid() {
 
 
         const number =
-            document.createElement("span");
+            document.createElement(
+                "span"
+            );
+
 
         number.className =
             "day-number";
@@ -625,65 +669,63 @@ function renderDayGrid() {
         );
 
 
-        /*
-         * FUTURE DAY
-         */
-
         if (
-            day >
+            day <=
             state.releasedDay
         ) {
-
-            button.classList.add(
-                "locked"
-            );
-
-            button.disabled =
-                true;
-
-            button.setAttribute(
-                "aria-disabled",
-                "true"
-            );
-
-        }
-
-
-        /*
-         * RELEASED DAY
-         */
-
-        else {
 
             button.classList.add(
                 "available"
             );
 
+
+            button.setAttribute(
+                "aria-label",
+                `Open Day ${day}`
+            );
+
+
             button.addEventListener(
                 "click",
-                function () {
+                () => openDay(day)
+            );
 
-                    loadDay(
-                        day,
-                        true
-                    );
 
-                }
+        } else {
+
+            button.classList.add(
+                "locked"
+            );
+
+
+            button.disabled =
+                true;
+
+
+            button.setAttribute(
+                "aria-label",
+                `Day ${day} locked`
+            );
+
+
+            button.setAttribute(
+                "aria-disabled",
+                "true"
             );
         }
 
 
         /*
-         * CURRENT LIVE DAY
+         * The latest released day is the
+         * highlighted current course day.
          */
-
         if (
             day ===
             state.releasedDay
         ) {
 
             button.classList.add(
-                "today"
+                "current"
             );
 
             button.setAttribute(
@@ -699,83 +741,134 @@ function renderDayGrid() {
     }
 
 
-    dom.dayGrid.appendChild(
+    dom.dayGrid.replaceChildren(
         fragment
     );
+
+
+    updateDaysCount();
 }
 
 
-/* ============================================================
-   DAILY JSON FILE PATH
-   ============================================================ */
+function updateDaysCount() {
 
-function getPrimaryDayPath(dayNumber) {
-
-    return `./data/day-${String(dayNumber).padStart(3, "0")}.json`;
-}
-
-
-/* ============================================================
-   LOAD DAY JSON
-   ============================================================ */
-
-async function loadDay(
-    dayNumber,
-    scrollToLesson = true
-) {
-
-    /*
-     * Never permit a future day to load.
-     */
-
-    if (
-        dayNumber < 1 ||
-        dayNumber >
-        state.releasedDay
-    ) {
-
+    if (!dom.releasedDaysCount) {
         return;
     }
 
 
-    /*
-     * If same lesson is already visible,
-     * simply scroll to it.
-     */
+    dom.releasedDaysCount.textContent =
+        `${state.releasedDay} / ${state.totalDays} available`;
+}
 
-    if (
-        state.selectedDay === dayNumber &&
-        state.currentLesson
-    ) {
 
-        if (scrollToLesson) {
-            scrollToLessonView();
+/* ============================================================
+   HOME STATUS
+   ============================================================ */
+
+function updateHomeStatus() {
+
+    state.releasedDay =
+        calculateReleasedDay();
+
+
+    updateDaysCount();
+
+
+    if (dom.todayBadge) {
+
+        if (
+            state.releasedDay > 0
+        ) {
+
+            dom.todayBadge.textContent =
+                `Day ${state.releasedDay} available`;
+
+        } else {
+
+            dom.todayBadge.textContent =
+                "Course starts at 6:00 AM IST";
         }
+    }
 
+
+    if (dom.releaseStatusText) {
+
+        if (
+            state.releasedDay === 0
+        ) {
+
+            dom.releaseStatusText.textContent =
+                "Day 1 unlocks at 6:00 AM IST";
+
+        } else if (
+            state.releasedDay >=
+            state.totalDays
+        ) {
+
+            dom.releaseStatusText.textContent =
+                "All 365 days available";
+
+        } else {
+
+            dom.releaseStatusText.textContent =
+                `Day ${state.releasedDay} available`;
+        }
+    }
+}
+
+
+/* ============================================================
+   OPEN DAY
+   ============================================================ */
+
+async function openDay(dayNumber) {
+
+    /*
+     * Always recalculate before opening.
+     * This prevents future days being opened manually.
+     */
+    const released =
+        calculateReleasedDay();
+
+
+    state.releasedDay =
+        released;
+
+
+    if (
+        !Number.isInteger(dayNumber) ||
+        dayNumber < 1 ||
+        dayNumber > state.totalDays
+    ) {
         return;
     }
 
 
-    state.loading = true;
+    if (
+        dayNumber >
+        released
+    ) {
+
+        renderDayGrid();
+        showDays();
+
+        return;
+    }
+
 
     state.selectedDay =
         dayNumber;
 
-    state.currentLesson =
-        null;
-
-    state.mcqAnswered.clear();
-
-
-    showLoading();
-
-    hideError();
-
 
     try {
 
+        hideError();
+        showLoading();
+
+
         const lesson =
-            await fetchDayJSON(
+            await loadDayJSON(
                 dayNumber
             );
 
@@ -786,7 +879,7 @@ async function loadDay(
         );
 
 
-        state.currentLesson =
+        state.lesson =
             lesson;
 
 
@@ -796,89 +889,90 @@ async function loadDay(
         );
 
 
-        updateSelectedDay(
-            dayNumber
-        );
-
-
         hideLoading();
 
-        showLessonView();
+        showLesson();
 
 
-        if (scrollToLesson) {
-
-            scrollToLessonView();
-        }
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
 
 
     } catch (error) {
 
         console.error(
-            `[VIDHWAAN NEET] Day ${dayNumber} load failed:`,
+            `Day ${dayNumber} failed:`,
             error
         );
 
-        state.currentLesson =
-            null;
+
+        hideLoading();
+
 
         showError(
-            `Day ${String(dayNumber).padStart(3, "0")} could not be loaded. Please check that the daily JSON file exists.`
+            `Unable to load Day ${dayNumber}. Please try again.`
         );
-
-    } finally {
-
-        state.loading = false;
     }
 }
 
 
 /* ============================================================
-   FETCH DAILY JSON
+   LOAD ONE DAILY JSON
    ============================================================ */
 
-async function fetchDayJSON(dayNumber) {
+async function loadDayJSON(
+    dayNumber
+) {
 
-    const path =
-        `./data/day-${String(dayNumber).padStart(3, "0")}.json`;
+    const filename =
+        `${DAY_PREFIX}` +
+        `${String(dayNumber).padStart(3, "0")}` +
+        `${DAY_SUFFIX}`;
 
-    console.log(
-        `[VIDHWAAN NEET] Loading daily JSON: ${path}`
-    );
+
+    const url =
+        `${DATA_DIRECTORY}${filename}?v=${Date.now()}`;
+
 
     const response =
         await fetch(
-            `${path}?v=${getCacheVersion()}`,
+            url,
             {
-                cache: "no-store"
+                method: "GET",
+                cache: "no-store",
+                headers: {
+                    "Accept":
+                        "application/json"
+                }
             }
         );
+
 
     if (!response.ok) {
 
         throw new Error(
-            `Daily JSON HTTP ${response.status}: ${path}`
+            `HTTP ${response.status}: ${filename}`
         );
     }
 
-    const lesson =
+
+    const data =
         await response.json();
 
-    console.log(
-        `[VIDHWAAN NEET] Loaded Day ${dayNumber}`,
-        lesson
-    );
 
-    return lesson;
+    return data;
 }
 
+
 /* ============================================================
-   VALIDATE LESSON
+   VALIDATE DAILY JSON
    ============================================================ */
 
 function validateLesson(
     lesson,
-    dayNumber
+    expectedDay
 ) {
 
     if (
@@ -888,58 +982,26 @@ function validateLesson(
     ) {
 
         throw new Error(
-            "Daily JSON is not a valid object."
+            "Daily lesson JSON is invalid."
         );
     }
 
-
-    /*
-     * The uploaded Day JSON has a day field.
-     *
-     * We do not reject content if a generator omits it,
-     * but if it exists it must agree with the requested day.
-     */
 
     if (
         lesson.day !== undefined &&
-        Number(lesson.day) !== dayNumber
+        Number(lesson.day) !==
+            expectedDay
     ) {
 
         throw new Error(
-            `Daily JSON day mismatch. Requested Day ${dayNumber}, received Day ${lesson.day}.`
-        );
-    }
-
-
-    /*
-     * A proper lesson should have at least one of:
-     *
-     * title
-     * sections
-     * mcqs
-     * introduction
-     */
-
-    const hasContent =
-        Boolean(
-            lesson.title ||
-            lesson.introduction ||
-            Array.isArray(lesson.sections) ||
-            Array.isArray(lesson.mcqs)
-        );
-
-
-    if (!hasContent) {
-
-        throw new Error(
-            "Daily JSON contains no recognizable lesson content."
+            `Day mismatch: requested ${expectedDay}, received ${lesson.day}.`
         );
     }
 }
 
 
 /* ============================================================
-   RENDER LESSON
+   LESSON RENDERER
    ============================================================ */
 
 function renderLesson(
@@ -947,97 +1009,45 @@ function renderLesson(
     dayNumber
 ) {
 
-    if (!dom.lessonContainer) {
-        return;
-    }
-
-
-    dom.lessonContainer.innerHTML = "";
-
-
-    const fragment =
-        document.createDocumentFragment();
-
-
-    /*
-     * LESSON HERO
-     */
-
-    fragment.appendChild(
-        renderLessonHeader(
-            lesson,
-            dayNumber
-        )
-    );
-
-
-    /*
-     * INTRODUCTION
-     */
-
-    if (
-        lesson.introduction
-    ) {
-
-        fragment.appendChild(
-            renderIntroduction(
-                lesson.introduction
-            )
+    const title =
+        firstValid(
+            lesson.title,
+            `Day ${dayNumber}`
         );
-    }
 
 
-    /*
-     * NEET FOCUS
-     */
+    const subject =
+        firstValid(
+            lesson.subject,
+            ""
+        );
 
-    const neetFocus =
-        Array.isArray(
+
+    const unit =
+        firstValid(
+            lesson.unit,
+            ""
+        );
+
+
+    const chapter =
+        firstValid(
+            lesson.chapter,
+            ""
+        );
+
+
+    const focus =
+        toArray(
             lesson.neetFocus
-        )
-            ? lesson.neetFocus
-            : [];
-
-
-    if (
-        neetFocus.length > 0
-    ) {
-
-        fragment.appendChild(
-            renderFocusCard(
-                neetFocus
-            );
         );
-    }
 
 
-    /*
-     * LEARNING OUTCOMES
-     */
-
-    const learningOutcome =
-        Array.isArray(
+    const outcomes =
+        toArray(
             lesson.learningOutcome
-        )
-            ? lesson.learningOutcome
-            : [];
-
-
-    if (
-        learningOutcome.length > 0
-    ) {
-
-        fragment.appendChild(
-            renderLearningOutcome(
-                learningOutcome
-            )
         );
-    }
 
-
-    /*
-     * SECTIONS
-     */
 
     const sections =
         Array.isArray(
@@ -1047,346 +1057,227 @@ function renderLesson(
             : [];
 
 
-    if (
-        sections.length > 0
-    ) {
-
-        const sectionsWrapper =
-            document.createElement("div");
-
-        sectionsWrapper.className =
-            "lesson-sections";
-
-
-        sections.forEach(
-            (
-                section,
-                index
-            ) => {
-
-                sectionsWrapper.appendChild(
-                    renderSection(
-                        section,
-                        index + 1
-                    )
-                );
-
-            }
-        );
-
-
-        fragment.appendChild(
-            sectionsWrapper
-        );
-    }
-
-
-    /*
-     * MCQS
-     */
-
     const mcqs =
-        getMCQs(
-            lesson
-        );
+        Array.isArray(
+            lesson.mcqs
+        )
+            ? lesson.mcqs
+            : [];
 
 
-    if (
-        mcqs.length > 0
-    ) {
+    if (dom.lessonDayBadge) {
 
-        fragment.appendChild(
-            renderMCQSection(
-                mcqs
-            )
-        );
+        dom.lessonDayBadge.textContent =
+            `DAY ${dayNumber}`;
     }
 
 
-    /*
-     * FALLBACK CONTENT
-     */
+    dom.lessonContainer.innerHTML = `
 
-    if (
-        sections.length === 0 &&
-        mcqs.length === 0 &&
-        !lesson.introduction &&
-        neetFocus.length === 0 &&
-        learningOutcome.length === 0
-    ) {
+        <article class="neet-lesson">
 
-        fragment.appendChild(
-            renderFallbackContent(
-                lesson
-            )
-        );
-    }
+            <header class="lesson-hero">
+
+                <span class="lesson-day-label">
+                    DAY ${dayNumber}
+                </span>
+
+                <h1 class="lesson-title">
+                    ${escapeHTML(title)}
+                </h1>
+
+                ${
+                    subject ||
+                    unit ||
+                    chapter
+                        ? `
+                            <p class="lesson-subtitle">
+                                ${renderMeta(
+                                    subject,
+                                    unit,
+                                    chapter
+                                )}
+                            </p>
+                          `
+                        : ""
+                }
+
+            </header>
 
 
-    dom.lessonContainer.appendChild(
-        fragment
-    );
+            ${
+                focus.length
+                    ? `
+                        <section class="content-section">
+
+                            <div class="content-card">
+
+                                <h2>
+                                    NEET Focus
+                                </h2>
+
+                                ${renderList(
+                                    focus
+                                )}
+
+                            </div>
+
+                        </section>
+                      `
+                    : ""
+            }
+
+
+            ${
+                outcomes.length
+                    ? `
+                        <section class="content-section">
+
+                            <div class="content-card">
+
+                                <h2>
+                                    What You Will Learn
+                                </h2>
+
+                                ${renderList(
+                                    outcomes
+                                )}
+
+                            </div>
+
+                        </section>
+                      `
+                    : ""
+            }
+
+
+            ${
+                sections.length
+                    ? `
+                        <section class="content-section">
+
+                            <div class="section-heading">
+
+                                <div>
+
+                                    <span class="section-kicker">
+                                        CORE CONCEPTS
+                                    </span>
+
+                                    <h2>
+                                        Concepts
+                                    </h2>
+
+                                </div>
+
+                            </div>
+
+                            <div class="topics-list">
+
+                                ${sections
+                                    .map(
+                                        (
+                                            section,
+                                            index
+                                        ) =>
+                                            renderSection(
+                                                section,
+                                                index
+                                            )
+                                    )
+                                    .join("")}
+
+                            </div>
+
+                        </section>
+                      `
+                    : ""
+            }
+
+
+            ${
+                mcqs.length
+                    ? `
+                        <section
+                            class="mcqs-section"
+                            id="mcqs-section"
+                        >
+
+                            <div class="mcqs-header">
+
+                                <span class="section-kicker">
+                                    NEET PRACTICE
+                                </span>
+
+                                <h2>
+                                    MCQs
+                                </h2>
+
+                                <p>
+                                    Test your understanding.
+                                    Select one answer for each question.
+                                </p>
+
+                            </div>
+
+                            <div
+                                class="mcqs-list"
+                                id="mcqs-list"
+                            >
+
+                                ${mcqs
+                                    .map(
+                                        (
+                                            mcq,
+                                            index
+                                        ) =>
+                                            renderMCQ(
+                                                mcq,
+                                                index
+                                            )
+                                    )
+                                    .join("")}
+
+                            </div>
+
+                        </section>
+                      `
+                    : ""
+            }
+
+        </article>
+    `;
+
+
+    attachMCQEvents();
 }
 
 
 /* ============================================================
-   LESSON HEADER
+   META
    ============================================================ */
 
-function renderLessonHeader(
-    lesson,
-    dayNumber
+function renderMeta(
+    subject,
+    unit,
+    chapter
 ) {
 
-    const card =
-        document.createElement("article");
-
-    card.className =
-        "lesson-hero";
-
-
-    const badge =
-        document.createElement("div");
-
-    badge.className =
-        "lesson-day-badge";
-
-    badge.textContent =
-        `DAY ${String(dayNumber).padStart(3, "0")}`;
-
-
-    const title =
-        document.createElement("h2");
-
-    title.id =
-        "lesson-page-title";
-
-    title.textContent =
-        cleanText(
-            lesson.title ||
-            `NEET Preparation — Day ${dayNumber}`
-        );
-
-
-    const meta =
-        document.createElement("div");
-
-    meta.className =
-        "lesson-meta";
-
-
-    const subject =
-        lesson.subject ||
-        "NEET Preparation";
-
-
-    const chapter =
-        lesson.chapter ||
-        "";
-
-
-    meta.textContent =
+    return [
+        subject,
+        unit,
         chapter
-            ? `${subject} • ${chapter}`
-            : subject;
-
-
-    const date =
-        document.createElement("div");
-
-    date.className =
-        "lesson-date";
-
-    date.textContent =
-        formatCourseDate(
-            dayNumber
-        );
-
-
-    card.appendChild(
-        badge
-    );
-
-    card.appendChild(
-        title
-    );
-
-    card.appendChild(
-        meta
-    );
-
-    card.appendChild(
-        date
-    );
-
-
-    return card;
+    ]
+        .filter(Boolean)
+        .map(
+            escapeHTML
+        )
+        .join(" • ");
 }
 
 
 /* ============================================================
-   INTRODUCTION
-   ============================================================ */
-
-function renderIntroduction(
-    introduction
-) {
-
-    const card =
-        document.createElement("article");
-
-    card.className =
-        "lesson-introduction";
-
-
-    const label =
-        document.createElement("div");
-
-    label.className =
-        "lesson-card-label";
-
-    label.textContent =
-        "Today's Lesson";
-
-
-    const paragraph =
-        document.createElement("p");
-
-    paragraph.textContent =
-        cleanText(
-            introduction
-        );
-
-
-    card.appendChild(
-        label
-    );
-
-    card.appendChild(
-        paragraph
-    );
-
-
-    return card;
-}
-
-
-/* ============================================================
-   NEET FOCUS
-   ============================================================ */
-
-function renderFocusCard(
-    focus
-) {
-
-    const card =
-        document.createElement("article");
-
-    card.className =
-        "lesson-focus";
-
-
-    const title =
-        document.createElement("h3");
-
-    title.textContent =
-        "NEET Focus";
-
-
-    const list =
-        document.createElement("ul");
-
-
-    focus.forEach(
-        item => {
-
-            const li =
-                document.createElement("li");
-
-            li.textContent =
-                cleanText(
-                    item
-                );
-
-            list.appendChild(
-                li
-            );
-        }
-    );
-
-
-    card.appendChild(
-        title
-    );
-
-    card.appendChild(
-        list
-    );
-
-
-    return card;
-}
-
-
-/* ============================================================
-   LEARNING OUTCOME
-   ============================================================ */
-
-function renderLearningOutcome(
-    outcomes
-) {
-
-    const card =
-        document.createElement("article");
-
-    card.className =
-        "learning-outcomes";
-
-
-    const title =
-        document.createElement("h3");
-
-    title.textContent =
-        "By the End of Today";
-
-
-    const list =
-        document.createElement("ul");
-
-
-    outcomes.forEach(
-        outcome => {
-
-            const li =
-                document.createElement("li");
-
-            li.textContent =
-                cleanText(
-                    outcome
-                );
-
-            list.appendChild(
-                li
-            );
-        }
-    );
-
-
-    card.appendChild(
-        title
-    );
-
-    card.appendChild(
-        list
-    );
-
-
-    return card;
-}
-
-
-/* ============================================================
-   SECTION RENDERER
+   SECTION / CONCEPT
    ============================================================ */
 
 function renderSection(
@@ -1394,100 +1285,33 @@ function renderSection(
     index
 ) {
 
-    const card =
-        document.createElement("article");
-
-    card.className =
-        "lesson-section";
-
-
-    const top =
-        document.createElement("div");
-
-    top.className =
-        "lesson-section-top";
-
-
-    const number =
-        document.createElement("span");
-
-    number.className =
-        "lesson-section-number";
-
-    number.textContent =
-        String(index).padStart(2, "0");
-
-
-    const topic =
-        document.createElement("span");
-
-    topic.className =
-        "lesson-section-topic";
-
-    topic.textContent =
-        cleanText(
-            section.topic ||
-            `Topic ${index}`
-        );
-
-
-    top.appendChild(
-        number
-    );
-
-    top.appendChild(
-        topic
-    );
-
-
-    const heading =
-        document.createElement("h3");
-
-    heading.textContent =
-        cleanText(
-            section.heading ||
-            section.topic ||
-            `Concept ${index}`
-        );
-
-
-    card.appendChild(
-        top
-    );
-
-    card.appendChild(
-        heading
-    );
-
-
-    /*
-     * Main explanation.
-     */
-
     if (
-        section.content
+        !section ||
+        typeof section !== "object"
     ) {
-
-        const paragraph =
-            document.createElement("p");
-
-        paragraph.className =
-            "lesson-content";
-
-        paragraph.textContent =
-            cleanText(
-                section.content
-            );
-
-        card.appendChild(
-            paragraph
-        );
+        return "";
     }
 
 
-    /*
-     * Subsections.
-     */
+    const topic =
+        firstValid(
+            section.topic,
+            ""
+        );
+
+
+    const heading =
+        firstValid(
+            section.heading,
+            topic ||
+                `Concept ${index + 1}`
+        );
+
+
+    const content =
+        section.content ??
+        "";
+
 
     const subsections =
         Array.isArray(
@@ -1497,604 +1321,387 @@ function renderSection(
             : [];
 
 
-    if (
-        subsections.length > 0
-    ) {
-
-        const subWrapper =
-            document.createElement("div");
-
-        subWrapper.className =
-            "lesson-subsections";
-
-
-        subsections.forEach(
-            subsection => {
-
-                const sub =
-                    document.createElement("div");
-
-                sub.className =
-                    "lesson-subsection";
-
-
-                const subHeading =
-                    document.createElement("h4");
-
-                subHeading.textContent =
-                    cleanText(
-                        subsection.heading ||
-                        subsection.title ||
-                        ""
-                    );
-
-
-                const subContent =
-                    document.createElement("p");
-
-                subContent.textContent =
-                    cleanText(
-                        subsection.content ||
-                        subsection.explanation ||
-                        ""
-                    );
-
-
-                if (
-                    subHeading.textContent
-                ) {
-
-                    sub.appendChild(
-                        subHeading
-                    );
-                }
-
-
-                if (
-                    subContent.textContent
-                ) {
-
-                    sub.appendChild(
-                        subContent
-                    );
-                }
-
-
-                subWrapper.appendChild(
-                    sub
-                );
-            }
-        );
-
-
-        card.appendChild(
-            subWrapper
-        );
-    }
-
-
-    /*
-     * Key points.
-     */
-
     const keyPoints =
-        Array.isArray(
+        toArray(
             section.keyPoints
-        )
-            ? section.keyPoints
-            : [];
-
-
-    if (
-        keyPoints.length > 0
-    ) {
-
-        const keyBlock =
-            document.createElement("div");
-
-        keyBlock.className =
-            "key-points";
-
-
-        const title =
-            document.createElement("h4");
-
-        title.textContent =
-            "Key Points";
-
-
-        const list =
-            document.createElement("ul");
-
-
-        keyPoints.forEach(
-            point => {
-
-                const li =
-                    document.createElement("li");
-
-                li.textContent =
-                    cleanText(
-                        point
-                    );
-
-                list.appendChild(
-                    li
-                );
-            }
         );
 
 
-        keyBlock.appendChild(
-            title
-        );
-
-        keyBlock.appendChild(
-            list
-        );
-
-
-        card.appendChild(
-            keyBlock
-        );
-    }
-
-
-    /*
-     * NEET Tips.
-     *
-     * The actual uploaded JSON uses:
-     *
-     * "neetTips": [...]
-     */
-
-    const neetTips =
-        Array.isArray(
+    const tips =
+        toArray(
             section.neetTips
-        )
-            ? section.neetTips
-            : [];
+        );
 
+
+    return `
+
+        <article class="topic-card">
+
+            <div class="topic-header">
+
+                <span class="topic-number">
+                    ${String(index + 1).padStart(2, "0")}
+                </span>
+
+                <div>
+
+                    <h3 class="topic-title">
+                        ${escapeHTML(heading)}
+                    </h3>
+
+                    ${
+                        topic &&
+                        topic !== heading
+                            ? `
+                                <div class="topic-name">
+                                    ${escapeHTML(topic)}
+                                </div>
+                              `
+                            : ""
+                    }
+
+                </div>
+
+            </div>
+
+
+            <div class="topic-content">
+
+                ${
+                    content
+                        ? `
+                            <p>
+                                ${renderRichText(
+                                    content
+                                )}
+                            </p>
+                          `
+                        : ""
+                }
+
+
+                ${
+                    subsections.length
+                        ? `
+                            <div class="concepts-list">
+
+                                ${subsections
+                                    .map(
+                                        (
+                                            subsection
+                                        ) =>
+                                            renderSubsection(
+                                                subsection
+                                            )
+                                    )
+                                    .join("")}
+
+                            </div>
+                          `
+                        : ""
+                }
+
+
+                ${
+                    keyPoints.length
+                        ? `
+                            <div class="key-points">
+
+                                <div class="key-points-title">
+                                    Key Points
+                                </div>
+
+                                ${renderList(
+                                    keyPoints
+                                )}
+
+                            </div>
+                          `
+                        : ""
+                }
+
+
+                ${
+                    tips.length
+                        ? `
+                            <div class="neet-tips">
+
+                                <div class="neet-tip-title">
+                                    NEET Tips
+                                </div>
+
+                                ${renderList(
+                                    tips
+                                )}
+
+                            </div>
+                          `
+                        : ""
+                }
+
+            </div>
+
+        </article>
+    `;
+}
+
+
+/* ============================================================
+   SUBSECTION
+   ============================================================ */
+
+function renderSubsection(
+    subsection
+) {
 
     if (
-        neetTips.length > 0
+        !subsection ||
+        typeof subsection !== "object"
     ) {
-
-        const tips =
-            document.createElement("div");
-
-        tips.className =
-            "neet-tips";
-
-
-        const title =
-            document.createElement("h4");
-
-        title.textContent =
-            "NEET Tip";
-
-
-        tips.appendChild(
-            title
-        );
-
-
-        neetTips.forEach(
-            tip => {
-
-                const paragraph =
-                    document.createElement("p");
-
-                paragraph.textContent =
-                    cleanText(
-                        tip
-                    );
-
-                tips.appendChild(
-                    paragraph
-                );
-            }
-        );
-
-
-        card.appendChild(
-            tips
-        );
+        return "";
     }
 
 
-    return card;
+    const heading =
+        firstValid(
+            subsection.heading,
+            ""
+        );
+
+
+    const content =
+        subsection.content ??
+        "";
+
+
+    return `
+
+        <div class="concept-card">
+
+            <div class="concept-header">
+
+                <span class="concept-number">
+                    •
+                </span>
+
+                <h3 class="concept-title">
+                    ${escapeHTML(heading)}
+                </h3>
+
+            </div>
+
+            <div class="concept-content">
+
+                <p>
+                    ${renderRichText(
+                        content
+                    )}
+                </p>
+
+            </div>
+
+        </div>
+    `;
 }
 
 
 /* ============================================================
-   MCQ EXTRACTION
-   ============================================================ */
-
-function getMCQs(
-    lesson
-) {
-
-    const candidates = [
-
-        lesson.mcqs,
-
-        lesson.MCQs,
-
-        lesson.questions,
-
-        lesson.quiz,
-
-        lesson.practiceQuestions,
-
-        lesson.practice_questions
-    ];
-
-
-    for (
-        const candidate of candidates
-    ) {
-
-        if (
-            Array.isArray(candidate)
-        ) {
-
-            return candidate;
-        }
-    }
-
-
-    return [];
-}
-
-
-/* ============================================================
-   MCQ SECTION
-   ============================================================ */
-
-function renderMCQSection(
-    mcqs
-) {
-
-    const section =
-        document.createElement("section");
-
-    section.className =
-        "mcq-section";
-
-
-    const header =
-        document.createElement("div");
-
-    header.className =
-        "mcq-header";
-
-
-    const eyebrow =
-        document.createElement("div");
-
-    eyebrow.className =
-        "lesson-eyebrow";
-
-    eyebrow.textContent =
-        "NEET PRACTICE";
-
-
-    const title =
-        document.createElement("h3");
-
-    title.textContent =
-        "Test Your Understanding";
-
-
-    const description =
-        document.createElement("p");
-
-    description.textContent =
-        `${mcqs.length} NEET-level questions. Select an option to reveal the answer and explanation.`;
-
-
-    header.appendChild(
-        eyebrow
-    );
-
-    header.appendChild(
-        title
-    );
-
-    header.appendChild(
-        description
-    );
-
-
-    section.appendChild(
-        header
-    );
-
-
-    mcqs.forEach(
-        (
-            mcq,
-            index
-        ) => {
-
-            section.appendChild(
-                renderMCQ(
-                    mcq,
-                    index
-                )
-            );
-        }
-    );
-
-
-    return section;
-}
-
-
-/* ============================================================
-   SINGLE MCQ
+   MCQ RENDERER
    ============================================================ */
 
 function renderMCQ(
     mcq,
     index
 ) {
-
-    const card =
-        document.createElement("article");
-
-    card.className =
-        "mcq-card";
-
-    card.dataset.question =
-        String(index);
-
-
-    const number =
-        document.createElement("div");
-
-    number.className =
-        "mcq-number";
-
-    number.textContent =
-        `Question ${index + 1}`;
-
-
-    const question =
-        document.createElement("h4");
-
-    question.className =
-        "mcq-question";
-
-    question.textContent =
-        cleanText(
-            mcq.question ||
-            mcq.questionText ||
-            mcq.prompt ||
-            mcq.text ||
-            "Question"
-        );
-
-
-    const options =
-        normalizeMCQOptions(
-            mcq.options ||
-            mcq.choices ||
-            mcq.answers ||
-            []
-        );
-
-
-    const optionsWrapper =
-        document.createElement("div");
-
-    optionsWrapper.className =
-        "mcq-options";
-
-
-    const answerPanel =
-        document.createElement("div");
-
-    answerPanel.className =
-        "mcq-answer-panel";
-
-    answerPanel.hidden =
-        true;
-
-
-    options.forEach(
-        (
-            option,
-            optionIndex
-        ) => {
-
-            optionsWrapper.appendChild(
-                createMCQOptionButton(
-                    mcq,
-                    option,
-                    optionIndex,
-                    options,
-                    card,
-                    answerPanel
-                )
-            );
-        }
-    );
-
-
-    card.appendChild(
-        number
-    );
-
-    card.appendChild(
-        question
-    );
-
-    card.appendChild(
-        optionsWrapper
-    );
-
-    card.appendChild(
-        answerPanel
-    );
-
-
-    return card;
-}
-
-
-/* ============================================================
-   NORMALIZE MCQ OPTIONS
-   ============================================================ */
-
-function normalizeMCQOptions(
-    options
-) {
-
     if (
-        !Array.isArray(options)
+        !mcq ||
+        typeof mcq !== "object"
     ) {
-
-        return [];
+        return "";
     }
 
+    const question =
+        firstValid(
+            mcq.question,
+            `Question ${index + 1}`
+        );
 
-    return options.map(
-        (
-            option,
-            index
-        ) => {
+    const options =
+        Array.isArray(mcq.options)
+            ? mcq.options
+            : [];
 
-            if (
-                typeof option === "string" ||
-                typeof option === "number"
-            ) {
+    /*
+     * PRODUCTION JSON FORMAT
+     *
+     * answer: 0 = A
+     * answer: 1 = B
+     * answer: 2 = C
+     * answer: 3 = D
+     *
+     * Example:
+     * "answer": 2
+     * means option C is correct.
+     */
+    const correct =
+        normalizeAnswer(
+            mcq.answer
+        );
 
-                return {
+    const explanation =
+        firstValid(
+            mcq.explanation,
+            "Explanation not provided."
+        );
 
-                    text:
-                        String(option),
+    return `
+        <article
+            class="mcq-card"
+            data-mcq-index="${index}"
+            data-correct-answer="${escapeHTML(correct)}"
+        >
 
-                    index:
-                        index,
+            <div class="mcq-header">
 
-                    isCorrect:
-                        false
-                };
-            }
+                <span class="mcq-number">
+                    Question ${index + 1}
+                </span>
+
+                <span class="mcq-topic">
+                    NEET MCQ
+                </span>
+
+            </div>
+
+            <div class="mcq-body">
+
+                <h3 class="mcq-question">
+                    ${renderRichText(question)}
+                </h3>
+
+                <div class="mcq-options">
+
+                    ${options
+                        .map(
+                            (
+                                option,
+                                optionIndex
+                            ) =>
+                                renderOption(
+                                    option,
+                                    optionIndex
+                                )
+                        )
+                        .join("")}
+
+                </div>
+
+                <div
+                    class="mcq-result"
+                    hidden
+                >
+                </div>
+
+                <div
+                    class="mcq-explanation"
+                    hidden
+                >
+
+                    <div class="mcq-explanation-title">
+                        Explanation
+                    </div>
+
+                    <p>
+                        ${renderRichText(
+                            explanation
+                        )}
+                    </p>
+
+                </div>
+
+            </div>
+
+        </article>
+    `;
+}
 
 
-            if (
-                option &&
-                typeof option === "object"
-            ) {
 
-                return {
+/* ============================================================
+   MCQ OPTION
+   ============================================================ */
 
-                    text:
-                        cleanText(
-                            option.text ||
-                            option.label ||
-                            option.answer ||
-                            option.option ||
-                            ""
-                        ),
+function renderOption(
+    option,
+    index
+) {
 
-                    index:
-                        index,
-
-                    isCorrect:
-                        option.isCorrect === true ||
-                        option.correct === true
-                };
-            }
+    const letter =
+        String.fromCharCode(
+            65 + index
+        );
 
 
-            return {
+    return `
 
-                text: "",
+        <button
+            type="button"
+            class="mcq-option"
+            data-option="${letter}"
+        >
 
-                index,
+            <span class="option-letter">
+                ${letter}
+            </span>
 
-                isCorrect: false
-            };
-        }
-    );
+            <span class="option-text">
+                ${renderRichText(
+                    option
+                )}
+            </span>
+
+        </button>
+    `;
 }
 
 
 /* ============================================================
-   CREATE MCQ OPTION
+   MCQ EVENTS
    ============================================================ */
 
-function createMCQOptionButton(
-    mcq,
-    option,
-    optionIndex,
-    options,
-    card,
-    answerPanel
-) {
+function attachMCQEvents() {
 
-    const button =
-        document.createElement("button");
-
-    button.type =
-        "button";
-
-    button.className =
-        "mcq-option";
-
-
-    const letter =
-        document.createElement("span");
-
-    letter.className =
-        "mcq-option-letter";
-
-    letter.textContent =
-        String.fromCharCode(
-            65 + optionIndex
-        );
-
-
-    const text =
-        document.createElement("span");
-
-    text.className =
-        "mcq-option-text";
-
-    text.textContent =
-        option.text;
-
-
-    button.appendChild(
-        letter
-    );
-
-    button.appendChild(
-        text
-    );
-
-
-    button.addEventListener(
-        "click",
-        function () {
-
-            answerMCQ(
-                mcq,
-                optionIndex,
-                options,
-                card,
-                answerPanel
+    const cards =
+        dom.lessonContainer
+            .querySelectorAll(
+                ".mcq-card"
             );
 
+
+    cards.forEach(
+        card => {
+
+            const options =
+                card.querySelectorAll(
+                    ".mcq-option"
+                );
+
+
+            options.forEach(
+                option => {
+
+                    option.addEventListener(
+                        "click",
+                        () =>
+                            answerMCQ(
+                                card,
+                                option
+                            )
+                    );
+                }
+            );
         }
     );
-
-
-    return button;
 }
 
 
@@ -2103,749 +1710,529 @@ function createMCQOptionButton(
    ============================================================ */
 
 function answerMCQ(
-    mcq,
-    selectedIndex,
-    options,
     card,
-    answerPanel
+    selectedOption
 ) {
 
     /*
-     * Do not allow changing an answered question.
+     * Prevent answering the same question
+     * more than once.
      */
-
     if (
         card.dataset.answered ===
         "true"
     ) {
+        return;
+    }
+
+    /*
+     * Selected answer:
+     *
+     * A / B / C / D
+     */
+    const selected =
+        normalizeAnswer(
+            selectedOption.dataset.option
+        );
+
+    /*
+     * Correct answer comes from the
+     * JSON through renderMCQ().
+     */
+    const correct =
+        normalizeAnswer(
+            card.dataset.correctAnswer
+        );
+
+    const allOptions =
+        card.querySelectorAll(
+            ".mcq-option"
+        );
+
+    const result =
+        card.querySelector(
+            ".mcq-result"
+        );
+
+    const explanation =
+        card.querySelector(
+            ".mcq-explanation"
+        );
+
+    /*
+     * Safety validation.
+     */
+    if (
+        !/^[A-D]$/.test(correct)
+    ) {
+        console.error(
+            "Invalid MCQ correct answer:",
+            card.dataset.correctAnswer
+        );
 
         return;
     }
 
-
-    const correctIndex =
-        findCorrectAnswer(
-            mcq,
-            options
-        );
-
-
+    /*
+     * Check student's answer.
+     */
     const isCorrect =
-        selectedIndex ===
-        correctIndex;
+        selected === correct;
 
-
+    /*
+     * Mark question as answered.
+     */
     card.dataset.answered =
         "true";
 
-
-    state.mcqAnswered.add(
-        card.dataset.question
-    );
-
-
-    const buttons =
-        Array.from(
-            card.querySelectorAll(
-                ".mcq-option"
-            )
-        );
-
-
     /*
-     * Disable all options.
+     * Disable all options after
+     * the first answer.
      */
-
-    buttons.forEach(
-        button => {
-
-            button.disabled =
+    allOptions.forEach(
+        option => {
+            option.disabled =
                 true;
         }
     );
 
-
     /*
-     * SELECTED ANSWER
+     * ALWAYS highlight the real
+     * correct answer GREEN.
      */
+    allOptions.forEach(
+        option => {
 
-    if (
-        buttons[selectedIndex]
-    ) {
+            const optionLetter =
+                normalizeAnswer(
+                    option.dataset.option
+                );
 
-        buttons[
-            selectedIndex
-        ].classList.add(
-            isCorrect
-                ? "correct"
-                : "wrong"
-        );
-    }
-
-
-    /*
-     * IF WRONG:
-     *
-     * show the actual correct option in green.
-     */
-
-    if (
-        !isCorrect &&
-        correctIndex >= 0 &&
-        buttons[correctIndex]
-    ) {
-
-        buttons[
-            correctIndex
-        ].classList.add(
-            "correct"
-        );
-    }
-
-
-    /*
-     * ANSWER PANEL
-     */
-
-    renderMCQAnswer(
-        answerPanel,
-        mcq,
-        options,
-        correctIndex,
-        isCorrect
-    );
-
-
-    /*
-     * Make the result visible smoothly.
-     */
-
-    requestAnimationFrame(
-        function () {
-
-            answerPanel.scrollIntoView(
-                {
-                    behavior: "smooth",
-                    block: "nearest"
-                }
-            );
-
+            if (
+                optionLetter === correct
+            ) {
+                option.classList.add(
+                    "correct",
+                    "is-correct"
+                );
+            }
         }
     );
+
+    /*
+     * If the student selected
+     * the wrong answer, mark
+     * ONLY that selected answer RED.
+     */
+    if (!isCorrect) {
+
+        selectedOption.classList.add(
+            "wrong",
+            "is-wrong"
+        );
+    }
+
+    /*
+     * Find the actual correct
+     * option text.
+     *
+     * Example:
+     * C — Ability to move
+     */
+    let correctOptionText = "";
+
+    allOptions.forEach(
+        option => {
+
+            const optionLetter =
+                normalizeAnswer(
+                    option.dataset.option
+                );
+
+            if (
+                optionLetter === correct
+            ) {
+
+                const text =
+                    option.querySelector(
+                        ".option-text"
+                    );
+
+                if (text) {
+                    correctOptionText =
+                        text.textContent.trim();
+                }
+            }
+        }
+    );
+
+    /*
+     * Show result immediately.
+     */
+    if (result) {
+
+        result.hidden =
+            false;
+
+        result.className =
+            `mcq-result ${
+                isCorrect
+                    ? "correct"
+                    : "wrong"
+            }`;
+
+        result.innerHTML = `
+
+            <div class="mcq-result-title">
+
+                ${
+                    isCorrect
+                        ? "✓ Correct!"
+                        : "✕ Incorrect"
+                }
+
+            </div>
+
+            <p class="mcq-result-answer">
+
+                Correct answer:
+
+                <strong>
+                    ${escapeHTML(correct)}
+                </strong>
+
+                ${
+                    correctOptionText
+                        ? `
+                            — ${escapeHTML(
+                                correctOptionText
+                            )}
+                          `
+                        : ""
+                }
+
+            </p>
+
+        `;
+    }
+
+    /*
+     * ALWAYS open the explanation
+     * immediately after the user
+     * selects an answer.
+     */
+    if (explanation) {
+
+        explanation.hidden =
+            false;
+    }
 }
 
 
+
 /* ============================================================
-   FIND CORRECT MCQ ANSWER
+   ANSWER NORMALISATION
    ============================================================ */
 
-function findCorrectAnswer(
-    mcq,
-    options
+function normalizeAnswer(
+    value
 ) {
 
-    /*
-     * FIRST:
-     *
-     * Explicit isCorrect flag on options.
-     */
-
-    const explicit =
-        options.findIndex(
-            option =>
-                option.isCorrect === true
-        );
-
-
     if (
-        explicit >= 0
+        value === null ||
+        value === undefined
     ) {
-
-        return explicit;
+        return "";
     }
 
-
     /*
-     * ACTUAL UPLOADED DAY JSON FORMAT:
-     *
-     * "answer": 0
-     *
-     * This is zero-based.
+     * Your generated JSON uses
+     * ZERO-BASED answer indexes:
      *
      * 0 = A
      * 1 = B
      * 2 = C
      * 3 = D
      */
-
     if (
-        typeof mcq.answer ===
-        "number"
+        typeof value === "number" &&
+        Number.isInteger(value) &&
+        value >= 0 &&
+        value <= 3
     ) {
-
-        if (
-            mcq.answer >= 0 &&
-            mcq.answer < options.length
-        ) {
-
-            return mcq.answer;
-        }
+        return String.fromCharCode(
+            65 + value
+        );
     }
 
+    const text =
+        String(value)
+            .trim()
+            .toUpperCase();
 
     /*
-     * Other common formats.
+     * Direct A / B / C / D
      */
-
-    const raw =
-        mcq.correctAnswer !== undefined
-            ? mcq.correctAnswer
-            : mcq.correct_answer !== undefined
-                ? mcq.correct_answer
-                : mcq.correctOption !== undefined
-                    ? mcq.correctOption
-                    : mcq.correct_option !== undefined
-                        ? mcq.correct_option
-                        : mcq.correctIndex !== undefined
-                            ? mcq.correctIndex
-                            : mcq.correct_index !== undefined
-                                ? mcq.correct_index
-                                : undefined;
-
-
     if (
-        raw === undefined ||
-        raw === null
+        /^[A-D]$/.test(text)
     ) {
-
-        return -1;
+        return text;
     }
 
-
     /*
-     * Number.
+     * Numeric string:
+     *
+     * "0" = A
+     * "1" = B
+     * "2" = C
+     * "3" = D
      */
-
     if (
-        typeof raw === "number"
+        /^[0-3]$/.test(text)
     ) {
-
-        if (
-            raw >= 0 &&
-            raw < options.length
-        ) {
-
-            return raw;
-        }
-
-
-        if (
-            raw >= 1 &&
-            raw <= options.length
-        ) {
-
-            return raw - 1;
-        }
+        return String.fromCharCode(
+            65 + Number(text)
+        );
     }
 
-
-    const value =
-        String(raw)
-            .trim();
-
-
     /*
-     * A / B / C / D
+     * Support:
+     *
+     * Option A
+     * Option B
+     * Option C
+     * Option D
      */
-
-    if (
-        /^[A-Za-z]$/.test(
-            value
-        )
-    ) {
-
-        const index =
-            value
-                .toUpperCase()
-                .charCodeAt(0) - 65;
-
-
-        if (
-            index >= 0 &&
-            index < options.length
-        ) {
-
-            return index;
-        }
-    }
-
-
-    /*
-     * Numeric string.
-     */
-
-    if (
-        /^\d+$/.test(value)
-    ) {
-
-        const number =
-            Number(value);
-
-
-        if (
-            number >= 0 &&
-            number < options.length
-        ) {
-
-            return number;
-        }
-
-
-        if (
-            number >= 1 &&
-            number <= options.length
-        ) {
-
-            return number - 1;
-        }
-    }
-
-
-    /*
-     * Text match.
-     */
-
-    const normalized =
-        normalizeComparison(
-            value
+    const optionMatch =
+        text.match(
+            /\bOPTION\s+([A-D])\b/
         );
 
+    if (optionMatch) {
+        return optionMatch[1];
+    }
 
-    const textIndex =
-        options.findIndex(
-            option =>
-                normalizeComparison(
-                    option.text
-                ) === normalized
+    /*
+     * Support:
+     *
+     * Answer: A
+     * Answer: B
+     * Answer: C
+     * Answer: D
+     */
+    const answerMatch =
+        text.match(
+            /\bANSWER\s*[:\-]?\s*([A-D])\b/
         );
 
+    if (answerMatch) {
+        return answerMatch[1];
+    }
 
-    return textIndex;
+    /*
+     * Fallback:
+     * preserve the normalized value.
+     */
+    return text;
 }
 
 
 /* ============================================================
-   RENDER MCQ ANSWER
+   TEXT HELPERS
    ============================================================ */
 
-function renderMCQAnswer(
-    panel,
-    mcq,
-    options,
-    correctIndex,
-    isCorrect
-) {
-
-    panel.innerHTML = "";
-
-    panel.hidden =
-        false;
-
-
-    panel.classList.toggle(
-        "is-correct",
-        isCorrect
-    );
-
-    panel.classList.toggle(
-        "is-wrong",
-        !isCorrect
-    );
-
-
-    /*
-     * RESULT
-     */
-
-    const result =
-        document.createElement("div");
-
-    result.className =
-        "mcq-result";
-
-    result.textContent =
-        isCorrect
-            ? "✓ Correct! Excellent work."
-            : "✕ Incorrect. Review the explanation below.";
-
-
-    panel.appendChild(
-        result
-    );
-
-
-    /*
-     * CORRECT ANSWER
-     */
+function toArray(value) {
 
     if (
-        correctIndex >= 0 &&
-        options[correctIndex]
+        !Array.isArray(value)
     ) {
-
-        const correct =
-            document.createElement("div");
-
-        correct.className =
-            "mcq-correct-answer";
-
-
-        const label =
-            document.createElement("strong");
-
-        label.textContent =
-            "Correct Answer";
-
-
-        const value =
-            document.createElement("span");
-
-        value.textContent =
-            `${String.fromCharCode(65 + correctIndex)}. ${options[correctIndex].text}`;
-
-
-        correct.appendChild(
-            label
-        );
-
-        correct.appendChild(
-            value
-        );
-
-
-        panel.appendChild(
-            correct
-        );
+        return [];
     }
 
 
-    /*
-     * EXPLANATION
-     */
+    return value
+        .filter(
+            item =>
+                item !== null &&
+                item !== undefined &&
+                String(item).trim() !== ""
+        );
+}
+
+
+function renderList(
+    items
+) {
 
     if (
-        mcq.explanation
+        !Array.isArray(items) ||
+        items.length === 0
     ) {
-
-        const explanation =
-            document.createElement("div");
-
-        explanation.className =
-            "mcq-explanation";
+        return "";
+    }
 
 
-        const label =
-            document.createElement("strong");
+    return `
 
-        label.textContent =
-            "Explanation";
+        <ul class="neet-content-list">
+
+            ${items
+                .map(
+                    item => `
+                        <li>
+                            ${renderRichText(
+                                item
+                            )}
+                        </li>
+                    `
+                )
+                .join("")}
+
+        </ul>
+    `;
+}
 
 
-        const text =
-            document.createElement("p");
+/*
+ * Safe text renderer.
+ *
+ * We intentionally escape HTML first.
+ * This prevents generated JSON content
+ * from injecting arbitrary HTML/JS.
+ *
+ * Basic Markdown-style emphasis is then
+ * converted safely:
+ *
+ * *text* → <em>text</em>
+ */
+function renderRichText(
+    value
+) {
 
-        text.textContent =
-            cleanText(
-                mcq.explanation
-            );
-
-
-        explanation.appendChild(
-            label
+    const text =
+        String(
+            value ?? ""
         );
 
-        explanation.appendChild(
+
+    let safe =
+        escapeHTML(
             text
         );
 
 
-        panel.appendChild(
-            explanation
+    /*
+     * Convert simple line breaks.
+     */
+    safe =
+        safe.replace(
+            /\r?\n/g,
+            "<br>"
         );
-    }
 
 
     /*
-     * TOPIC
+     * Safe simple emphasis.
      */
-
-    if (
-        mcq.topic
-    ) {
-
-        const topic =
-            document.createElement("div");
-
-        topic.className =
-            "mcq-topic";
-
-        topic.textContent =
-            `Topic: ${cleanText(mcq.topic)}`;
-
-
-        panel.appendChild(
-            topic
+    safe =
+        safe.replace(
+            /\*([^*]+)\*/g,
+            "<em>$1</em>"
         );
-    }
+
+
+    return safe;
 }
 
 
 /* ============================================================
-   FALLBACK LESSON
+   HTML ESCAPING
    ============================================================ */
 
-function renderFallbackContent(
-    lesson
+function escapeHTML(
+    value
 ) {
 
-    const card =
-        document.createElement("article");
-
-    card.className =
-        "lesson-section";
-
-
-    const title =
-        document.createElement("h3");
-
-    title.textContent =
-        "Today's Lesson";
-
-
-    const paragraph =
-        document.createElement("p");
-
-    paragraph.textContent =
-        cleanText(
-            lesson.content ||
-            lesson.description ||
-            "Lesson content is available."
+    return String(
+        value ?? ""
+    )
+        .replaceAll(
+            "&",
+            "&amp;"
+        )
+        .replaceAll(
+            "<",
+            "&lt;"
+        )
+        .replaceAll(
+            ">",
+            "&gt;"
+        )
+        .replaceAll(
+            '"',
+            "&quot;"
+        )
+        .replaceAll(
+            "'",
+            "&#039;"
         );
-
-
-    card.appendChild(
-        title
-    );
-
-    card.appendChild(
-        paragraph
-    );
-
-
-    return card;
 }
 
 
 /* ============================================================
-   SELECTED DAY UI
+   VIEWS
    ============================================================ */
 
-function updateSelectedDay(
-    dayNumber
-) {
-
-    if (!dom.dayGrid) {
-        return;
-    }
-
-
-    const buttons =
-        dom.dayGrid.querySelectorAll(
-            ".day-button"
-        );
-
-
-    buttons.forEach(
-        button => {
-
-            const value =
-                Number(
-                    button.dataset.day
-                );
-
-
-            button.classList.toggle(
-                "selected",
-                value === dayNumber
-            );
-        }
-    );
-}
-
-
-/* ============================================================
-   RELEASE STATUS UI
-   ============================================================ */
-
-function updateReleaseUI() {
-
-    if (
-        dom.releaseStatusText
-    ) {
-
-        if (
-            state.releasedDay === 0
-        ) {
-
-            dom.releaseStatusText.textContent =
-                "Day 1 releases at 6:00 AM IST";
-
-        } else {
-
-            dom.releaseStatusText.textContent =
-                `Day ${state.releasedDay} is live`;
-        }
-    }
-
-
-    if (
-        dom.todayBadgeText
-    ) {
-
-        if (
-            state.releasedDay === 0
-        ) {
-
-            dom.todayBadgeText.textContent =
-                "Starts at 6:00 AM";
-
-        } else {
-
-            dom.todayBadgeText.textContent =
-                `Day ${state.releasedDay} Live`;
-        }
-    }
-
-
-    if (
-        dom.syllabusSummary
-    ) {
-
-        if (
-            state.releasedDay === 0
-        ) {
-
-            dom.syllabusSummary.textContent =
-                "Day 1 will unlock automatically at 6:00 AM IST.";
-
-        } else {
-
-            dom.syllabusSummary.textContent =
-                `${state.releasedDay} of ${state.totalDays} days released`;
-        }
-    }
-}
-
-
-/* ============================================================
-   BEFORE FIRST RELEASE
-   ============================================================ */
-
-function showBeforeRelease() {
+function showDays() {
 
     hideLoading();
+    hideError();
+
+
+    if (dom.lessonView) {
+        dom.lessonView.hidden =
+            true;
+    }
+
+
+    if (dom.daysView) {
+        dom.daysView.hidden =
+            false;
+    }
+
+
+    state.selectedDay =
+        null;
+
+    state.lesson =
+        null;
+
+
+    updateHomeStatus();
+    renderDayGrid();
+
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+}
+
+
+function showLesson() {
 
     hideError();
 
-    hideLessonView();
 
-
-    if (
-        !dom.lessonContainer
-    ) {
-        return;
+    if (dom.daysView) {
+        dom.daysView.hidden =
+            true;
     }
 
 
-    dom.lessonContainer.innerHTML = "";
-
-
-    const card =
-        document.createElement("article");
-
-    card.className =
-        "lesson-introduction";
-
-
-    const label =
-        document.createElement("div");
-
-    label.className =
-        "lesson-card-label";
-
-    label.textContent =
-        "COURSE STARTS TODAY";
-
-
-    const title =
-        document.createElement("h3");
-
-    title.textContent =
-        "Your Day 1 lesson unlocks at 6:00 AM IST.";
-
-
-    const paragraph =
-        document.createElement("p");
-
-    paragraph.textContent =
-        "Come back after the daily release time and Day 1 will become available automatically.";
-
-
-    card.appendChild(
-        label
-    );
-
-    card.appendChild(
-        title
-    );
-
-    card.appendChild(
-        paragraph
-    );
-
-
-    dom.lessonContainer.appendChild(
-        card
-    );
-}
-
-
-/* ============================================================
-   LESSON VIEW
-   ============================================================ */
-
-function showLessonView() {
-
-    if (
-        dom.lessonView
-    ) {
-
-        dom.lessonView.classList.remove(
-            "hidden"
-        );
-    }
-}
-
-
-function hideLessonView() {
-
-    if (
-        dom.lessonView
-    ) {
-
-        dom.lessonView.classList.add(
-            "hidden"
-        );
+    if (dom.lessonView) {
+        dom.lessonView.hidden =
+            false;
     }
 }
 
@@ -2856,26 +2243,28 @@ function hideLessonView() {
 
 function showLoading() {
 
-    if (
-        dom.loadingState
-    ) {
+    state.loading =
+        true;
 
-        dom.loadingState.classList.remove(
-            "hidden"
-        );
+
+    if (dom.loadingState) {
+
+        dom.loadingState.hidden =
+            false;
     }
 }
 
 
 function hideLoading() {
 
-    if (
-        dom.loadingState
-    ) {
+    state.loading =
+        false;
 
-        dom.loadingState.classList.add(
-            "hidden"
-        );
+
+    if (dom.loadingState) {
+
+        dom.loadingState.hidden =
+            true;
     }
 }
 
@@ -2888,361 +2277,50 @@ function showError(
     message
 ) {
 
-    hideLoading();
-
-    hideLessonView();
-
-
-    if (
-        dom.errorMessage
-    ) {
+    if (dom.errorMessage) {
 
         dom.errorMessage.textContent =
             message;
     }
 
 
-    if (
-        dom.errorState
-    ) {
+    if (dom.errorState) {
 
-        dom.errorState.classList.remove(
-            "hidden"
-        );
+        dom.errorState.hidden =
+            false;
     }
 }
 
 
 function hideError() {
 
-    if (
-        dom.errorState
-    ) {
+    if (dom.errorState) {
 
-        dom.errorState.classList.add(
-            "hidden"
-        );
+        dom.errorState.hidden =
+            true;
     }
 }
 
 
-/* ============================================================
-   RETRY
-   ============================================================ */
+async function retrySelectedDay() {
 
-async function retryLesson() {
-
-    calculateReleasedDay();
-
-    renderDayGrid();
-
-    updateReleaseUI();
-
-
-    const day =
-        state.selectedDay ||
-        state.releasedDay;
+    hideError();
 
 
     if (
-        day >= 1 &&
-        day <= state.releasedDay
+        Number.isInteger(
+            state.selectedDay
+        )
     ) {
 
-        await loadDay(
-            day,
-            false
+        await openDay(
+            state.selectedDay
         );
 
     } else {
 
-        showBeforeRelease();
+        await initialize();
     }
-}
-
-
-/* ============================================================
-   SCROLL TO LESSON
-   ============================================================ */
-
-function scrollToLessonView() {
-
-    if (
-        !dom.lessonView
-    ) {
-        return;
-    }
-
-
-    setTimeout(
-        function () {
-
-            dom.lessonView.scrollIntoView(
-                {
-                    behavior: "smooth",
-                    block: "start"
-                }
-            );
-
-        },
-        50
-    );
-}
-
-
-/* ============================================================
-   COURSE DATE
-   ============================================================ */
-
-function formatCourseDate(
-    dayNumber
-) {
-
-    const timestamp =
-        istDateToUTC(
-            state.startDate.year,
-            state.startDate.month,
-            state.startDate.day
-        ) +
-        (
-            dayNumber - 1
-        ) *
-        86400000;
-
-
-    return new Intl.DateTimeFormat(
-        "en-IN",
-        {
-            timeZone:
-                "Asia/Kolkata",
-
-            day:
-                "numeric",
-
-            month:
-                "long",
-
-            year:
-                "numeric"
-        }
-    ).format(
-        new Date(timestamp)
-    );
-}
-
-
-/* ============================================================
-   CACHE VERSION
-   ============================================================ */
-
-function getCacheVersion() {
-
-    const now =
-        getCurrentIST();
-
-
-    return [
-        now.year,
-        String(now.month).padStart(2, "0"),
-        String(now.day).padStart(2, "0"),
-        String(now.hour).padStart(2, "0"),
-        String(now.minute).padStart(2, "0")
-    ].join("");
-}
-
-
-/* ============================================================
-   TEXT HELPERS
-   ============================================================ */
-
-function cleanText(
-    value
-) {
-
-    if (
-        value === null ||
-        value === undefined
-    ) {
-
-        return "";
-    }
-
-
-    if (
-        typeof value === "string"
-    ) {
-
-        return value.trim();
-    }
-
-
-    if (
-        typeof value === "number" ||
-        typeof value === "boolean"
-    ) {
-
-        return String(value);
-    }
-
-
-    if (
-        typeof value === "object"
-    ) {
-
-        if (
-            value.text !== undefined
-        ) {
-
-            return cleanText(
-                value.text
-            );
-        }
-
-
-        if (
-            value.content !== undefined
-        ) {
-
-            return cleanText(
-                value.content
-            );
-        }
-
-
-        return JSON.stringify(
-            value
-        );
-    }
-
-
-    return String(value);
-}
-
-
-function normalizeComparison(
-    value
-) {
-
-    return cleanText(
-        value
-    )
-        .toLowerCase()
-        .replace(
-            /\s+/g,
-            " "
-        )
-        .trim();
-}
-
-
-/* ============================================================
-   GLOBAL EVENTS
-   ============================================================ */
-
-function bindEvents() {
-
-    /*
-     * Retry
-     */
-
-    if (
-        dom.retryButton
-    ) {
-
-        dom.retryButton.addEventListener(
-            "click",
-            retryLesson
-        );
-    }
-
-
-    /*
-     * PWA install
-     */
-
-    window.addEventListener(
-        "beforeinstallprompt",
-        function (event) {
-
-            event.preventDefault();
-
-            state.installPrompt =
-                event;
-
-
-            if (
-                dom.installButton
-            ) {
-
-                dom.installButton.classList.remove(
-                    "hidden"
-                );
-            }
-        }
-    );
-
-
-    if (
-        dom.installButton
-    ) {
-
-        dom.installButton.addEventListener(
-            "click",
-            installApplication
-        );
-    }
-
-
-    window.addEventListener(
-        "appinstalled",
-        function () {
-
-            state.installPrompt =
-                null;
-
-
-            if (
-                dom.installButton
-            ) {
-
-                dom.installButton.classList.add(
-                    "hidden"
-                );
-            }
-        }
-    );
-
-
-    /*
-     * Recalculate when returning to the app.
-     */
-
-    document.addEventListener(
-        "visibilitychange",
-        function () {
-
-            if (
-                document.visibilityState ===
-                "visible"
-            ) {
-
-                refreshReleaseState();
-            }
-        }
-    );
-
-
-    /*
-     * Recalculate if the system clock/timezone changes.
-     */
-
-    window.addEventListener(
-        "focus",
-        function () {
-
-            refreshReleaseState();
-        }
-    );
 }
 
 
@@ -3250,114 +2328,144 @@ function bindEvents() {
    RELEASE REFRESH
    ============================================================ */
 
-async function refreshReleaseState() {
+function scheduleReleaseRefresh() {
 
-    if (
-        !state.config
-    ) {
-        return;
+    if (state.releaseTimer) {
+
+        clearInterval(
+            state.releaseTimer
+        );
     }
 
 
-    const previous =
-        state.releasedDay;
+    /*
+     * Check periodically so the app does not
+     * require a manual refresh at 06:00.
+     */
+    state.releaseTimer =
+        setInterval(
+            () => {
+
+                const previous =
+                    state.releasedDay;
 
 
-    calculateReleasedDay();
+                const current =
+                    calculateReleasedDay();
 
 
-    if (
-        previous !==
-        state.releasedDay
-    ) {
+                if (
+                    current !==
+                    previous
+                ) {
 
-        renderDayGrid();
+                    state.releasedDay =
+                        current;
 
-        updateReleaseUI();
 
+                    if (
+                        !dom.lessonView ||
+                        dom.lessonView.hidden
+                    ) {
 
-        /*
-         * A new daily lesson became live.
-         *
-         * Automatically load it.
-         */
+                        renderDayGrid();
+                        updateHomeStatus();
+                    }
+                }
 
-        if (
-            state.releasedDay >= 1
-        ) {
-
-            await loadDay(
-                state.releasedDay,
-                false
-            );
-        }
-
-    } else {
-
-        /*
-         * Keep status accurate even if no new day
-         * has been released.
-         */
-
-        updateReleaseUI();
-    }
+            },
+            30000
+        );
 }
-
-
-/* ============================================================
-   CHECK EVERY MINUTE
-   ============================================================ */
-
-setInterval(
-    function () {
-
-        refreshReleaseState();
-
-    },
-    60000
-);
 
 
 /* ============================================================
    PWA INSTALL
    ============================================================ */
 
+function setupInstallPrompt() {
+
+    window.addEventListener(
+        "beforeinstallprompt",
+        event => {
+
+            event.preventDefault();
+
+            state.deferredInstallPrompt =
+                event;
+
+
+            if (dom.installButton) {
+
+                dom.installButton.hidden =
+                    false;
+            }
+        }
+    );
+
+
+    window.addEventListener(
+        "appinstalled",
+        () => {
+
+            state.deferredInstallPrompt =
+                null;
+
+
+            if (dom.installButton) {
+
+                dom.installButton.hidden =
+                    true;
+            }
+        }
+    );
+
+
+    if (dom.installButton) {
+
+        dom.installButton.addEventListener(
+            "click",
+            installApplication
+        );
+    }
+}
+
+
 async function installApplication() {
 
-    if (
-        !state.installPrompt
-    ) {
+    const prompt =
+        state.deferredInstallPrompt;
 
+
+    if (!prompt) {
         return;
     }
 
 
+    prompt.prompt();
+
+
     try {
 
-        state.installPrompt.prompt();
-
-        await state.installPrompt.userChoice;
+        await prompt.userChoice;
 
     } catch (error) {
 
         console.warn(
-            "[VIDHWAAN NEET] PWA install prompt failed:",
+            "PWA install choice failed:",
             error
         );
     }
 
 
-    state.installPrompt =
+    state.deferredInstallPrompt =
         null;
 
 
-    if (
-        dom.installButton
-    ) {
+    if (dom.installButton) {
 
-        dom.installButton.classList.add(
-            "hidden"
-        );
+        dom.installButton.hidden =
+            true;
     }
 }
 
@@ -3366,23 +2474,31 @@ async function installApplication() {
    SERVICE WORKER
    ============================================================ */
 
-if (
-    "serviceWorker" in navigator
-) {
+function registerServiceWorker() {
+
+    if (
+        !("serviceWorker" in navigator)
+    ) {
+        return;
+    }
+
 
     window.addEventListener(
         "load",
-        function () {
+        () => {
 
             navigator.serviceWorker
                 .register(
-                    "./sw.js"
+                    "./sw.js",
+                    {
+                        scope: "./"
+                    }
                 )
                 .then(
                     registration => {
 
                         console.log(
-                            "[VIDHWAAN NEET] Service worker registered:",
+                            "VIDHWAAN NEET service worker registered:",
                             registration.scope
                         );
                     }
@@ -3391,7 +2507,7 @@ if (
                     error => {
 
                         console.warn(
-                            "[VIDHWAAN NEET] Service worker registration failed:",
+                            "Service worker registration failed:",
                             error
                         );
                     }
