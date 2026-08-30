@@ -1,29 +1,57 @@
+/* ============================================================
+   VIDHWAAN NEET — PRODUCTION FRONTEND
+   ============================================================
+
+   FRONTEND RULE:
+   - syllabus.json is NEVER used by the student app.
+   - AI uses syllabus.json only during generation.
+   - Students receive generated daily JSON files.
+
+   RELEASE SCHEDULE:
+   Day 1   = 2026-08-30 at 06:00 IST
+   Day 2   = 2026-08-31 at 06:00 IST
+   Day 3   = 2026-09-01 at 06:00 IST
+   ...
+   Day 365 = start date + 364 days at 06:00 IST
+
+   DAILY CONTENT:
+   ./data/day-001.json
+   ./data/day-002.json
+   ...
+   ./data/day-365.json
+   ============================================================ */
+
+"use strict";
+
+/* ============================================================
+   CONFIG
+   ============================================================ */
+
 const CONFIG_URL = "./data/app-config.json";
-const SYLLABUS_URL = "./data/syllabus.json";
 
-const IST_OFFSET_MINUTES = 330;
-
-// IMPORTANT:
-// Set this to the actual calendar date on which Day 1 starts.
-// Format: YYYY-MM-DD
-//
-// For the current build we use today's IST date if no explicit
-// value is supplied by app-config.json.
 const DEFAULT_START_DATE = "2026-08-30";
+const DEFAULT_ACTIVATION_HOUR = 6;
+const DEFAULT_TOTAL_DAYS = 365;
 
-let syllabus = null;
 let config = null;
+let currentDay = 0;
 let deferredInstallPrompt = null;
-
 
 /* ============================================================
    DOM
    ============================================================ */
 
-const dayGrid = document.getElementById("day-grid");
-const loadingState = document.getElementById("loading-state");
-const errorState = document.getElementById("error-state");
-const errorMessage = document.getElementById("error-message");
+const dayGrid =
+    document.getElementById("day-grid");
+
+const loadingState =
+    document.getElementById("loading-state");
+
+const errorState =
+    document.getElementById("error-state");
+
+const errorMessage =
+    document.getElementById("error-message");
 
 const syllabusSummary =
     document.getElementById("syllabus-summary");
@@ -40,50 +68,79 @@ const retryButton =
 const installButton =
     document.getElementById("install-button");
 
-
 /* ============================================================
-   IST DATE / TIME
+   IST CLOCK
    ============================================================ */
 
-function getISTNow() {
-    const now = new Date();
+function getISTParts() {
+    const parts = new Intl.DateTimeFormat(
+        "en-CA",
+        {
+            timeZone: "Asia/Kolkata",
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+            hourCycle: "h23"
+        }
+    ).formatToParts(new Date());
 
-    const utcMillis =
-        now.getTime() +
-        now.getTimezoneOffset() * 60 * 1000;
+    const result = {};
 
-    return new Date(
-        utcMillis +
-        IST_OFFSET_MINUTES * 60 * 1000
-    );
+    for (const part of parts) {
+        if (part.type !== "literal") {
+            result[part.type] = part.value;
+        }
+    }
+
+    return {
+        year: Number(result.year),
+        month: Number(result.month),
+        day: Number(result.day),
+        hour: Number(result.hour),
+        minute: Number(result.minute),
+        second: Number(result.second)
+    };
 }
 
+function getISTDateString() {
+    const now = getISTParts();
 
-function formatDateUTC(date) {
     return [
-        date.getUTCFullYear(),
-        String(date.getUTCMonth() + 1).padStart(2, "0"),
-        String(date.getUTCDate()).padStart(2, "0")
+        String(now.year).padStart(4, "0"),
+        String(now.month).padStart(2, "0"),
+        String(now.day).padStart(2, "0")
     ].join("-");
 }
 
-
-function getISTDateString() {
-    return formatDateUTC(getISTNow());
-}
-
+/* ============================================================
+   DATE HELPERS
+   ============================================================ */
 
 function parseDateOnly(dateString) {
-    const [year, month, day] =
-        dateString.split("-").map(Number);
+    const match =
+        /^(\d{4})-(\d{2})-(\d{2})$/.exec(
+            String(dateString)
+        );
+
+    if (!match) {
+        throw new Error(
+            `Invalid course start date: ${dateString}`
+        );
+    }
 
     return new Date(
-        Date.UTC(year, month - 1, day)
+        Date.UTC(
+            Number(match[1]),
+            Number(match[2]) - 1,
+            Number(match[3])
+        )
     );
 }
 
-
-function differenceInCalendarDays(
+function differenceInDays(
     startDateString,
     currentDateString
 ) {
@@ -94,96 +151,148 @@ function differenceInCalendarDays(
         parseDateOnly(currentDateString);
 
     return Math.floor(
-        (current.getTime() - start.getTime()) /
-        (24 * 60 * 60 * 1000)
+        (
+            current.getTime() -
+            start.getTime()
+        ) /
+        86400000
     );
 }
 
-
 /* ============================================================
-   RELEASE LOGIC
+   RELEASE CALCULATION
    ============================================================
 
-   Day N:
-       01:00 AM -> JSON may be generated
-       06:00 AM -> Day N becomes visible/available
+   IMPORTANT:
 
-   This frontend NEVER treats the existence of JSON alone
-   as proof that the day has been released.
+   Before 06:00 IST:
+       today's lesson is NOT released.
+
+   At/after 06:00 IST:
+       today's lesson IS released.
+
+   Example:
+
+   2026-08-30 05:59 -> Day 0
+   2026-08-30 06:00 -> Day 1
+
+   2026-08-31 05:59 -> Day 1
+   2026-08-31 06:00 -> Day 2
    ============================================================ */
 
 function getReleaseDay() {
+    const now = getISTParts();
 
-    const now = getISTNow();
-
-    const todayString = formatDateUTC(now);
-
-    const configuredStart =
+    const startDate =
+        config?.courseStartDate ||
         config?.releaseStartDate ||
+        config?.programStartDateIST ||
         DEFAULT_START_DATE;
 
-    const dayOffset =
-        differenceInCalendarDays(
-            configuredStart,
-            todayString
+    const activationHour =
+        Number(
+            config?.dailyActivationHourIST ??
+            config?.publishHour ??
+            DEFAULT_ACTIVATION_HOUR
         );
 
-    const scheduledDay =
-        dayOffset + 1;
+    const today =
+        getISTDateString();
 
-    const hour = now.getUTCHours();
+    const calendarOffset =
+        differenceInDays(
+            startDate,
+            today
+        );
 
-    // getISTNow() is represented using UTC fields after
-    // applying the +05:30 offset.
-    const isAfterSixAM =
-        hour >= 6;
-
-    if (!isAfterSixAM) {
-        return Math.max(0, scheduledDay - 1);
+    if (calendarOffset < 0) {
+        return 0;
     }
 
-    return scheduledDay;
+    let dayNumber =
+        calendarOffset + 1;
+
+    /*
+      The first lesson and every subsequent lesson
+      activate only at the configured hour.
+    */
+    if (now.hour < activationHour) {
+        dayNumber -= 1;
+    }
+
+    const totalDays =
+        Number(
+            config?.totalDays ||
+            DEFAULT_TOTAL_DAYS
+        );
+
+    return Math.min(
+        Math.max(dayNumber, 0),
+        totalDays
+    );
 }
 
+/* ============================================================
+   NEXT RELEASE
+   ============================================================ */
 
-function getReleaseMessage(releasedDay) {
+function getNextReleaseText() {
+    const now = getISTParts();
 
-    const now = getISTNow();
+    const activationHour =
+        Number(
+            config?.dailyActivationHourIST ??
+            config?.publishHour ??
+            DEFAULT_ACTIVATION_HOUR
+        );
 
-    const hour = now.getUTCHours();
+    const released =
+        getReleaseDay();
 
-    if (hour < 6) {
-        return "Next lesson unlocks at 6:00 AM IST";
-    }
+    const totalDays =
+        Number(
+            config?.totalDays ||
+            DEFAULT_TOTAL_DAYS
+        );
 
-    if (releasedDay <= 0) {
-        return "Day 1 begins at 6:00 AM IST";
-    }
-
-    if (releasedDay >= 365) {
+    if (released >= totalDays) {
         return "All 365 days released";
     }
 
-    return `Day ${releasedDay} available`;
+    if (released === 0) {
+        return "Day 1 unlocks at 6:00 AM IST";
+    }
+
+    if (now.hour < activationHour) {
+        return `Day ${released + 1} unlocks at 6:00 AM IST`;
+    }
+
+    return `Day ${released} available`;
 }
 
-
 /* ============================================================
-   SYLLABUS LOADING
+   FETCH JSON
    ============================================================ */
 
 async function fetchJSON(url) {
+    const separator =
+        url.includes("?")
+            ? "&"
+            : "?";
 
-    const response = await fetch(
-        `${url}?t=${Date.now()}`,
-        {
-            method: "GET",
-            cache: "no-store",
-            headers: {
-                "Cache-Control": "no-cache"
+    const response =
+        await fetch(
+            `${url}${separator}v=${Date.now()}`,
+            {
+                method: "GET",
+                cache: "no-store",
+                headers: {
+                    "Cache-Control":
+                        "no-cache, no-store, must-revalidate",
+                    "Pragma": "no-cache"
+                }
             }
-        }
-    );
+        );
 
     if (!response.ok) {
         throw new Error(
@@ -194,156 +303,773 @@ async function fetchJSON(url) {
     return response.json();
 }
 
-
-async function loadApp() {
-
-    setLoading(true);
-
-    try {
-
-        // Network-first / live fetch.
-        // We deliberately do not use cached lesson data.
-        const [loadedConfig, loadedSyllabus] =
-            await Promise.all([
-                fetchJSON(CONFIG_URL),
-                fetchJSON(SYLLABUS_URL)
-            ]);
-
-        config = loadedConfig || {};
-        syllabus = loadedSyllabus;
-
-        validateSyllabus();
-
-        render();
-
-        setLoading(false);
-
-    } catch (error) {
-
-        console.error(
-            "Vidhwaan NEET loading error:",
-            error
-        );
-
-        setLoading(false);
-
-        errorState.classList.remove("hidden");
-
-        errorMessage.textContent =
-            error?.message ||
-            "Unable to load the syllabus.";
-    }
-}
-
-
 /* ============================================================
-   VALIDATION
+   LOAD CONFIG ONLY
    ============================================================ */
 
-function validateSyllabus() {
+async function loadConfig() {
+    config =
+        await fetchJSON(CONFIG_URL);
 
-    if (!syllabus) {
+    if (!config || typeof config !== "object") {
         throw new Error(
-            "Syllabus data is empty."
+            "Invalid app configuration."
         );
     }
 
-    const days =
-        Array.isArray(syllabus)
-            ? syllabus
-            : syllabus.days;
-
-    if (!Array.isArray(days)) {
-        throw new Error(
-            "syllabus.json must contain a days array."
+    config.totalDays =
+        Number(
+            config.totalDays ||
+            DEFAULT_TOTAL_DAYS
         );
-    }
 
-    if (days.length !== 365) {
+    if (
+        !Number.isInteger(config.totalDays) ||
+        config.totalDays < 1
+    ) {
         throw new Error(
-            `Expected 365 syllabus days, found ${days.length}.`
+            "Invalid totalDays in app-config.json."
         );
     }
 }
-
 
 /* ============================================================
-   RENDER
+   DAILY JSON PATH
    ============================================================ */
 
-function getDays() {
-    return Array.isArray(syllabus)
-        ? syllabus
-        : syllabus.days;
+function getDayURL(dayNumber) {
+    const filename =
+        `day-${String(dayNumber).padStart(3, "0")}.json`;
+
+    /*
+      Generated lessons are stored directly in:
+      public/data/day-001.json
+      public/data/day-002.json
+      etc.
+    */
+
+    return `./data/${filename}`;
 }
 
+/* ============================================================
+   DAY FILE EXISTENCE / LOAD
+   ============================================================ */
 
-function getDayNumber(day) {
+async function loadDay(dayNumber) {
+    const totalDays =
+        Number(
+            config?.totalDays ||
+            DEFAULT_TOTAL_DAYS
+        );
 
-    if (typeof day === "number") {
-        return day;
+    if (
+        !Number.isInteger(dayNumber) ||
+        dayNumber < 1 ||
+        dayNumber > totalDays
+    ) {
+        throw new Error(
+            `Invalid lesson day: ${dayNumber}`
+        );
     }
 
-    return Number(day.day);
+    const url =
+        getDayURL(dayNumber);
+
+    return fetchJSON(url);
 }
 
+/* ============================================================
+   ESCAPE HTML
+   ============================================================ */
 
-function render() {
+function escapeHTML(value) {
+    return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
 
-    const days = getDays();
+/* ============================================================
+   TEXT RENDERING
+   ============================================================ */
+
+function renderText(text) {
+    if (
+        text === null ||
+        text === undefined
+    ) {
+        return "";
+    }
+
+    if (Array.isArray(text)) {
+        return text
+            .map(item => renderText(item))
+            .join("<br>");
+    }
+
+    return escapeHTML(text)
+        .replace(/\n/g, "<br>");
+}
+
+/* ============================================================
+   ARRAY RENDERING
+   ============================================================ */
+
+function renderList(items) {
+    if (!Array.isArray(items) || items.length === 0) {
+        return "";
+    }
+
+    return `
+        <ul class="neet-content-list">
+            ${items.map(item => `
+                <li>${renderText(item)}</li>
+            `).join("")}
+        </ul>
+    `;
+}
+
+/* ============================================================
+   LESSON RENDERER
+   ============================================================ */
+
+function renderLesson(lesson) {
+    if (
+        !lesson ||
+        typeof lesson !== "object"
+    ) {
+        throw new Error(
+            "Invalid daily lesson JSON."
+        );
+    }
+
+    const sections =
+        Array.isArray(lesson.sections)
+            ? lesson.sections
+            : [];
+
+    const mcqs =
+        Array.isArray(lesson.mcqs)
+            ? lesson.mcqs
+            : [];
+
+    const topicHTML =
+        sections.map(
+            (section, index) => {
+
+                const subsections =
+                    Array.isArray(
+                        section.subsections
+                    )
+                        ? section.subsections
+                        : [];
+
+                return `
+                    <article class="neet-topic-card">
+
+                        <div class="neet-topic-number">
+                            Topic ${index + 1}
+                        </div>
+
+                        <h3>
+                            ${escapeHTML(
+                                section.heading ||
+                                section.topic ||
+                                `Topic ${index + 1}`
+                            )}
+                        </h3>
+
+                        ${
+                            section.topic &&
+                            section.heading &&
+                            section.topic !== section.heading
+                                ? `
+                                    <div class="neet-topic-name">
+                                        ${escapeHTML(section.topic)}
+                                    </div>
+                                  `
+                                : ""
+                        }
+
+                        ${
+                            section.content
+                                ? `
+                                    <div class="neet-topic-content">
+                                        ${renderText(section.content)}
+                                    </div>
+                                  `
+                                : ""
+                        }
+
+                        ${
+                            subsections.length
+                                ? `
+                                    <div class="neet-subsections">
+                                        ${subsections.map(
+                                            subsection => `
+                                                <section class="neet-subsection">
+                                                    <h4>
+                                                        ${escapeHTML(
+                                                            subsection.heading ||
+                                                            "Key Concept"
+                                                        )}
+                                                    </h4>
+
+                                                    <div>
+                                                        ${renderText(
+                                                            subsection.content
+                                                        )}
+                                                    </div>
+                                                </section>
+                                            `
+                                        ).join("")}
+                                    </div>
+                                  `
+                                : ""
+                        }
+
+                        ${
+                            Array.isArray(section.keyPoints) &&
+                            section.keyPoints.length
+                                ? `
+                                    <div class="neet-keypoints">
+                                        <strong>Key Points</strong>
+                                        ${renderList(
+                                            section.keyPoints
+                                        )}
+                                    </div>
+                                  `
+                                : ""
+                        }
+
+                        ${
+                            Array.isArray(section.neetTips) &&
+                            section.neetTips.length
+                                ? `
+                                    <div class="neet-tips">
+                                        <strong>NEET Focus</strong>
+                                        ${renderList(
+                                            section.neetTips
+                                        )}
+                                    </div>
+                                  `
+                                : ""
+                        }
+
+                    </article>
+                `;
+            }
+        ).join("");
+
+    const mcqHTML =
+        mcqs.map(
+            (mcq, index) => {
+
+                const options =
+                    Array.isArray(mcq.options)
+                        ? mcq.options
+                        : [];
+
+                return `
+                    <article class="neet-mcq-card">
+
+                        <div class="neet-mcq-number">
+                            Question ${index + 1}
+                        </div>
+
+                        <h4>
+                            ${renderText(
+                                mcq.question
+                            )}
+                        </h4>
+
+                        <div class="neet-options">
+                            ${options.map(
+                                (option, optionIndex) => {
+
+                                    const letter =
+                                        String.fromCharCode(
+                                            65 + optionIndex
+                                        );
+
+                                    return `
+                                        <div class="neet-option">
+                                            <span class="neet-option-letter">
+                                                ${letter}
+                                            </span>
+
+                                            <span>
+                                                ${renderText(option)}
+                                            </span>
+                                        </div>
+                                    `;
+                                }
+                            ).join("")}
+                        </div>
+
+                        ${
+                            mcq.correctAnswer
+                                ? `
+                                    <div class="neet-answer">
+                                        <strong>
+                                            Answer:
+                                        </strong>
+                                        ${escapeHTML(
+                                            mcq.correctAnswer
+                                        )}
+                                    </div>
+                                  `
+                                : ""
+                        }
+
+                        ${
+                            mcq.explanation
+                                ? `
+                                    <div class="neet-explanation">
+                                        <strong>
+                                            Explanation:
+                                        </strong>
+                                        ${renderText(
+                                            mcq.explanation
+                                        )}
+                                    </div>
+                                  `
+                                : ""
+                        }
+
+                    </article>
+                `;
+            }
+        ).join("");
+
+    dayGrid.innerHTML = `
+        <div class="neet-lesson">
+
+            <button
+                type="button"
+                class="neet-back-button"
+                id="back-to-days"
+            >
+                ← Back to 365-Day Course
+            </button>
+
+            <header class="neet-lesson-header">
+
+                <div class="neet-day-label">
+                    DAY ${escapeHTML(
+                        lesson.day
+                    )}
+                </div>
+
+                <h2>
+                    ${escapeHTML(
+                        lesson.title ||
+                        `NEET Day ${lesson.day}`
+                    )}
+                </h2>
+
+                ${
+                    lesson.subject
+                        ? `
+                            <div class="neet-meta">
+                                ${escapeHTML(
+                                    lesson.subject
+                                )}
+                                ${
+                                    lesson.chapter
+                                        ? ` • ${escapeHTML(
+                                            lesson.chapter
+                                          )}`
+                                        : ""
+                                }
+                            </div>
+                          `
+                        : ""
+                }
+
+                ${
+                    lesson.courseDate
+                        ? `
+                            <div class="neet-date">
+                                ${escapeHTML(
+                                    lesson.courseDate
+                                )}
+                            </div>
+                          `
+                        : ""
+                }
+
+            </header>
+
+            ${
+                Array.isArray(lesson.neetFocus) &&
+                lesson.neetFocus.length
+                    ? `
+                        <section class="neet-overview-card">
+                            <h3>NEET Focus</h3>
+                            ${renderList(
+                                lesson.neetFocus
+                            )}
+                        </section>
+                      `
+                    : ""
+            }
+
+            ${
+                Array.isArray(lesson.learningOutcome) &&
+                lesson.learningOutcome.length
+                    ? `
+                        <section class="neet-overview-card">
+                            <h3>What You Will Learn</h3>
+                            ${renderList(
+                                lesson.learningOutcome
+                            )}
+                        </section>
+                      `
+                    : ""
+            }
+
+            <section class="neet-section">
+                <div class="neet-section-heading">
+                    <span>01</span>
+                    <h2>Complete Lesson</h2>
+                </div>
+
+                ${topicHTML}
+            </section>
+
+            <section class="neet-section">
+                <div class="neet-section-heading">
+                    <span>02</span>
+                    <h2>NEET Practice MCQs</h2>
+                </div>
+
+                ${
+                    mcqHTML ||
+                    `
+                        <div class="neet-empty">
+                            No MCQs available for this lesson.
+                        </div>
+                    `
+                }
+            </section>
+
+        </div>
+    `;
+
+    const backButton =
+        document.getElementById(
+            "back-to-days"
+        );
+
+    if (backButton) {
+        backButton.addEventListener(
+            "click",
+            () => renderDayGrid()
+        );
+    }
+}
+
+/* ============================================================
+   DYNAMIC LESSON STYLES
+   ============================================================
+
+   Kept inside app.js so no additional production files
+   are required for the lesson renderer.
+   ============================================================ */
+
+function injectLessonStyles() {
+    if (
+        document.getElementById(
+            "vidhwaan-neet-lesson-styles"
+        )
+    ) {
+        return;
+    }
+
+    const style =
+        document.createElement("style");
+
+    style.id =
+        "vidhwaan-neet-lesson-styles";
+
+    style.textContent = `
+        .neet-lesson {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 8px 0 60px;
+        }
+
+        .neet-back-button {
+            border: 0;
+            background: transparent;
+            cursor: pointer;
+            font: inherit;
+            font-weight: 700;
+            margin: 0 0 18px;
+            padding: 10px 0;
+        }
+
+        .neet-lesson-header {
+            background: #ffffff;
+            border: 1px solid #e6e9ee;
+            border-radius: 20px;
+            padding: 28px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 28px rgba(0,0,0,.05);
+        }
+
+        .neet-day-label {
+            font-size: 13px;
+            font-weight: 800;
+            letter-spacing: .12em;
+            margin-bottom: 8px;
+        }
+
+        .neet-lesson-header h2 {
+            margin: 0;
+            font-size: clamp(26px, 5vw, 42px);
+            line-height: 1.15;
+        }
+
+        .neet-meta,
+        .neet-date {
+            margin-top: 10px;
+            opacity: .72;
+        }
+
+        .neet-overview-card {
+            background: #ffffff;
+            border: 1px solid #e6e9ee;
+            border-radius: 18px;
+            padding: 22px;
+            margin-bottom: 18px;
+        }
+
+        .neet-overview-card h3 {
+            margin-top: 0;
+        }
+
+        .neet-section {
+            margin-top: 34px;
+        }
+
+        .neet-section-heading {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .neet-section-heading span {
+            font-weight: 900;
+            opacity: .55;
+        }
+
+        .neet-section-heading h2 {
+            margin: 0;
+        }
+
+        .neet-topic-card,
+        .neet-mcq-card {
+            background: #ffffff;
+            border: 1px solid #e6e9ee;
+            border-radius: 18px;
+            padding: 22px;
+            margin-bottom: 16px;
+            box-shadow: 0 6px 22px rgba(0,0,0,.04);
+        }
+
+        .neet-topic-number,
+        .neet-mcq-number {
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: .08em;
+            opacity: .55;
+            margin-bottom: 8px;
+        }
+
+        .neet-topic-card h3 {
+            margin: 0 0 10px;
+            font-size: 22px;
+        }
+
+        .neet-topic-name {
+            font-weight: 700;
+            margin-bottom: 14px;
+            opacity: .75;
+        }
+
+        .neet-topic-content {
+            line-height: 1.75;
+            font-size: 16px;
+        }
+
+        .neet-subsections {
+            margin-top: 18px;
+        }
+
+        .neet-subsection {
+            margin-top: 18px;
+            padding-top: 18px;
+            border-top: 1px solid #edf0f3;
+        }
+
+        .neet-subsection h4 {
+            margin: 0 0 8px;
+            font-size: 17px;
+        }
+
+        .neet-subsection div {
+            line-height: 1.7;
+        }
+
+        .neet-keypoints,
+        .neet-tips {
+            margin-top: 18px;
+            padding: 16px;
+            border-radius: 14px;
+            background: #f7f9fb;
+        }
+
+        .neet-tips {
+            background: #fffaf0;
+        }
+
+        .neet-content-list {
+            margin: 10px 0 0;
+            padding-left: 22px;
+        }
+
+        .neet-content-list li {
+            margin: 7px 0;
+            line-height: 1.55;
+        }
+
+        .neet-mcq-card h4 {
+            margin: 0 0 16px;
+            font-size: 18px;
+            line-height: 1.55;
+        }
+
+        .neet-options {
+            display: grid;
+            gap: 9px;
+        }
+
+        .neet-option {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            padding: 12px;
+            border: 1px solid #e5e8ec;
+            border-radius: 12px;
+            line-height: 1.45;
+        }
+
+        .neet-option-letter {
+            font-weight: 900;
+            min-width: 24px;
+        }
+
+        .neet-answer {
+            margin-top: 16px;
+            padding: 13px;
+            border-radius: 12px;
+            background: #f2f7f3;
+            line-height: 1.5;
+        }
+
+        .neet-explanation {
+            margin-top: 10px;
+            padding: 13px;
+            border-radius: 12px;
+            background: #f7f8fa;
+            line-height: 1.6;
+        }
+
+        .neet-empty {
+            padding: 24px;
+            text-align: center;
+            opacity: .65;
+        }
+
+        @media (max-width: 600px) {
+            .neet-lesson {
+                padding-left: 0;
+                padding-right: 0;
+            }
+
+            .neet-lesson-header,
+            .neet-topic-card,
+            .neet-mcq-card,
+            .neet-overview-card {
+                border-radius: 14px;
+                padding: 17px;
+            }
+
+            .neet-topic-content {
+                font-size: 15px;
+            }
+        }
+    `;
+
+    document.head.appendChild(style);
+}
+
+/* ============================================================
+   DAY GRID
+   ============================================================ */
+
+function renderDayGrid() {
+    const totalDays =
+        Number(
+            config?.totalDays ||
+            DEFAULT_TOTAL_DAYS
+        );
 
     const releasedDay =
-        Math.min(
-            Math.max(getReleaseDay(), 0),
-            365
-        );
+        getReleaseDay();
 
-    const releaseMessage =
-        getReleaseMessage(releasedDay);
+    currentDay =
+        releasedDay;
 
-    releaseStatusText.textContent =
-        releaseMessage;
-
-    todayBadgeText.textContent =
-        releasedDay > 0
-            ? `Day ${releasedDay} released`
-            : "Day 1 locked";
-
-    syllabusSummary.textContent =
-        releasedDay > 0
-            ? `Day ${releasedDay} of 365 released • 0 completed`
-            : "Day 1 of 365 • Begins at 6:00 AM IST";
+    if (!dayGrid) {
+        return;
+    }
 
     dayGrid.innerHTML = "";
 
-    for (const day of days) {
-
-        const dayNumber =
-            getDayNumber(day);
-
+    for (
+        let day = 1;
+        day <= totalDays;
+        day++
+    ) {
         const button =
             document.createElement("button");
 
         button.type = "button";
-
         button.className = "day-button";
-
-        button.textContent =
-            String(dayNumber);
+        button.textContent = String(day);
 
         button.setAttribute(
             "aria-label",
-            `Day ${dayNumber}`
+            `Day ${day}`
         );
 
-        if (dayNumber <= releasedDay) {
+        if (day <= releasedDay) {
 
             button.classList.add(
                 "available"
             );
 
-            if (dayNumber === releasedDay) {
-                button.classList.add("today");
+            if (day === releasedDay) {
+                button.classList.add(
+                    "today"
+                );
 
                 button.setAttribute(
                     "aria-current",
@@ -353,7 +1079,7 @@ function render() {
 
             button.addEventListener(
                 "click",
-                () => openDay(dayNumber)
+                () => openDay(day)
             );
 
         } else {
@@ -365,54 +1091,135 @@ function render() {
             button.disabled = true;
 
             button.title =
-                `Day ${dayNumber} is not released yet`;
+                `Day ${day} is not released yet`;
         }
 
         dayGrid.appendChild(button);
     }
+
+    updateStatus(releasedDay);
 }
 
-
 /* ============================================================
-   DAY NAVIGATION
+   OPEN DAILY LESSON
    ============================================================ */
 
-function openDay(dayNumber) {
-
+async function openDay(dayNumber) {
     const releasedDay =
-        Math.min(
-            Math.max(getReleaseDay(), 0),
-            365
-        );
+        getReleaseDay();
 
-    if (dayNumber > releasedDay) {
+    if (
+        dayNumber < 1 ||
+        dayNumber > releasedDay
+    ) {
         return;
     }
 
-    // Lesson route will be implemented in the next phase.
-    // Keeping the route deterministic now makes the final
-    // architecture simple.
-    window.location.href =
-        `./day.html?day=${dayNumber}`;
+    setLoading(true);
+
+    try {
+
+        const lesson =
+            await loadDay(dayNumber);
+
+        /*
+          Safety check:
+          Never display the wrong JSON under a day number.
+        */
+        if (
+            Number(lesson.day) !==
+            Number(dayNumber)
+        ) {
+            throw new Error(
+                `Lesson mismatch: requested Day ${dayNumber}, received Day ${lesson.day}.`
+            );
+        }
+
+        currentDay =
+            dayNumber;
+
+        renderLesson(lesson);
+
+        setLoading(false);
+
+        window.scrollTo({
+            top: 0,
+            behavior: "instant"
+        });
+
+    } catch (error) {
+
+        console.error(
+            "Vidhwaan NEET lesson loading error:",
+            error
+        );
+
+        setLoading(false);
+
+        showError(
+            `Day ${dayNumber} could not be loaded. ` +
+            `The daily lesson may not have been generated yet.`
+        );
+    }
 }
 
+/* ============================================================
+   STATUS
+   ============================================================ */
+
+function updateStatus(releasedDay) {
+
+    const totalDays =
+        Number(
+            config?.totalDays ||
+            DEFAULT_TOTAL_DAYS
+        );
+
+    const status =
+        getNextReleaseText();
+
+    if (releaseStatusText) {
+        releaseStatusText.textContent =
+            status;
+    }
+
+    if (todayBadgeText) {
+
+        todayBadgeText.textContent =
+            releasedDay > 0
+                ? `Day ${releasedDay} released`
+                : "Day 1 locked";
+    }
+
+    if (syllabusSummary) {
+
+        syllabusSummary.textContent =
+            releasedDay > 0
+                ? `Day ${releasedDay} of ${totalDays} released`
+                : `Day 1 of ${totalDays} begins at 6:00 AM IST`;
+    }
+}
 
 /* ============================================================
-   LOADING / RETRY
+   LOADING
    ============================================================ */
 
 function setLoading(isLoading) {
+
+    if (!loadingState) {
+        return;
+    }
 
     if (isLoading) {
 
         loadingState.style.display =
             "flex";
 
-        errorState.classList.add(
-            "hidden"
-        );
-
-        dayGrid.innerHTML = "";
+        if (errorState) {
+            errorState.classList.add(
+                "hidden"
+            );
+        }
 
     } else {
 
@@ -421,12 +1228,213 @@ function setLoading(isLoading) {
     }
 }
 
+/* ============================================================
+   ERROR
+   ============================================================ */
 
-retryButton.addEventListener(
-    "click",
-    () => loadApp()
-);
+function showError(message) {
 
+    if (!errorState) {
+        return;
+    }
+
+    errorState.classList.remove(
+        "hidden"
+    );
+
+    if (errorMessage) {
+        errorMessage.textContent =
+            message;
+    }
+}
+
+/* ============================================================
+   AUTO REFRESH AT NEXT 6 AM IST
+   ============================================================ */
+
+function scheduleNextRelease() {
+
+    const now =
+        new Date();
+
+    const ist =
+        getISTParts();
+
+    const next =
+        new Date(now.getTime());
+
+    /*
+      Calculate milliseconds until the next
+      06:00 IST boundary.
+
+      First try today's 06:00.
+      If already passed, use tomorrow.
+    */
+
+    const todayTarget =
+        getNextISTBoundary(
+            ist,
+            DEFAULT_ACTIVATION_HOUR
+        );
+
+    let delay =
+        todayTarget -
+        now.getTime();
+
+    if (delay <= 1000) {
+        delay += 86400000;
+    }
+
+    /*
+      Never allow an accidental huge or tiny timer.
+    */
+    delay =
+        Math.max(
+            delay,
+            1000
+        );
+
+    setTimeout(
+        async () => {
+
+            try {
+                await refreshRelease();
+            } catch (error) {
+                console.error(
+                    "Daily release refresh failed:",
+                    error
+                );
+            }
+
+            scheduleNextRelease();
+
+        },
+        delay
+    );
+}
+
+function getNextISTBoundary(
+    ist,
+    hour
+) {
+    /*
+      Convert the current instant to a
+      target ISO-like IST clock and then
+      calculate using UTC representation.
+
+      Asia/Kolkata is UTC+05:30.
+    */
+
+    const targetUTC =
+        Date.UTC(
+            ist.year,
+            ist.month - 1,
+            ist.day,
+            hour - 5,
+            30,
+            0,
+            0
+        );
+
+    return targetUTC;
+}
+
+/* ============================================================
+   REFRESH RELEASE
+   ============================================================ */
+
+async function refreshRelease() {
+
+    /*
+      Config rarely changes, but reload it so that
+      production configuration remains authoritative.
+    */
+
+    await loadConfig();
+
+    const newReleasedDay =
+        getReleaseDay();
+
+    /*
+      If the student is currently looking at the
+      day grid, update it.
+
+      If they are reading today's lesson, automatically
+      return to the new released day at 06:00.
+    */
+
+    if (
+        currentDay > 0 &&
+        currentDay === newReleasedDay
+    ) {
+        await openDay(
+            newReleasedDay
+        );
+        return;
+    }
+
+    renderDayGrid();
+
+    /*
+      Automatically open the newly released lesson
+      after 06:00 when the app is left open.
+    */
+
+    if (
+        newReleasedDay > 0 &&
+        newReleasedDay !== currentDay
+    ) {
+        await openDay(
+            newReleasedDay
+        );
+    }
+}
+
+/* ============================================================
+   RETRY
+   ============================================================ */
+
+if (retryButton) {
+
+    retryButton.addEventListener(
+        "click",
+        async () => {
+
+            try {
+
+                setLoading(true);
+
+                await loadConfig();
+
+                setLoading(false);
+
+                renderDayGrid();
+
+                const released =
+                    getReleaseDay();
+
+                if (released > 0) {
+                    await openDay(
+                        released
+                    );
+                }
+
+            } catch (error) {
+
+                console.error(
+                    error
+                );
+
+                setLoading(false);
+
+                showError(
+                    error?.message ||
+                    "Unable to load Vidhwaan NEET."
+                );
+            }
+        }
+    );
+}
 
 /* ============================================================
    PWA INSTALL
@@ -434,53 +1442,59 @@ retryButton.addEventListener(
 
 window.addEventListener(
     "beforeinstallprompt",
-    (event) => {
+    event => {
 
         event.preventDefault();
 
         deferredInstallPrompt =
             event;
 
-        installButton.classList.remove(
-            "hidden"
-        );
-    }
-);
-
-
-installButton.addEventListener(
-    "click",
-    async () => {
-
-        if (!deferredInstallPrompt) {
-            return;
+        if (installButton) {
+            installButton.classList.remove(
+                "hidden"
+            );
         }
-
-        deferredInstallPrompt.prompt();
-
-        await deferredInstallPrompt.userChoice;
-
-        deferredInstallPrompt = null;
-
-        installButton.classList.add(
-            "hidden"
-        );
     }
 );
 
+if (installButton) {
+
+    installButton.addEventListener(
+        "click",
+        async () => {
+
+            if (!deferredInstallPrompt) {
+                return;
+            }
+
+            deferredInstallPrompt.prompt();
+
+            await deferredInstallPrompt.userChoice;
+
+            deferredInstallPrompt =
+                null;
+
+            installButton.classList.add(
+                "hidden"
+            );
+        }
+    );
+}
 
 window.addEventListener(
     "appinstalled",
     () => {
 
-        deferredInstallPrompt = null;
+        deferredInstallPrompt =
+            null;
 
-        installButton.classList.add(
-            "hidden"
-        );
+        if (installButton) {
+            installButton.classList.add(
+                "hidden"
+            );
+        }
     }
 );
-
 
 /* ============================================================
    SERVICE WORKER
@@ -494,29 +1508,84 @@ if ("serviceWorker" in navigator) {
 
             navigator.serviceWorker
                 .register("./sw.js")
-                .then((registration) => {
+                .then(
+                    registration => {
 
-                    console.log(
-                        "Vidhwaan NEET service worker registered:",
-                        registration.scope
-                    );
+                        console.log(
+                            "Vidhwaan NEET service worker registered:",
+                            registration.scope
+                        );
+                    }
+                )
+                .catch(
+                    error => {
 
-                })
-                .catch((error) => {
-
-                    console.error(
-                        "Service worker registration failed:",
-                        error
-                    );
-
-                });
+                        console.error(
+                            "Service worker registration failed:",
+                            error
+                        );
+                    }
+                );
         }
     );
 }
 
-
 /* ============================================================
-   START
+   START APPLICATION
    ============================================================ */
 
-loadApp();
+async function startApp() {
+
+    try {
+
+        injectLessonStyles();
+
+        setLoading(true);
+
+        await loadConfig();
+
+        setLoading(false);
+
+        /*
+          Build the 365-day grid from the number
+          in config — NOT from syllabus.json.
+        */
+        renderDayGrid();
+
+        /*
+          If a lesson has been released today,
+          load that day's generated JSON immediately.
+        */
+        const releasedDay =
+            getReleaseDay();
+
+        if (releasedDay > 0) {
+
+            await openDay(
+                releasedDay
+            );
+        }
+
+        /*
+          Keep the app synchronized if it remains
+          open across the daily 06:00 IST release.
+        */
+        scheduleNextRelease();
+
+    } catch (error) {
+
+        console.error(
+            "Vidhwaan NEET startup error:",
+            error
+        );
+
+        setLoading(false);
+
+        showError(
+            error?.message ||
+            "Unable to start Vidhwaan NEET."
+        );
+    }
+}
+
+startApp();
