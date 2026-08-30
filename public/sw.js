@@ -1,4 +1,4 @@
-const SW_VERSION = "vidhwaan-neet-live-v2";
+const SW_VERSION = "vidhwaan-neet-live-v3";
 
 self.addEventListener("install", () => {
     self.skipWaiting();
