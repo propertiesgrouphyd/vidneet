@@ -3,64 +3,163 @@ export function validateDayContent(
   expectedDay,
   expectedTopics
 ) {
-  if (!data || typeof data !== "object") {
-    throw new Error("Generated lesson is not an object.");
+  if (
+    !data ||
+    typeof data !== "object" ||
+    Array.isArray(data)
+  ) {
+    throw new Error(
+      "Generated lesson is not an object."
+    );
   }
 
-  if (!data.title?.trim()) {
-    throw new Error("Missing lesson title.");
+  if (
+    expectedDay !== undefined &&
+    Number(data.day) !== Number(expectedDay)
+  ) {
+    throw new Error(
+      `Generated day mismatch. Expected ${expectedDay}, received ${data.day}.`
+    );
   }
 
-  if (!data.introduction?.trim()) {
-    throw new Error("Missing lesson introduction.");
+  if (
+    typeof data.title !== "string" ||
+    !data.title.trim()
+  ) {
+    throw new Error(
+      "Missing lesson title."
+    );
+  }
+
+  if (
+    typeof data.introduction !== "string" ||
+    !data.introduction.trim()
+  ) {
+    throw new Error(
+      "Missing lesson introduction."
+    );
   }
 
   if (
     !Array.isArray(data.sections) ||
     data.sections.length === 0
   ) {
-    throw new Error("Lesson contains no sections.");
-  }
-
-  if (
-    !Array.isArray(data.learningOutcome)
-  ) {
     throw new Error(
-      "learningOutcome must be an array."
+      "Lesson contains no sections."
     );
   }
 
-  for (const [index, section] of data.sections.entries()) {
-    if (!section.topic?.trim()) {
+  if (
+    !Array.isArray(data.learningOutcome) ||
+    data.learningOutcome.length === 0
+  ) {
+    throw new Error(
+      "learningOutcome must be a non-empty array."
+    );
+  }
+
+  if (
+    data.learningOutcome.some(
+      item =>
+        typeof item !== "string" ||
+        !item.trim()
+    )
+  ) {
+    throw new Error(
+      "learningOutcome must contain only non-empty strings."
+    );
+  }
+
+  for (
+    const [index, section]
+    of data.sections.entries()
+  ) {
+    if (
+      !section ||
+      typeof section !== "object" ||
+      Array.isArray(section)
+    ) {
+      throw new Error(
+        `Section ${index + 1}: invalid section object.`
+      );
+    }
+
+    if (
+      typeof section.topic !== "string" ||
+      !section.topic.trim()
+    ) {
       throw new Error(
         `Section ${index + 1}: missing topic.`
       );
     }
 
-    if (!section.heading?.trim()) {
+    if (
+      typeof section.heading !== "string" ||
+      !section.heading.trim()
+    ) {
       throw new Error(
         `Section ${index + 1}: missing heading.`
       );
     }
 
-    if (!section.content?.trim()) {
+    if (
+      typeof section.content !== "string" ||
+      !section.content.trim()
+    ) {
       throw new Error(
         `Section ${index + 1}: missing content.`
       );
     }
 
-    if (!Array.isArray(section.keyPoints)) {
+    if (
+      !Array.isArray(section.keyPoints) ||
+      section.keyPoints.length === 0
+    ) {
       throw new Error(
-        `Section ${index + 1}: keyPoints must be an array.`
+        `Section ${index + 1}: keyPoints must be a non-empty array.`
       );
     }
 
-    if (!Array.isArray(section.neetTips)) {
+    if (
+      section.keyPoints.some(
+        item =>
+          typeof item !== "string" ||
+          !item.trim()
+      )
+    ) {
       throw new Error(
-        `Section ${index + 1}: neetTips must be an array.`
+        `Section ${index + 1}: keyPoints must contain only non-empty strings.`
+      );
+    }
+
+    if (
+      !Array.isArray(section.neetTips) ||
+      section.neetTips.length === 0
+    ) {
+      throw new Error(
+        `Section ${index + 1}: neetTips must be a non-empty array.`
+      );
+    }
+
+    if (
+      section.neetTips.some(
+        item =>
+          typeof item !== "string" ||
+          !item.trim()
+      )
+    ) {
+      throw new Error(
+        `Section ${index + 1}: neetTips must contain only non-empty strings.`
       );
     }
   }
+
+  /*
+   * Every supplied syllabus topic MUST
+   * have a corresponding lesson section.
+   *
+   * Missing topics are errors, not warnings.
+   */
 
   if (
     Array.isArray(expectedTopics) &&
@@ -69,18 +168,32 @@ export function validateDayContent(
     const generatedTopics =
       data.sections.map(
         section =>
-          section.topic.trim().toLowerCase()
+          String(section.topic)
+            .trim()
+            .toLowerCase()
+            .replace(/\s+/g, " ")
       );
 
-    for (const topic of expectedTopics) {
-      const name =
-        String(topic).trim().toLowerCase();
+    for (
+      const topic of expectedTopics
+    ) {
+      const expected =
+        String(topic)
+          .trim()
+          .toLowerCase()
+          .replace(/\s+/g, " ");
 
-      if (!generatedTopics.some(
-        generated => generated.includes(name)
-      )) {
-        console.warn(
-          `Warning: syllabus topic may not have a matching section: ${topic}`
+      const found =
+        generatedTopics.some(
+          generated =>
+            generated === expected ||
+            generated.includes(expected) ||
+            expected.includes(generated)
+        );
+
+      if (!found) {
+        throw new Error(
+          `Missing syllabus topic in lesson: ${topic}`
         );
       }
     }
@@ -89,13 +202,37 @@ export function validateDayContent(
   return true;
 }
 
-export function validateMcqs(mcqs) {
-  if (!Array.isArray(mcqs)) {
-    throw new Error("MCQs must be an array.");
+
+export function validateMcqs(
+  mcqs
+) {
+  if (
+    !Array.isArray(mcqs) ||
+    mcqs.length === 0
+  ) {
+    throw new Error(
+      "MCQs must be a non-empty array."
+    );
   }
 
-  for (const [index, mcq] of mcqs.entries()) {
-    if (!mcq.question?.trim()) {
+  for (
+    const [index, mcq]
+    of mcqs.entries()
+  ) {
+    if (
+      !mcq ||
+      typeof mcq !== "object" ||
+      Array.isArray(mcq)
+    ) {
+      throw new Error(
+        `MCQ ${index + 1}: invalid MCQ object.`
+      );
+    }
+
+    if (
+      typeof mcq.question !== "string" ||
+      !mcq.question.trim()
+    ) {
       throw new Error(
         `MCQ ${index + 1}: missing question.`
       );
@@ -118,7 +255,21 @@ export function validateMcqs(mcqs) {
       )
     ) {
       throw new Error(
-        `MCQ ${index + 1}: empty option.`
+        `MCQ ${index + 1}: options must contain only non-empty strings.`
+      );
+    }
+
+    const normalizedOptions =
+      mcq.options.map(
+        option =>
+          option.trim().toLowerCase()
+      );
+
+    if (
+      new Set(normalizedOptions).size !== 4
+    ) {
+      throw new Error(
+        `MCQ ${index + 1}: options must be unique.`
       );
     }
 
@@ -132,7 +283,10 @@ export function validateMcqs(mcqs) {
       );
     }
 
-    if (!mcq.explanation?.trim()) {
+    if (
+      typeof mcq.explanation !== "string" ||
+      !mcq.explanation.trim()
+    ) {
       throw new Error(
         `MCQ ${index + 1}: missing explanation.`
       );
