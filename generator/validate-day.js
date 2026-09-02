@@ -1,143 +1,494 @@
-export function validateDayContent(
-  data,
-  expectedDay,
-  expectedTopics
+function fail(message) {
+  throw new Error(message);
+}
+
+
+function isNonEmptyString(value) {
+  return (
+    typeof value === "string" &&
+    value.trim().length > 0
+  );
+}
+
+
+function normalizeTopic(value) {
+  return String(value ?? "")
+    .trim()
+    .replace(/\s+/g, " ")
+    .toLowerCase();
+}
+
+
+function validateStringArray(
+  value,
+  fieldName
 ) {
-  if (!data || typeof data !== "object") {
-    throw new Error("Generated lesson is not an object.");
-  }
-
-  if (!data.title?.trim()) {
-    throw new Error("Missing lesson title.");
-  }
-
-  if (!data.introduction?.trim()) {
-    throw new Error("Missing lesson introduction.");
-  }
-
-  if (
-    !Array.isArray(data.sections) ||
-    data.sections.length === 0
-  ) {
-    throw new Error("Lesson contains no sections.");
-  }
-
-  if (
-    !Array.isArray(data.learningOutcome)
-  ) {
-    throw new Error(
-      "learningOutcome must be an array."
+  if (!Array.isArray(value)) {
+    fail(
+      `${fieldName} must be an array.`
     );
   }
 
-  for (const [index, section] of data.sections.entries()) {
-    if (!section.topic?.trim()) {
-      throw new Error(
-        `Section ${index + 1}: missing topic.`
-      );
-    }
+  if (value.length === 0) {
+    fail(
+      `${fieldName} must not be empty.`
+    );
+  }
 
-    if (!section.heading?.trim()) {
-      throw new Error(
-        `Section ${index + 1}: missing heading.`
-      );
-    }
-
-    if (!section.content?.trim()) {
-      throw new Error(
-        `Section ${index + 1}: missing content.`
-      );
-    }
-
-    if (!Array.isArray(section.keyPoints)) {
-      throw new Error(
-        `Section ${index + 1}: keyPoints must be an array.`
-      );
-    }
-
-    if (!Array.isArray(section.neetTips)) {
-      throw new Error(
-        `Section ${index + 1}: neetTips must be an array.`
+  for (
+    let i = 0;
+    i < value.length;
+    i++
+  ) {
+    if (
+      !isNonEmptyString(value[i])
+    ) {
+      fail(
+        `${fieldName}[${i}] must be a non-empty string.`
       );
     }
   }
+}
+
+
+/*
+ * ------------------------------------------------------
+ * LESSON VALIDATION
+ * ------------------------------------------------------
+ */
+export function validateDayContent(
+  lesson,
+  expectedDay,
+  expectedTopics
+) {
+  if (
+    !lesson ||
+    typeof lesson !== "object" ||
+    Array.isArray(lesson)
+  ) {
+    fail(
+      "Lesson must be a valid JSON object."
+    );
+  }
+
+
+  /*
+   * Basic lesson fields
+   */
+  if (
+    !isNonEmptyString(
+      lesson.title
+    )
+  ) {
+    fail(
+      "title must be a non-empty string."
+    );
+  }
+
 
   if (
-    Array.isArray(expectedTopics) &&
-    expectedTopics.length > 0
+    !isNonEmptyString(
+      lesson.introduction
+    )
   ) {
-    const generatedTopics =
-      data.sections.map(
-        section =>
-          section.topic.trim().toLowerCase()
+    fail(
+      "introduction must be a non-empty string."
+    );
+  }
+
+
+  /*
+   * Day number
+   */
+  if (
+    expectedDay !== undefined &&
+    expectedDay !== null
+  ) {
+    if (
+      Number(lesson.day) !==
+      Number(expectedDay)
+    ) {
+      fail(
+        `day must equal ${expectedDay}.`
       );
-
-    for (const topic of expectedTopics) {
-      const name =
-        String(topic).trim().toLowerCase();
-
-      if (!generatedTopics.some(
-        generated => generated.includes(name)
-      )) {
-        console.warn(
-          `Warning: syllabus topic may not have a matching section: ${topic}`
-        );
-      }
     }
   }
+
+
+  /*
+   * Learning outcome
+   */
+  validateStringArray(
+    lesson.learningOutcome,
+    "learningOutcome"
+  );
+
+
+  /*
+   * Sections
+   */
+  if (
+    !Array.isArray(
+      lesson.sections
+    )
+  ) {
+    fail(
+      "sections must be an array."
+    );
+  }
+
+
+  if (
+    lesson.sections.length === 0
+  ) {
+    fail(
+      "sections must not be empty."
+    );
+  }
+
+
+  /*
+   * Exact syllabus topic validation
+   */
+  if (
+    Array.isArray(expectedTopics)
+  ) {
+    if (
+      lesson.sections.length !==
+      expectedTopics.length
+    ) {
+      fail(
+        `Section count ${lesson.sections.length} does not equal syllabus topic count ${expectedTopics.length}.`
+      );
+    }
+
+
+    const seenTopics =
+      new Set();
+
+
+    for (
+      let i = 0;
+      i < expectedTopics.length;
+      i++
+    ) {
+      const expectedTopic =
+        expectedTopics[i];
+
+      const section =
+        lesson.sections[i];
+
+
+      if (
+        !section ||
+        typeof section !== "object" ||
+        Array.isArray(section)
+      ) {
+        fail(
+          `Section ${i + 1} must be an object.`
+        );
+      }
+
+
+      if (
+        !isNonEmptyString(
+          section.topic
+        )
+      ) {
+        fail(
+          `Section ${i + 1} topic must be a non-empty string.`
+        );
+      }
+
+
+      const generatedTopic =
+        normalizeTopic(
+          section.topic
+        );
+
+      const expected =
+        normalizeTopic(
+          expectedTopic
+        );
+
+
+      /*
+       * Exact normalized equality only.
+       *
+       * No includes(), startsWith(),
+       * fuzzy matching, or partial matching.
+       */
+      if (
+        generatedTopic !== expected
+      ) {
+        fail(
+          `Section ${i + 1} topic mismatch. Expected "${expectedTopic}" but received "${section.topic}".`
+        );
+      }
+
+
+      if (
+        seenTopics.has(
+          generatedTopic
+        )
+      ) {
+        fail(
+          `Duplicate section topic: "${section.topic}".`
+        );
+      }
+
+
+      seenTopics.add(
+        generatedTopic
+      );
+    }
+  }
+
+
+  /*
+   * Validate every section
+   */
+  for (
+    let i = 0;
+    i < lesson.sections.length;
+    i++
+  ) {
+    const section =
+      lesson.sections[i];
+
+
+    if (
+      !isNonEmptyString(
+        section.heading
+      )
+    ) {
+      fail(
+        `Section ${i + 1} heading must be a non-empty string.`
+      );
+    }
+
+
+    if (
+      !isNonEmptyString(
+        section.content
+      )
+    ) {
+      fail(
+        `Section ${i + 1} content must be a non-empty string.`
+      );
+    }
+
+
+    validateStringArray(
+      section.keyPoints,
+      `Section ${i + 1} keyPoints`
+    );
+
+
+    validateStringArray(
+      section.neetTips,
+      `Section ${i + 1} neetTips`
+    );
+  }
+
 
   return true;
 }
 
-export function validateMcqs(mcqs) {
-  if (!Array.isArray(mcqs)) {
-    throw new Error("MCQs must be an array.");
+
+/*
+ * ------------------------------------------------------
+ * MCQ VALIDATION
+ * ------------------------------------------------------
+ */
+export function validateMcqs(
+  mcqs
+) {
+  if (
+    !Array.isArray(mcqs)
+  ) {
+    fail(
+      "mcqs must be an array."
+    );
   }
 
-  for (const [index, mcq] of mcqs.entries()) {
-    if (!mcq.question?.trim()) {
-      throw new Error(
-        `MCQ ${index + 1}: missing question.`
-      );
-    }
+
+  if (
+    mcqs.length === 0
+  ) {
+    fail(
+      "mcqs must not be empty."
+    );
+  }
+
+
+  const questionSet =
+    new Set();
+
+
+  for (
+    let i = 0;
+    i < mcqs.length;
+    i++
+  ) {
+    const mcq =
+      mcqs[i];
+
 
     if (
-      !Array.isArray(mcq.options) ||
-      mcq.options.length !== 4
+      !mcq ||
+      typeof mcq !== "object" ||
+      Array.isArray(mcq)
     ) {
-      throw new Error(
-        `MCQ ${index + 1}: must have exactly 4 options.`
+      fail(
+        `MCQ ${i + 1} must be an object.`
       );
     }
 
+
+    /*
+     * Question
+     */
     if (
-      mcq.options.some(
-        option =>
-          typeof option !== "string" ||
-          !option.trim()
+      !isNonEmptyString(
+        mcq.question
       )
     ) {
-      throw new Error(
-        `MCQ ${index + 1}: empty option.`
+      fail(
+        `MCQ ${i + 1} question must be a non-empty string.`
       );
     }
 
+
+    const questionKey =
+      mcq.question
+        .trim()
+        .replace(/\s+/g, " ")
+        .toLowerCase();
+
+
     if (
-      !Number.isInteger(mcq.answer) ||
+      questionSet.has(
+        questionKey
+      )
+    ) {
+      fail(
+        `Duplicate MCQ question at item ${i + 1}.`
+      );
+    }
+
+
+    questionSet.add(
+      questionKey
+    );
+
+
+    /*
+     * Exactly four options
+     */
+    if (
+      !Array.isArray(
+        mcq.options
+      )
+    ) {
+      fail(
+        `MCQ ${i + 1} options must be an array.`
+      );
+    }
+
+
+    if (
+      mcq.options.length !== 4
+    ) {
+      fail(
+        `MCQ ${i + 1} must have exactly 4 options.`
+      );
+    }
+
+
+    const optionSet =
+      new Set();
+
+
+    for (
+      let j = 0;
+      j < mcq.options.length;
+      j++
+    ) {
+      const option =
+        mcq.options[j];
+
+
+      if (
+        !isNonEmptyString(
+          option
+        )
+      ) {
+        fail(
+          `MCQ ${i + 1} option ${j + 1} must be a non-empty string.`
+        );
+      }
+
+
+      const optionKey =
+        option
+          .trim()
+          .replace(/\s+/g, " ")
+          .toLowerCase();
+
+
+      if (
+        optionSet.has(
+          optionKey
+        )
+      ) {
+        fail(
+          `MCQ ${i + 1} contains duplicate options.`
+        );
+      }
+
+
+      optionSet.add(
+        optionKey
+      );
+    }
+
+
+    /*
+     * Correct answer
+     *
+     * 0 = A
+     * 1 = B
+     * 2 = C
+     * 3 = D
+     */
+    if (
+      !Number.isInteger(
+        mcq.answer
+      ) ||
       mcq.answer < 0 ||
       mcq.answer > 3
     ) {
-      throw new Error(
-        `MCQ ${index + 1}: invalid answer index.`
+      fail(
+        `MCQ ${i + 1} answer must be an integer from 0 to 3.`
       );
     }
 
-    if (!mcq.explanation?.trim()) {
-      throw new Error(
-        `MCQ ${index + 1}: missing explanation.`
+
+    /*
+     * Explanation
+     */
+    if (
+      !isNonEmptyString(
+        mcq.explanation
+      )
+    ) {
+      fail(
+        `MCQ ${i + 1} explanation must be a non-empty string.`
       );
     }
   }
+
 
   return true;
 }
