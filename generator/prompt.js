@@ -2,39 +2,24 @@ export function buildLessonPrompt(day) {
   return `
 You are a senior NEET-UG preparation content author.
 
-Create ONE complete study lesson for EXACTLY ONE supplied syllabus day.
-
-SYLLABUS STRUCTURE — IMPORTANT:
-- "chapter" is the lesson/chapter title and is NOT a separate section topic.
-- "topics" is the authoritative list of section topics.
-- "subtopics" are supporting syllabus requirements that MUST be covered inside the relevant topic sections.
-- "neetFocus" contains exam priorities and is supporting guidance, not separate section topics.
-- Do NOT turn the chapter, subtopics, neetFocus items, or learningOutcome into additional section topics.
-
-TOPIC COVERAGE — ABSOLUTE REQUIREMENT:
-- Create EXACTLY ONE section for EVERY item in the supplied "topics" array.
-- Use the EXACT topic text from the "topics" array as the section "topic" value.
-- Copy each topic name verbatim. Do not shorten, rename, merge, split, paraphrase, or replace topic names.
-- The number of sections MUST equal the number of items in "topics".
-- The section order MUST match the order of the supplied "topics" array.
-- Every supplied topic must appear exactly once as a section topic.
-- Do NOT create sections for "chapter", "subtopics", "neetFocus", or "learningOutcome".
-- Cover ALL supplied subtopics within the appropriate topic sections. Subtopics do NOT require separate sections unless they are also explicitly present in the "topics" array.
-- For an integrated revision day, preserve the integrated topic names exactly as supplied and cover the supplied revision subtopics throughout the lesson.
+Create ONE high-quality study lesson ONLY for the supplied syllabus day.
 
 NEET STANDARD:
 - Follow the supplied syllabus exactly.
+- Cover EVERY topic and subtopic supplied.
+- Do not teach topics from other days.
 - Use scientifically accurate NCERT-aligned terminology.
 - Explain from fundamentals to NEET-exam level.
 - Prioritize concepts, mechanisms, formulas, definitions, relationships,
-  exceptions, comparisons, examples, and high-yield facts.
+  exceptions, diagrams-in-words where useful, and high-yield facts.
 - Do not invent facts.
 - Do not add unrelated information.
 - Avoid unnecessary verbosity.
 - Use short, information-dense paragraphs.
-- Use the supplied neetFocus to prioritize exam-relevant material.
 
 LESSON:
+For every supplied topic create a corresponding section.
+
 Each section MUST contain:
 - topic
 - heading
@@ -42,17 +27,25 @@ Each section MUST contain:
 - keyPoints
 - neetTips
 
-The "topic" value MUST be copied exactly from the supplied "topics" array.
-keyPoints and neetTips MUST always be JSON arrays of strings.
+The fields keyPoints and neetTips MUST always be JSON arrays
+of strings.
 
-LEARNING OUTCOME:
-- learningOutcome MUST ALWAYS be a JSON array of strings.
-- Every item must be a non-empty string.
-- Never return it as a string, object, null, or omit it.
+LEARNING OUTCOME — VERY IMPORTANT:
+- learningOutcome MUST ALWAYS be a JSON array.
+- Every item inside learningOutcome MUST be a string.
+- Example:
+  "learningOutcome": [
+    "Understand the major concepts covered in this lesson.",
+    "Apply the concepts to NEET-level questions."
+  ]
+- NEVER return learningOutcome as a string.
+- NEVER return learningOutcome as an object.
+- NEVER return learningOutcome as null.
+- NEVER omit learningOutcome.
 
 MCQs:
 - Do NOT generate MCQs in this call.
-- MCQs are generated separately for each authoritative syllabus topic.
+- MCQs are generated separately.
 
 LANGUAGE:
 - English only.
@@ -62,7 +55,7 @@ OUTPUT:
 - No markdown.
 - No code fences.
 - No explanatory text before or after the JSON.
-- Do not add unexpected top-level fields.
+- Follow the JSON structure exactly.
 
 EXACT JSON STRUCTURE:
 {
@@ -70,7 +63,7 @@ EXACT JSON STRUCTURE:
   "introduction": "string",
   "sections": [
     {
-      "topic": "EXACT TOPIC FROM topics ARRAY",
+      "topic": "string",
       "heading": "string",
       "content": "string",
       "keyPoints": ["string"],
@@ -80,19 +73,16 @@ EXACT JSON STRUCTURE:
   "learningOutcome": ["string"]
 }
 
-FINAL CHECK BEFORE RETURNING:
+FINAL CHECK:
 1. Valid JSON.
 2. sections contains exactly one section for each item in topics.
-3. sections.length equals topics.length.
-4. Section order exactly matches topics order.
-5. Every section.topic exactly equals the corresponding topics item.
-6. No chapter, subtopic, neetFocus item, or invented topic is used as a section topic.
-7. Every supplied subtopic is covered in the lesson.
-8. Every section has topic, heading, content, keyPoints and neetTips.
-9. keyPoints and neetTips are arrays of strings.
-10. learningOutcome is a non-empty array of strings.
-11. No MCQs are included.
-12. All content follows the supplied syllabus only.
+3. Section order exactly matches topics order.
+4. Every section.topic exactly matches its supplied topic.
+5. Every supplied subtopic is covered.
+6. keyPoints and neetTips are arrays of strings.
+7. learningOutcome is a non-empty array of strings.
+8. No MCQs are included.
+9. All content follows the supplied syllabus only.
 
 SYLLABUS:
 ${JSON.stringify(day)}
@@ -108,19 +98,43 @@ AUTHORITATIVE TOPIC:
 The exact topic for this request is:
 "${String(topic).trim()}"
 
-Create 3 to 5 ORIGINAL NEET-level MCQs ONLY from this exact topic and its supplied syllabus context.
+Create ORIGINAL NEET-level MCQs ONLY from this exact topic
+and its supplied syllabus context.
+
+ADAPTIVE MCQ COUNT:
+First assess the conceptual breadth of the authoritative topic
+using the supplied day, chapter, subtopics and NEET-focused context.
+
+Choose the number of MCQs intelligently:
+- 5 MCQs for a narrow topic.
+- 6 to 7 MCQs for a moderately broad topic.
+- 8 to 9 MCQs for a broad topic.
+- 10 MCQs for a very broad topic.
+
+STRICT COUNT:
+- Minimum: 5 MCQs.
+- Maximum: 10 MCQs.
+- Never generate fewer than 5.
+- Never generate more than 10.
+- Do not add repetitive questions just to reach a higher count.
+- Generate more questions only when the topic contains enough
+  distinct NEET-relevant concepts worth testing.
 
 IMPORTANT TOPIC BOUNDARY:
 - The authoritative topic is the exact topic string above.
 - Do not generate questions for another topic.
-- Do not silently replace, broaden, merge, or rename the topic.
+- Do not silently replace, broaden, merge or rename the topic.
 - Use the supplied day only as context for understanding this topic.
-- For an integrated revision topic, questions may test the supplied integrated revision material, comparisons, examples, and subtopics, but must remain within that topic's scope.
+- Use relevant supplied subtopics when they belong to this topic.
+- For an integrated revision topic, questions may test the supplied
+  integrated revision material, comparisons, examples and subtopics,
+  but must remain within this topic's scope.
 
 QUESTION QUALITY:
 - Match the conceptual difficulty of the NEET-UG public examination.
-- Test understanding, application, interpretation, calculation, mechanism,
-  comparison or precise factual knowledge where appropriate.
+- Test understanding, application, interpretation, calculation,
+  mechanism, comparison or precise factual knowledge where appropriate.
+- Cover different meaningful concepts within the topic.
 - Avoid trivial questions.
 - Avoid Olympiad/JEE-Advanced level questions.
 - Avoid ambiguous wording.
@@ -150,12 +164,27 @@ EXACT JSON STRUCTURE:
 }
 
 MCQ RULES:
-- mcqs MUST be an array containing 3 to 5 items.
+- mcqs MUST be an array containing 5 to 10 items.
 - Every MCQ must have exactly 4 unique non-empty option strings.
-- answer MUST be the zero-based integer 0, 1, 2, or 3.
+- answer MUST be the zero-based integer 0, 1, 2 or 3.
 - Exactly one option must be correct.
 - explanation MUST be a non-empty string.
 - Every question must belong only to the authoritative topic.
+- Questions must be meaningfully different from each other.
+- Do not create duplicate or near-duplicate questions.
+
+FINAL CHECK:
+1. Valid JSON.
+2. mcqs is an array.
+3. mcqs contains at least 5 and at most 10 items.
+4. Every MCQ has exactly 4 options.
+5. Every option is non-empty and unique.
+6. answer is 0, 1, 2 or 3.
+7. Exactly one option is correct.
+8. Every explanation is non-empty.
+9. Every question belongs only to the authoritative topic.
+10. No repetitive questions.
+11. The number of questions reflects the conceptual breadth of the topic.
 
 DAY:
 ${JSON.stringify(day)}
