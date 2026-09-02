@@ -2,24 +2,39 @@ export function buildLessonPrompt(day) {
   return `
 You are a senior NEET-UG preparation content author.
 
-Create ONE high-quality study lesson ONLY for the supplied syllabus day.
+Create ONE complete study lesson for EXACTLY ONE supplied syllabus day.
+
+SYLLABUS STRUCTURE — IMPORTANT:
+- "chapter" is the lesson/chapter title and is NOT a separate section topic.
+- "topics" is the authoritative list of section topics.
+- "subtopics" are supporting syllabus requirements that MUST be covered inside the relevant topic sections.
+- "neetFocus" contains exam priorities and is supporting guidance, not separate section topics.
+- Do NOT turn the chapter, subtopics, neetFocus items, or learningOutcome into additional section topics.
+
+TOPIC COVERAGE — ABSOLUTE REQUIREMENT:
+- Create EXACTLY ONE section for EVERY item in the supplied "topics" array.
+- Use the EXACT topic text from the "topics" array as the section "topic" value.
+- Copy each topic name verbatim. Do not shorten, rename, merge, split, paraphrase, or replace topic names.
+- The number of sections MUST equal the number of items in "topics".
+- The section order MUST match the order of the supplied "topics" array.
+- Every supplied topic must appear exactly once as a section topic.
+- Do NOT create sections for "chapter", "subtopics", "neetFocus", or "learningOutcome".
+- Cover ALL supplied subtopics within the appropriate topic sections. Subtopics do NOT require separate sections unless they are also explicitly present in the "topics" array.
+- For an integrated revision day, preserve the integrated topic names exactly as supplied and cover the supplied revision subtopics throughout the lesson.
 
 NEET STANDARD:
 - Follow the supplied syllabus exactly.
-- Cover EVERY topic and subtopic supplied.
-- Do not teach topics from other days.
 - Use scientifically accurate NCERT-aligned terminology.
 - Explain from fundamentals to NEET-exam level.
 - Prioritize concepts, mechanisms, formulas, definitions, relationships,
-  exceptions, diagrams-in-words where useful, and high-yield facts.
+  exceptions, comparisons, examples, and high-yield facts.
 - Do not invent facts.
 - Do not add unrelated information.
 - Avoid unnecessary verbosity.
 - Use short, information-dense paragraphs.
+- Use the supplied neetFocus to prioritize exam-relevant material.
 
 LESSON:
-For every supplied topic create a corresponding section.
-
 Each section MUST contain:
 - topic
 - heading
@@ -27,31 +42,17 @@ Each section MUST contain:
 - keyPoints
 - neetTips
 
-The fields keyPoints and neetTips MUST always be JSON arrays
-of strings.
+The "topic" value MUST be copied exactly from the supplied "topics" array.
+keyPoints and neetTips MUST always be JSON arrays of strings.
 
-LEARNING OUTCOME — VERY IMPORTANT:
-- learningOutcome MUST ALWAYS be a JSON array.
-- Every item inside learningOutcome MUST be a string.
-- Example of the ONLY acceptable format:
-  "learningOutcome": [
-    "Understand the major concepts covered in this lesson.",
-    "Apply the concepts to NEET-level questions."
-  ]
-- NEVER return learningOutcome as a string.
-- NEVER return learningOutcome as an object.
-- NEVER return learningOutcome as null.
-- NEVER omit learningOutcome.
-- NEVER use an object such as:
-  "learningOutcome": {"text": "..."}
-- NEVER use:
-  "learningOutcome": "..."
-- ALWAYS use:
-  "learningOutcome": ["..."]
+LEARNING OUTCOME:
+- learningOutcome MUST ALWAYS be a JSON array of strings.
+- Every item must be a non-empty string.
+- Never return it as a string, object, null, or omit it.
 
 MCQs:
 - Do NOT generate MCQs in this call.
-- MCQs are generated separately.
+- MCQs are generated separately for each authoritative syllabus topic.
 
 LANGUAGE:
 - English only.
@@ -61,7 +62,6 @@ OUTPUT:
 - No markdown.
 - No code fences.
 - No explanatory text before or after the JSON.
-- Follow the JSON structure below exactly.
 - Do not add unexpected top-level fields.
 
 EXACT JSON STRUCTURE:
@@ -70,7 +70,7 @@ EXACT JSON STRUCTURE:
   "introduction": "string",
   "sections": [
     {
-      "topic": "string",
+      "topic": "EXACT TOPIC FROM topics ARRAY",
       "heading": "string",
       "content": "string",
       "keyPoints": ["string"],
@@ -81,19 +81,18 @@ EXACT JSON STRUCTURE:
 }
 
 FINAL CHECK BEFORE RETURNING:
-1. The response is valid JSON.
-2. title is a string.
-3. introduction is a string.
-4. sections is an array.
-5. Every section has topic, heading, content, keyPoints and neetTips.
-6. keyPoints is an array of strings.
-7. neetTips is an array of strings.
-8. learningOutcome is an array of strings.
-9. learningOutcome is NOT a string.
-10. learningOutcome is NOT an object.
-11. learningOutcome is NOT null.
-12. No MCQs are included.
-13. All content follows the supplied syllabus only.
+1. Valid JSON.
+2. sections contains exactly one section for each item in topics.
+3. sections.length equals topics.length.
+4. Section order exactly matches topics order.
+5. Every section.topic exactly equals the corresponding topics item.
+6. No chapter, subtopic, neetFocus item, or invented topic is used as a section topic.
+7. Every supplied subtopic is covered in the lesson.
+8. Every section has topic, heading, content, keyPoints and neetTips.
+9. keyPoints and neetTips are arrays of strings.
+10. learningOutcome is a non-empty array of strings.
+11. No MCQs are included.
+12. All content follows the supplied syllabus only.
 
 SYLLABUS:
 ${JSON.stringify(day)}
@@ -105,8 +104,18 @@ export function buildMcqPrompt(day, topic) {
   return `
 You are an expert NEET-UG examination question setter.
 
-Create 3 to 5 ORIGINAL NEET-level MCQs ONLY from this supplied topic
-and its supplied syllabus context.
+AUTHORITATIVE TOPIC:
+The exact topic for this request is:
+"${String(topic).trim()}"
+
+Create 3 to 5 ORIGINAL NEET-level MCQs ONLY from this exact topic and its supplied syllabus context.
+
+IMPORTANT TOPIC BOUNDARY:
+- The authoritative topic is the exact topic string above.
+- Do not generate questions for another topic.
+- Do not silently replace, broaden, merge, or rename the topic.
+- Use the supplied day only as context for understanding this topic.
+- For an integrated revision topic, questions may test the supplied integrated revision material, comparisons, examples, and subtopics, but must remain within that topic's scope.
 
 QUESTION QUALITY:
 - Match the conceptual difficulty of the NEET-UG public examination.
@@ -119,7 +128,6 @@ QUESTION QUALITY:
 - All four options must be plausible.
 - Do not reveal the answer in the wording.
 - Do not repeat the same concept unnecessarily.
-- Do not ask anything outside the supplied topic.
 - Use NCERT-aligned terminology.
 - Check every answer carefully before returning it.
 
@@ -128,19 +136,13 @@ OUTPUT:
 - No markdown.
 - No code fences.
 - No explanatory text before or after the JSON.
-- Follow the exact structure below.
 
 EXACT JSON STRUCTURE:
 {
   "mcqs": [
     {
       "question": "string",
-      "options": [
-        "string",
-        "string",
-        "string",
-        "string"
-      ],
+      "options": ["string", "string", "string", "string"],
       "answer": 0,
       "explanation": "string"
     }
@@ -148,26 +150,12 @@ EXACT JSON STRUCTURE:
 }
 
 MCQ RULES:
-- mcqs MUST be an array.
-- Create 3 to 5 MCQs.
-- options MUST contain exactly 4 strings.
-- answer MUST be an integer.
-- answer MUST be exactly 0, 1, 2, or 3.
-- 0 means option A.
-- 1 means option B.
-- 2 means option C.
-- 3 means option D.
-- explanation MUST be a non-empty string.
+- mcqs MUST be an array containing 3 to 5 items.
+- Every MCQ must have exactly 4 unique non-empty option strings.
+- answer MUST be the zero-based integer 0, 1, 2, or 3.
 - Exactly one option must be correct.
-
-FINAL CHECK BEFORE RETURNING:
-1. Valid JSON.
-2. mcqs is an array.
-3. Every MCQ has question, options, answer and explanation.
-4. Every MCQ has exactly 4 options.
-5. answer is 0, 1, 2 or 3.
-6. Every question has exactly one correct answer.
-7. Every question belongs only to the supplied topic.
+- explanation MUST be a non-empty string.
+- Every question must belong only to the authoritative topic.
 
 DAY:
 ${JSON.stringify(day)}
