@@ -5,13 +5,63 @@ const MODEL =
   process.env.GROQ_MODEL ||
   "openai/gpt-oss-120b";
 
-const MAX_RETRIES = 3;
-
-
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+function getResetDelay(response) {
+  const retryAfter =
+    response.headers.get("retry-after");
+
+  if (retryAfter) {
+    const seconds =
+      Number.parseFloat(retryAfter);
+
+    if (Number.isFinite(seconds)) {
+      return Math.max(
+        1000,
+        Math.ceil(seconds * 1000) + 1000
+      );
+    }
+  }
+
+  const resetTokens =
+    response.headers.get(
+      "x-ratelimit-reset-tokens"
+    );
+
+  if (resetTokens) {
+    const match =
+      resetTokens.match(
+        /(\d+(?:\.\d+)?)(ms|s|m|h)?/
+      );
+
+    if (match) {
+      const value =
+        Number.parseFloat(match[1]);
+
+      const unit =
+        match[2] || "s";
+
+      let milliseconds = value * 1000;
+
+      if (unit === "ms") {
+        milliseconds = value;
+      } else if (unit === "m") {
+        milliseconds = value * 60 * 1000;
+      } else if (unit === "h") {
+        milliseconds = value * 60 * 60 * 1000;
+      }
+
+      return Math.max(
+        1000,
+        Math.ceil(milliseconds) + 1000
+      );
+    }
+  }
+
+  return 61000;
+}
 
 async function request(prompt, maxTokens) {
   const apiKey =
@@ -23,57 +73,54 @@ async function request(prompt, maxTokens) {
     );
   }
 
+  const response =
+    await fetch(
+      GROQ_API_URL,
+      {
+        method: "POST",
 
-  const response = await fetch(
-    GROQ_API_URL,
-    {
-      method: "POST",
-
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization":
-          `Bearer ${apiKey}`
-      },
-
-      body: JSON.stringify({
-        model: MODEL,
-
-        temperature: 0.15,
-
-        max_tokens: maxTokens,
-
-        response_format: {
-          type: "json_object"
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization":
+            `Bearer ${apiKey}`
         },
 
-        messages: [
-          {
-            role: "system",
+        body: JSON.stringify({
+          model: MODEL,
 
-            content:
-              "You are a precise NEET-UG educational content generator. " +
-              "Return ONLY valid JSON. " +
-              "Never invent syllabus content. " +
-              "Follow the user's requested JSON structure exactly. " +
-              "Never return markdown, code fences, comments, or explanatory text. " +
-              "For lesson generation, learningOutcome MUST ALWAYS be a JSON array of strings. " +
-              "It must NEVER be a string, object, null, or omitted. " +
-              "For MCQ generation, mcqs MUST be an array and answer MUST be a zero-based integer 0, 1, 2, or 3."
+          temperature: 0.15,
+
+          max_tokens: maxTokens,
+
+          response_format: {
+            type: "json_object"
           },
 
-          {
-            role: "user",
-            content: prompt
-          }
-        ]
-      })
-    }
-  );
+          messages: [
+            {
+              role: "system",
 
+              content:
+                "You are a precise NEET-UG educational content generator. " +
+                "Return ONLY valid JSON. " +
+                "Never invent syllabus content. " +
+                "Follow the requested JSON structure exactly. " +
+                "Never return markdown, code fences, comments, or explanatory text. " +
+                "For lesson generation, learningOutcome MUST ALWAYS be a JSON array of strings. " +
+                "For MCQ generation, mcqs MUST be an array and answer MUST be a zero-based integer 0, 1, 2, or 3."
+            },
+
+            {
+              role: "user",
+              content: prompt
+            }
+          ]
+        })
+      }
+    );
 
   const text =
     await response.text();
-
 
   if (!response.ok) {
     let message = text;
@@ -86,9 +133,7 @@ async function request(prompt, maxTokens) {
         parsed?.error?.message ||
         parsed?.error?.code ||
         text;
-
     } catch {}
-
 
     const error =
       new Error(
@@ -98,26 +143,28 @@ async function request(prompt, maxTokens) {
     error.status =
       response.status;
 
+    error.response =
+      response;
+
+    error.resetDelay =
+      getResetDelay(response);
+
     throw error;
   }
-
 
   let result;
 
   try {
     result =
       JSON.parse(text);
-
   } catch {
     throw new Error(
       "Groq returned invalid API JSON."
     );
   }
 
-
   const content =
     result?.choices?.[0]?.message?.content;
-
 
   if (
     !content ||
@@ -128,19 +175,14 @@ async function request(prompt, maxTokens) {
     );
   }
 
-
   return content.trim();
 }
-
 
 function parseJson(text) {
   let cleaned =
     String(text).trim();
 
-
-  if (
-    cleaned.startsWith("```")
-  ) {
+  if (cleaned.startsWith("```")) {
     cleaned =
       cleaned
         .replace(
@@ -158,10 +200,8 @@ function parseJson(text) {
         .trim();
   }
 
-
   try {
     return JSON.parse(cleaned);
-
   } catch {
     throw new Error(
       "Groq returned invalid lesson/MCQ JSON content."
@@ -169,25 +209,20 @@ function parseJson(text) {
   }
 }
 
-
 async function callWithRetry(
   prompt,
   maxTokens,
   label
 ) {
-  let lastError;
+  let attempt = 0;
 
+  while (true) {
+    attempt++;
 
-  for (
-    let attempt = 1;
-    attempt <= MAX_RETRIES;
-    attempt++
-  ) {
     try {
       console.log(
-        `${label}: Groq attempt ${attempt}/${MAX_RETRIES}`
+        `${label}: Groq attempt ${attempt}`
       );
-
 
       const raw =
         await request(
@@ -195,50 +230,133 @@ async function callWithRetry(
           maxTokens
         );
 
-
       return parseJson(raw);
 
     } catch (error) {
-      lastError =
-        error;
-
       const status =
         error?.status;
 
+      /*
+       * TPM / rate limit.
+       *
+       * IMPORTANT:
+       * Do NOT move to the next topic.
+       * Wait for Groq's reset time and retry
+       * the EXACT SAME request.
+       */
+      if (status === 429) {
+        const delay =
+          error?.resetDelay ||
+          61000;
+
+        const seconds =
+          Math.ceil(delay / 1000);
+
+        console.log("");
+        console.log(
+          `${label}: Groq rate limit reached.`
+        );
+        console.log(
+          `${label}: Waiting ${seconds} seconds for tokens to become available...`
+        );
+
+        await sleep(delay);
+
+        console.log(
+          `${label}: Token wait complete. Retrying the SAME request...`
+        );
+
+        continue;
+      }
 
       /*
-       * Do not retry malformed requests
-       * or requests that exceed limits.
+       * Temporary server/request conditions.
+       * Keep retrying the SAME request.
        */
       if (
-        status === 400 ||
-        status === 413
+        status === 408 ||
+        status === 409 ||
+        status === 422 ||
+        status === 500 ||
+        status === 502 ||
+        status === 503 ||
+        status === 504
       ) {
+        const delay =
+          Math.min(
+            60000,
+            Math.max(
+              5000,
+              attempt * 5000
+            )
+          );
+
+        console.log(
+          `${label}: Temporary Groq error (${status}). Waiting ${Math.ceil(delay / 1000)} seconds...`
+        );
+
+        await sleep(delay);
+
+        continue;
+      }
+
+      /*
+       * Invalid JSON returned by the model.
+       * Retry the SAME request instead of losing
+       * the current lesson/topic.
+       */
+      if (
+        !status ||
+        status === 400
+      ) {
+        const delay =
+          Math.min(
+            60000,
+            Math.max(
+              5000,
+              attempt * 5000
+            )
+          );
+
+        console.log(
+          `${label}: Retrying after ${Math.ceil(delay / 1000)} seconds...`
+        );
+
+        await sleep(delay);
+
+        continue;
+      }
+
+      /*
+       * 413 means the request itself is too large.
+       * Retrying the identical request cannot solve it.
+       */
+      if (status === 413) {
         throw error;
       }
 
-
-      if (
-        attempt < MAX_RETRIES
-      ) {
-        const delay =
-          attempt * 3000;
-
-
-        console.log(
-          `${label}: retrying after ${delay}ms`
+      /*
+       * Any unexpected error:
+       * retry the SAME request rather than
+       * silently losing the current topic.
+       */
+      const delay =
+        Math.min(
+          60000,
+          Math.max(
+            5000,
+            attempt * 5000
+          )
         );
 
+      console.log(
+        `${label}: Error. Retrying after ${Math.ceil(delay / 1000)} seconds...`
+      );
 
-        await sleep(delay);
-      }
+      await sleep(delay);
     }
   }
-
-
-  throw lastError;
 }
-
 
 export async function generateLesson(
   prompt
@@ -249,7 +367,6 @@ export async function generateLesson(
     "Lesson generation"
   );
 }
-
 
 export async function generateTopicMcqs(
   prompt
