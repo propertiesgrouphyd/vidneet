@@ -415,15 +415,41 @@ function createPublishAt(
 }
 
 
+/*
+ * ------------------------------------------------------
+ * NORMALIZE TOPIC
+ * ------------------------------------------------------
+ */
+function normalizeTopic(value) {
+  return String(value ?? "")
+    .trim()
+    .replace(/\s+/g, " ")
+    .toLowerCase();
+}
+
+
+/*
+ * ------------------------------------------------------
+ * REMOVE DUPLICATE MCQs
+ * ------------------------------------------------------
+ *
+ * IMPORTANT:
+ *
+ * Duplicate questions are checked within the SAME
+ * topic only.
+ *
+ * The same question text appearing under different
+ * topics must not cause one topic's MCQ to disappear.
+ */
 function uniqueMcqs(mcqs) {
   const seen = new Set();
   const result = [];
 
   for (const mcq of mcqs) {
     const key =
-      mcq.question
+      `${normalizeTopic(mcq.topic)}::${mcq.question
         .trim()
-        .toLowerCase();
+        .toLowerCase()}`;
 
     if (seen.has(key)) {
       continue;
@@ -447,14 +473,6 @@ function uniqueMcqs(mcqs) {
  * Every generated section must correspond exactly
  * to one authoritative syllabus topic.
  */
-function normalizeTopic(value) {
-  return String(value ?? "")
-    .trim()
-    .replace(/\s+/g, " ")
-    .toLowerCase();
-}
-
-
 function topicMatches(
   generatedTopic,
   expectedTopic
@@ -525,6 +543,192 @@ function validateCompleteLesson(
 }
 
 
+/*
+ * ------------------------------------------------------
+ * GENERATE COMPLETE LESSON
+ * ------------------------------------------------------
+ *
+ * Keep generating the SAME lesson until it passes
+ * strict validation.
+ *
+ * Groq rate-limit waiting/retry is handled inside
+ * groq.js.
+ */
+async function generateCompleteLesson(
+  day,
+  topics
+) {
+  let attempt = 0;
+
+  while (true) {
+    attempt++;
+
+    console.log("");
+    console.log(
+      `Lesson validation attempt: ${attempt}`
+    );
+
+    try {
+      let lesson =
+        await generateLesson(
+          buildLessonPrompt(day)
+        );
+
+      lesson =
+        normalizeGeneratedLesson(
+          lesson,
+          day
+        );
+
+      validateCompleteLesson(
+        lesson,
+        topics
+      );
+
+      console.log(
+        "Lesson validation: PASSED"
+      );
+
+      return lesson;
+
+    } catch (error) {
+      console.warn("");
+      console.warn(
+        "Lesson validation failed."
+      );
+      console.warn(
+        error.message
+      );
+      console.warn(
+        "Regenerating the SAME lesson..."
+      );
+      console.warn("");
+    }
+  }
+}
+
+
+/*
+ * ------------------------------------------------------
+ * GENERATE COMPLETE TOPIC MCQs
+ * ------------------------------------------------------
+ *
+ * One request is made for one authoritative topic.
+ *
+ * Required:
+ *   minimum = 5
+ *   maximum = 10
+ *
+ * If generation or validation fails, the SAME topic
+ * is retried until it succeeds.
+ */
+async function generateCompleteTopicMcqs(
+  day,
+  topic
+) {
+  let attempt = 0;
+
+  while (true) {
+    attempt++;
+
+    console.log(
+      `  MCQ generation attempt ${attempt}: ${topic}`
+    );
+
+    try {
+      const result =
+        await generateTopicMcqs(
+          buildMcqPrompt(
+            day,
+            topic
+          )
+        );
+
+
+      if (
+        !Array.isArray(
+          result?.mcqs
+        )
+      ) {
+        throw new Error(
+          "Groq did not return an mcqs array."
+        );
+      }
+
+
+      validateMcqs(
+        result.mcqs,
+        5,
+        10
+      );
+
+
+      const mcqs =
+        result.mcqs.map(mcq => ({
+          ...mcq,
+          topic
+        }));
+
+
+      console.log(
+        `  ✓ ${mcqs.length} valid MCQs collected`
+      );
+
+
+      return mcqs;
+
+    } catch (error) {
+      console.warn(
+        `  Topic failed: ${error.message}`
+      );
+
+      console.warn(
+        `  Retrying SAME topic: ${topic}`
+      );
+    }
+  }
+}
+
+
+/*
+ * ------------------------------------------------------
+ * VALIDATE MCQ COUNT PER TOPIC
+ * ------------------------------------------------------
+ *
+ * Every authoritative syllabus topic must have
+ * between 5 and 10 MCQs.
+ */
+function validateMcqCountPerTopic(
+  mcqs,
+  topics
+) {
+  for (const topic of topics) {
+    const topicMcqCount =
+      mcqs.filter(
+        mcq =>
+          topicMatches(
+            mcq.topic,
+            topic
+          )
+      ).length;
+
+    if (
+      topicMcqCount < 5 ||
+      topicMcqCount > 10
+    ) {
+      throw new Error(
+        `MCQ count failure for topic "${topic}": expected 5-10, received ${topicMcqCount}.`
+      );
+    }
+  }
+}
+
+
+/*
+ * ------------------------------------------------------
+ * MAIN
+ * ------------------------------------------------------
+ */
 async function main() {
   const syllabus =
     readJson(SYLLABUS_FILE);
@@ -546,6 +750,7 @@ async function main() {
     );
   }
 
+
   const lastDay =
     findLastGeneratedDay();
 
@@ -557,24 +762,30 @@ async function main() {
   console.log("==============================================");
   console.log(" VIDHWAAN NEET — DAILY AI GENERATOR");
   console.log("==============================================");
+
   console.log(
     `Last generated : ${lastDay}`
   );
+
   console.log(
     `Next day       : ${nextDay}`
   );
+
   console.log(
     `Total days     : ${totalDays}`
   );
+
   console.log(
     `Model          : ${
       process.env.GROQ_MODEL ||
       "openai/gpt-oss-120b"
     }`
   );
+
   console.log(
-    "Strategy       : exact syllabus topics + topic MCQs"
+    "Strategy       : complete lesson + 5-10 MCQs per topic"
   );
+
   console.log("==============================================");
 
 
@@ -635,7 +846,11 @@ async function main() {
 
   /*
    * IMPORTANT:
-   * This now contains ONLY day.topics.
+   *
+   * ONLY day.topics are used.
+   *
+   * chapter/subtopics/neetFocus are NOT added as
+   * separate lesson or MCQ topics.
    */
   const topics =
     getTopics(day);
@@ -645,15 +860,19 @@ async function main() {
   console.log(
     `Syllabus day : ${nextDay}`
   );
+
   console.log(
     `Course date  : ${courseDate}`
   );
+
   console.log(
     `Publish at   : ${publishAt}`
   );
+
   console.log(
     `Topics found : ${topics.length}`
   );
+
   console.log("");
 
 
@@ -671,7 +890,7 @@ async function main() {
   /*
    * ------------------------------------------------------
    * STEP 1
-   * LESSON
+   * COMPLETE LESSON
    * ------------------------------------------------------
    */
 
@@ -681,62 +900,11 @@ async function main() {
   );
 
 
-  let lesson;
-
-
-  /*
-   * Keep generating the SAME lesson until it passes
-   * strict validation.
-   *
-   * Groq rate-limit waiting/retry is handled inside
-   * groq.js.
-   */
-  let lessonAttempt = 0;
-
-  while (true) {
-    lessonAttempt++;
-
-    console.log(
-      `Lesson validation attempt: ${lessonAttempt}`
+  const lesson =
+    await generateCompleteLesson(
+      day,
+      topics
     );
-
-    try {
-      lesson =
-        await generateLesson(
-          buildLessonPrompt(day)
-        );
-
-      lesson =
-        normalizeGeneratedLesson(
-          lesson,
-          day
-        );
-
-      validateCompleteLesson(
-        lesson,
-        topics
-      );
-
-      console.log(
-        "Lesson validation: PASSED"
-      );
-
-      break;
-
-    } catch (error) {
-      console.warn("");
-      console.warn(
-        "Lesson validation failed."
-      );
-      console.warn(
-        error.message
-      );
-      console.warn(
-        "Regenerating the SAME lesson..."
-      );
-      console.warn("");
-    }
-  }
 
 
   console.log(
@@ -747,16 +915,11 @@ async function main() {
   /*
    * ------------------------------------------------------
    * STEP 2
-   * MCQs
+   * TOPIC-WISE MCQs
    * ------------------------------------------------------
    *
-   * One request per authoritative syllabus topic.
-   *
-   * IMPORTANT:
-   * No topic is skipped.
-   *
-   * If a topic's MCQ request fails or validation fails,
-   * the SAME topic is retried until successful.
+   * The next topic is NEVER started until the current
+   * topic has successfully produced 5-10 valid MCQs.
    */
 
   console.log("");
@@ -773,7 +936,8 @@ async function main() {
     i < topics.length;
     i++
   ) {
-    const topic = topics[i];
+    const topic =
+      topics[i];
 
     console.log("");
     console.log(
@@ -781,78 +945,23 @@ async function main() {
     );
 
 
-    let topicMcqs = null;
-    let mcqAttempt = 0;
-
-
-    while (true) {
-      mcqAttempt++;
-
-      console.log(
-        `MCQ generation attempt ${mcqAttempt}`
+    const topicMcqs =
+      await generateCompleteTopicMcqs(
+        day,
+        topic
       );
 
 
-      try {
-        const result =
-          await generateTopicMcqs(
-            buildMcqPrompt(
-              day,
-              topic
-            )
-          );
-
-
-        if (
-          !Array.isArray(
-            result?.mcqs
-          )
-        ) {
-          throw new Error(
-            "Groq did not return an mcqs array."
-          );
-        }
-
-
-        validateMcqs(
-          result.mcqs
-        );
-
-
-        topicMcqs =
-          result.mcqs;
-
-
-        console.log(
-          `MCQs validated: ${topicMcqs.length}`
-        );
-
-
-        break;
-
-      } catch (error) {
-        console.warn(
-          `MCQ validation/generation failed for "${topic}": ${error.message}`
-        );
-
-        console.warn(
-          "Retrying the SAME topic..."
-        );
-      }
-    }
-
-
-    for (
-      const mcq of topicMcqs
-    ) {
-      allMcqs.push({
-        ...mcq,
-        topic
-      });
-    }
+    allMcqs.push(
+      ...topicMcqs
+    );
   }
 
 
+  /*
+   * Remove exact duplicate questions within the
+   * SAME topic only.
+   */
   const mcqs =
     uniqueMcqs(allMcqs);
 
@@ -861,6 +970,23 @@ async function main() {
   console.log(
     `Valid MCQs collected: ${mcqs.length}`
   );
+
+
+  /*
+   * ------------------------------------------------------
+   * FINAL PER-TOPIC MCQ COUNT
+   * ------------------------------------------------------
+   */
+  try {
+    validateMcqCountPerTopic(
+      mcqs,
+      topics
+    );
+  } catch (error) {
+    fail(
+      `Final MCQ validation failed:\n${error.message}`
+    );
+  }
 
 
   /*
@@ -896,7 +1022,7 @@ async function main() {
         "openai/gpt-oss-120b",
 
       strategy:
-        "3-5 MCQs per exact syllabus topic",
+        "5-10 MCQs per exact syllabus topic",
 
       topicCount:
         topics.length,
@@ -919,9 +1045,17 @@ async function main() {
       topics
     );
 
+
     validateMcqs(
       generated.mcqs
     );
+
+
+    validateMcqCountPerTopic(
+      generated.mcqs,
+      topics
+    );
+
 
   } catch (error) {
     fail(
@@ -947,31 +1081,95 @@ async function main() {
   );
 
 
+  /*
+   * ------------------------------------------------------
+   * READ THE ACTUAL WRITTEN FILE AGAIN
+   * ------------------------------------------------------
+   *
+   * This validates the exact JSON file that the
+   * frontend will eventually read.
+   */
+
+  try {
+    const saved =
+      JSON.parse(
+        fs.readFileSync(
+          outputFile,
+          "utf8"
+        )
+      );
+
+
+    validateCompleteLesson(
+      saved,
+      topics
+    );
+
+
+    validateMcqs(
+      saved.mcqs
+    );
+
+
+    validateMcqCountPerTopic(
+      saved.mcqs,
+      topics
+    );
+
+
+  } catch (error) {
+    fs.rmSync(
+      outputFile,
+      {
+        force: true
+      }
+    );
+
+    fail(
+      `Written file validation failed:\n${error.message}`
+    );
+  }
+
+
+  /*
+   * ------------------------------------------------------
+   * SUCCESS
+   * ------------------------------------------------------
+   */
+
   console.log("");
   console.log("==============================================");
   console.log(" DAILY NEET LESSON GENERATED");
   console.log("==============================================");
+
   console.log(
     `Day       : ${nextDay}`
   );
+
   console.log(
     `Date      : ${courseDate}`
   );
+
   console.log(
     `Sections  : ${generated.sections.length}`
   );
+
   console.log(
     `Topics    : ${topics.length}`
   );
+
   console.log(
     `MCQs      : ${generated.mcqs.length}`
   );
+
   console.log(
     `Output    : ${path.relative(ROOT, outputFile)}`
   );
+
   console.log(
     "Validation: PASSED"
   );
+
   console.log("==============================================");
 }
 
