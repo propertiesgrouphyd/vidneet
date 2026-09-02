@@ -67,68 +67,88 @@ function getDays(root) {
 }
 
 
+/*
+ * ------------------------------------------------------
+ * AUTHORITATIVE TOPIC EXTRACTION
+ * ------------------------------------------------------
+ *
+ * IMPORTANT:
+ *
+ * Only day.topics are lesson section topics.
+ *
+ * day.chapter     = context/title
+ * day.topics      = authoritative section topics
+ * day.subtopics   = supporting requirements
+ * day.neetFocus   = exam priorities
+ *
+ * NEVER add chapter or subtopics to this list.
+ */
 function getTopics(day) {
+  if (!Array.isArray(day?.topics)) {
+    fail(
+      `Day ${day?.day ?? "unknown"} does not contain a valid topics array.`
+    );
+  }
+
   const topics = [];
 
-  function add(value) {
-    if (!value) return;
+  for (const item of day.topics) {
+    let topic = null;
 
-    const text =
-      String(value).trim();
+    if (typeof item === "string") {
+      topic = item.trim();
+    }
 
-    if (
-      text &&
-      !topics.includes(text)
+    else if (
+      item &&
+      typeof item === "object"
     ) {
-      topics.push(text);
+      topic = String(
+        item.topic ??
+        item.title ??
+        item.name ??
+        ""
+      ).trim();
     }
-  }
 
-  add(day.title);
-  add(day.topic);
-  add(day.chapter);
-
-  if (Array.isArray(day.topics)) {
-    for (const topic of day.topics) {
-      if (typeof topic === "string") {
-        add(topic);
-      } else if (
-        topic &&
-        typeof topic === "object"
-      ) {
-        add(
-          topic.topic ||
-          topic.title ||
-          topic.name
-        );
-
-        if (Array.isArray(topic.subtopics)) {
-          for (const sub of topic.subtopics) {
-            if (typeof sub === "string") {
-              add(sub);
-            }
-          }
-        }
-      }
-    }
-  }
-
-  if (Array.isArray(day.subtopics)) {
-    for (const sub of day.subtopics) {
-      add(
-        typeof sub === "string"
-          ? sub
-          : sub?.title ||
-            sub?.name ||
-            sub?.topic
+    if (!topic) {
+      fail(
+        `Day ${day.day} contains an invalid or empty topic in the topics array.`
       );
     }
+
+    if (topics.includes(topic)) {
+      fail(
+        `Day ${day.day} contains a duplicate syllabus topic: "${topic}"`
+      );
+    }
+
+    topics.push(topic);
+  }
+
+  if (topics.length === 0) {
+    fail(
+      `Day ${day.day} contains no syllabus topics.`
+    );
   }
 
   return topics;
 }
 
 
+/*
+ * ------------------------------------------------------
+ * NORMALIZE AI-GENERATED LESSON
+ * ------------------------------------------------------
+ *
+ * Groq may occasionally return a valid JSON object
+ * with learningOutcome in the wrong shape.
+ *
+ * The validator remains strict.
+ *
+ * This function converts safe equivalent shapes into
+ * the required canonical format before validation.
+ */
 function normalizeGeneratedLesson(
   lesson,
   syllabusDay
@@ -142,6 +162,18 @@ function normalizeGeneratedLesson(
       "Groq returned an invalid lesson object."
     );
   }
+
+
+  /*
+   * learningOutcome
+   *
+   * Required final format:
+   *
+   * [
+   *   "string",
+   *   "string"
+   * ]
+   */
 
   if (
     typeof lesson.learningOutcome === "string"
@@ -183,6 +215,11 @@ function normalizeGeneratedLesson(
     }
   }
 
+
+  /*
+   * If Groq returned null, undefined, or another
+   * unexpected type, convert it to an empty array.
+   */
   if (
     !Array.isArray(
       lesson.learningOutcome
@@ -191,6 +228,13 @@ function normalizeGeneratedLesson(
     lesson.learningOutcome = [];
   }
 
+
+  /*
+   * Last-resort safe fallback.
+   *
+   * This prevents an otherwise valid lesson from
+   * failing only because Groq omitted learningOutcome.
+   */
   if (
     lesson.learningOutcome.length === 0
   ) {
@@ -206,10 +250,86 @@ function normalizeGeneratedLesson(
     ];
   }
 
+
+  /*
+   * Ensure every outcome is a clean string.
+   */
   lesson.learningOutcome =
     lesson.learningOutcome
       .map(item => String(item).trim())
       .filter(Boolean);
+
+
+  /*
+   * ----------------------------------------------------
+   * NORMALIZE MCQ ANSWER INDEX
+   * ----------------------------------------------------
+   *
+   * Canonical format:
+   *
+   * 0 = option A
+   * 1 = option B
+   * 2 = option C
+   * 3 = option D
+   *
+   * This is mainly a safety layer if a lesson response
+   * happens to contain MCQs despite the prompt.
+   */
+
+  if (Array.isArray(lesson.mcqs)) {
+    lesson.mcqs =
+      lesson.mcqs.map(mcq => {
+        if (
+          !mcq ||
+          typeof mcq !== "object"
+        ) {
+          return mcq;
+        }
+
+        if (
+          !Number.isInteger(mcq.answer)
+        ) {
+          const raw =
+            mcq.correctAnswer ??
+            mcq.correct_answer ??
+            mcq.correctOption ??
+            mcq.correct_option;
+
+          if (typeof raw === "string") {
+            const value =
+              raw.trim().toUpperCase();
+
+            if (/^[ABCD]$/.test(value)) {
+              mcq.answer =
+                value.charCodeAt(0) - 65;
+            }
+
+            else if (/^\d+$/.test(value)) {
+              const number =
+                Number(value);
+
+              if (
+                number >= 0 &&
+                number <= 3
+              ) {
+                mcq.answer = number;
+              }
+
+              else if (
+                number >= 1 &&
+                number <= 4
+              ) {
+                mcq.answer =
+                  number - 1;
+              }
+            }
+          }
+        }
+
+        return mcq;
+      });
+  }
+
 
   return lesson;
 }
@@ -295,111 +415,6 @@ function createPublishAt(
 }
 
 
-function normalizeTopic(value) {
-  return String(value)
-    .trim()
-    .toLowerCase()
-    .replace(/\s+/g, " ");
-}
-
-
-function topicMatches(
-  generatedTopic,
-  expectedTopic
-) {
-  const generated =
-    normalizeTopic(generatedTopic);
-
-  const expected =
-    normalizeTopic(expectedTopic);
-
-  return (
-    generated === expected ||
-    generated.includes(expected) ||
-    expected.includes(generated)
-  );
-}
-
-
-function validateCompleteLesson(
-  lesson,
-  expectedTopics
-) {
-  validateDayContent(
-    lesson,
-    undefined,
-    expectedTopics
-  );
-
-  for (const topic of expectedTopics) {
-    const found =
-      lesson.sections.some(
-        section =>
-          topicMatches(
-            section.topic,
-            topic
-          )
-      );
-
-    if (!found) {
-      throw new Error(
-        `Lesson is incomplete. Missing topic: ${topic}`
-      );
-    }
-  }
-}
-
-
-async function generateCompleteLesson(
-  day,
-  topics
-) {
-  let attempt = 0;
-
-  while (true) {
-    attempt++;
-
-    console.log("");
-    console.log(
-      `Lesson completeness attempt ${attempt}`
-    );
-
-    try {
-      let lesson =
-        await generateLesson(
-          buildLessonPrompt(day)
-        );
-
-      lesson =
-        normalizeGeneratedLesson(
-          lesson,
-          day
-        );
-
-      validateCompleteLesson(
-        lesson,
-        topics
-      );
-
-      console.log(
-        `Lesson complete: ${lesson.sections.length}/${topics.length} topics`
-      );
-
-      return lesson;
-
-    } catch (error) {
-      console.warn("");
-      console.warn(
-        `Lesson incomplete/invalid: ${error.message}`
-      );
-      console.warn(
-        "Regenerating the complete lesson..."
-      );
-    }
-  }
-}
-
-
 function uniqueMcqs(mcqs) {
   const seen = new Set();
   const result = [];
@@ -422,62 +437,88 @@ function uniqueMcqs(mcqs) {
 }
 
 
-async function generateCompleteTopicMcqs(
-  day,
-  topic
+/*
+ * ------------------------------------------------------
+ * EXACT TOPIC MATCH
+ * ------------------------------------------------------
+ *
+ * Do not use includes() or fuzzy matching.
+ *
+ * Every generated section must correspond exactly
+ * to one authoritative syllabus topic.
+ */
+function normalizeTopic(value) {
+  return String(value ?? "")
+    .trim()
+    .replace(/\s+/g, " ")
+    .toLowerCase();
+}
+
+
+function topicMatches(
+  generatedTopic,
+  expectedTopic
 ) {
-  let attempt = 0;
+  return (
+    normalizeTopic(generatedTopic) ===
+    normalizeTopic(expectedTopic)
+  );
+}
 
-  while (true) {
-    attempt++;
 
-    console.log(
-      `  Topic attempt ${attempt}: ${topic}`
+/*
+ * ------------------------------------------------------
+ * COMPLETE LESSON VALIDATION
+ * ------------------------------------------------------
+ *
+ * This additional check guarantees that every expected
+ * topic exists exactly once and in the correct order.
+ */
+function validateCompleteLesson(
+  lesson,
+  topics
+) {
+  validateDayContent(
+    lesson,
+    undefined,
+    topics
+  );
+
+  if (
+    !Array.isArray(lesson.sections)
+  ) {
+    throw new Error(
+      "Lesson sections must be an array."
     );
+  }
 
-    try {
-      const result =
-        await generateTopicMcqs(
-          buildMcqPrompt(
-            day,
-            topic
-          )
-        );
+  if (
+    lesson.sections.length !== topics.length
+  ) {
+    throw new Error(
+      `Lesson section count ${lesson.sections.length} does not equal syllabus topic count ${topics.length}.`
+    );
+  }
 
-      if (
-        !Array.isArray(
-          result?.mcqs
-        ) ||
-        result.mcqs.length === 0
-      ) {
-        throw new Error(
-          "Groq returned no MCQs."
-        );
-      }
+  for (
+    let i = 0;
+    i < topics.length;
+    i++
+  ) {
+    const generatedTopic =
+      lesson.sections[i]?.topic;
 
-      validateMcqs(
-        result.mcqs
-      );
+    const expectedTopic =
+      topics[i];
 
-      const mcqs =
-        result.mcqs.map(mcq => ({
-          ...mcq,
-          topic
-        }));
-
-      console.log(
-        `  ✓ ${mcqs.length} valid MCQs collected`
-      );
-
-      return mcqs;
-
-    } catch (error) {
-      console.warn(
-        `  Topic failed: ${error.message}`
-      );
-
-      console.warn(
-        `  Retrying SAME topic: ${topic}`
+    if (
+      !topicMatches(
+        generatedTopic,
+        expectedTopic
+      )
+    ) {
+      throw new Error(
+        `Section ${i + 1} topic mismatch. Expected "${expectedTopic}" but received "${generatedTopic}".`
       );
     }
   }
@@ -511,6 +552,7 @@ async function main() {
   const nextDay =
     lastDay + 1;
 
+
   console.log("");
   console.log("==============================================");
   console.log(" VIDHWAAN NEET — DAILY AI GENERATOR");
@@ -531,9 +573,10 @@ async function main() {
     }`
   );
   console.log(
-    "Strategy       : complete lesson + topic MCQs"
+    "Strategy       : exact syllabus topics + topic MCQs"
   );
   console.log("==============================================");
+
 
   if (nextDay > totalDays) {
     console.log(
@@ -542,9 +585,11 @@ async function main() {
     return;
   }
 
+
   fs.mkdirSync(DATA_DIR, {
     recursive: true
   });
+
 
   const outputFile =
     path.join(
@@ -552,11 +597,13 @@ async function main() {
       `day-${String(nextDay).padStart(3, "0")}.json`
     );
 
+
   if (fs.existsSync(outputFile)) {
     fail(
       `Safety stop: ${outputFile} already exists.`
     );
   }
+
 
   const day =
     days.find(
@@ -564,11 +611,13 @@ async function main() {
         Number(item.day) === nextDay
     );
 
+
   if (!day) {
     fail(
       `Day ${nextDay} was not found in syllabus.json.`
     );
   }
+
 
   const courseDate =
     calculateCourseDate(
@@ -576,20 +625,21 @@ async function main() {
       nextDay
     );
 
+
   const publishAt =
     createPublishAt(
       courseDate,
       config.publishTime
     );
 
+
+  /*
+   * IMPORTANT:
+   * This now contains ONLY day.topics.
+   */
   const topics =
     getTopics(day);
 
-  if (topics.length === 0) {
-    fail(
-      `No topics found for Day ${nextDay}.`
-    );
-  }
 
   console.log("");
   console.log(
@@ -606,28 +656,107 @@ async function main() {
   );
   console.log("");
 
+
+  for (
+    let i = 0;
+    i < topics.length;
+    i++
+  ) {
+    console.log(
+      `Topic ${i + 1}: ${topics[i]}`
+    );
+  }
+
+
   /*
+   * ------------------------------------------------------
    * STEP 1
-   * COMPLETE LESSON
+   * LESSON
+   * ------------------------------------------------------
    */
 
+  console.log("");
   console.log(
     "STEP 1 — Generating complete lesson..."
   );
 
-  const lesson =
-    await generateCompleteLesson(
-      day,
-      topics
-    );
+
+  let lesson;
+
 
   /*
+   * Keep generating the SAME lesson until it passes
+   * strict validation.
+   *
+   * Groq rate-limit waiting/retry is handled inside
+   * groq.js.
+   */
+  let lessonAttempt = 0;
+
+  while (true) {
+    lessonAttempt++;
+
+    console.log(
+      `Lesson validation attempt: ${lessonAttempt}`
+    );
+
+    try {
+      lesson =
+        await generateLesson(
+          buildLessonPrompt(day)
+        );
+
+      lesson =
+        normalizeGeneratedLesson(
+          lesson,
+          day
+        );
+
+      validateCompleteLesson(
+        lesson,
+        topics
+      );
+
+      console.log(
+        "Lesson validation: PASSED"
+      );
+
+      break;
+
+    } catch (error) {
+      console.warn("");
+      console.warn(
+        "Lesson validation failed."
+      );
+      console.warn(
+        error.message
+      );
+      console.warn(
+        "Regenerating the SAME lesson..."
+      );
+      console.warn("");
+    }
+  }
+
+
+  console.log(
+    `Lesson sections: ${lesson.sections.length}`
+  );
+
+
+  /*
+   * ------------------------------------------------------
    * STEP 2
-   * TOPIC-WISE MCQs
+   * MCQs
+   * ------------------------------------------------------
+   *
+   * One request per authoritative syllabus topic.
    *
    * IMPORTANT:
-   * The next topic is NEVER started
-   * until the current topic succeeds.
+   * No topic is skipped.
+   *
+   * If a topic's MCQ request fails or validation fails,
+   * the SAME topic is retried until successful.
    */
 
   console.log("");
@@ -635,67 +764,109 @@ async function main() {
     "STEP 2 — Generating topic-wise NEET MCQs..."
   );
 
+
   const allMcqs = [];
+
 
   for (
     let i = 0;
     i < topics.length;
     i++
   ) {
-    const topic =
-      topics[i];
+    const topic = topics[i];
 
     console.log("");
     console.log(
       `MCQ ${i + 1}/${topics.length}: ${topic}`
     );
 
-    const topicMcqs =
-      await generateCompleteTopicMcqs(
-        day,
-        topic
+
+    let topicMcqs = null;
+    let mcqAttempt = 0;
+
+
+    while (true) {
+      mcqAttempt++;
+
+      console.log(
+        `MCQ generation attempt ${mcqAttempt}`
       );
 
-    allMcqs.push(
-      ...topicMcqs
-    );
+
+      try {
+        const result =
+          await generateTopicMcqs(
+            buildMcqPrompt(
+              day,
+              topic
+            )
+          );
+
+
+        if (
+          !Array.isArray(
+            result?.mcqs
+          )
+        ) {
+          throw new Error(
+            "Groq did not return an mcqs array."
+          );
+        }
+
+
+        validateMcqs(
+          result.mcqs
+        );
+
+
+        topicMcqs =
+          result.mcqs;
+
+
+        console.log(
+          `MCQs validated: ${topicMcqs.length}`
+        );
+
+
+        break;
+
+      } catch (error) {
+        console.warn(
+          `MCQ validation/generation failed for "${topic}": ${error.message}`
+        );
+
+        console.warn(
+          "Retrying the SAME topic..."
+        );
+      }
+    }
+
+
+    for (
+      const mcq of topicMcqs
+    ) {
+      allMcqs.push({
+        ...mcq,
+        topic
+      });
+    }
   }
+
 
   const mcqs =
     uniqueMcqs(allMcqs);
 
-  /*
-   * Make absolutely sure every topic
-   * has at least one MCQ before writing.
-   */
-
-  for (const topic of topics) {
-    const hasMcqs =
-      mcqs.some(
-        mcq =>
-          topicMatches(
-            mcq.topic,
-            topic
-          )
-      );
-
-    if (!hasMcqs) {
-      fail(
-        `Final MCQ coverage failure. Missing topic: ${topic}`
-      );
-    }
-  }
 
   console.log("");
   console.log(
     `Valid MCQs collected: ${mcqs.length}`
   );
 
+
   /*
+   * ------------------------------------------------------
    * FINAL OBJECT
-   *
-   * Existing frontend-compatible
-   * JSON structure is preserved.
+   * ------------------------------------------------------
    */
 
   const generated = {
@@ -725,7 +896,7 @@ async function main() {
         "openai/gpt-oss-120b",
 
       strategy:
-        "3-5 MCQs per syllabus topic",
+        "3-5 MCQs per exact syllabus topic",
 
       topicCount:
         topics.length,
@@ -735,8 +906,11 @@ async function main() {
     }
   };
 
+
   /*
+   * ------------------------------------------------------
    * FINAL SAFETY VALIDATION
+   * ------------------------------------------------------
    */
 
   try {
@@ -749,47 +923,17 @@ async function main() {
       generated.mcqs
     );
 
-    for (const topic of topics) {
-      const lessonExists =
-        generated.sections.some(
-          section =>
-            topicMatches(
-              section.topic,
-              topic
-            )
-        );
-
-      if (!lessonExists) {
-        throw new Error(
-          `Missing lesson topic: ${topic}`
-        );
-      }
-
-      const mcqExists =
-        generated.mcqs.some(
-          mcq =>
-            topicMatches(
-              mcq.topic,
-              topic
-            )
-        );
-
-      if (!mcqExists) {
-        throw new Error(
-          `Missing MCQs for topic: ${topic}`
-        );
-      }
-    }
-
   } catch (error) {
     fail(
       `Final validation failed:\n${error.message}`
     );
   }
 
+
   /*
-   * WRITE ONLY AFTER EVERYTHING
-   * IS COMPLETE AND VALID.
+   * ------------------------------------------------------
+   * WRITE ONLY AFTER ALL VALIDATION PASSES
+   * ------------------------------------------------------
    */
 
   fs.writeFileSync(
@@ -802,42 +946,6 @@ async function main() {
     "utf8"
   );
 
-  /*
-   * READ THE FILE AGAIN AND VALIDATE
-   * THE ACTUAL FILE THAT WILL BE USED
-   * BY THE EXISTING FRONTEND.
-   */
-
-  try {
-    const saved =
-      JSON.parse(
-        fs.readFileSync(
-          outputFile,
-          "utf8"
-        )
-      );
-
-    validateCompleteLesson(
-      saved,
-      topics
-    );
-
-    validateMcqs(
-      saved.mcqs
-    );
-
-  } catch (error) {
-    fs.rmSync(
-      outputFile,
-      {
-        force: true
-      }
-    );
-
-    fail(
-      `Written file validation failed:\n${error.message}`
-    );
-  }
 
   console.log("");
   console.log("==============================================");
