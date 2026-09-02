@@ -27,6 +27,7 @@ const CONFIG_FILE =
 const DATA_DIR =
   path.join(ROOT, "public", "data");
 
+
 function fail(message) {
   console.error("");
   console.error("==============================================");
@@ -36,6 +37,7 @@ function fail(message) {
   console.error("==============================================");
   process.exit(1);
 }
+
 
 function readJson(file) {
   try {
@@ -48,6 +50,7 @@ function readJson(file) {
     );
   }
 }
+
 
 function getDays(root) {
   if (Array.isArray(root)) {
@@ -62,6 +65,7 @@ function getDays(root) {
     "syllabus.json does not contain a valid days array."
   );
 }
+
 
 function getTopics(day) {
   const topics = [];
@@ -87,7 +91,10 @@ function getTopics(day) {
     for (const topic of day.topics) {
       if (typeof topic === "string") {
         add(topic);
-      } else if (topic && typeof topic === "object") {
+      } else if (
+        topic &&
+        typeof topic === "object"
+      ) {
         add(
           topic.topic ||
           topic.title ||
@@ -110,13 +117,217 @@ function getTopics(day) {
       add(
         typeof sub === "string"
           ? sub
-          : sub?.title || sub?.name || sub?.topic
+          : sub?.title ||
+            sub?.name ||
+            sub?.topic
       );
     }
   }
 
   return topics;
 }
+
+
+/*
+ * ------------------------------------------------------
+ * NORMALIZE AI-GENERATED LESSON
+ * ------------------------------------------------------
+ *
+ * Groq may occasionally return a valid JSON object
+ * with learningOutcome in the wrong shape.
+ *
+ * The validator remains strict.
+ * This function converts safe equivalent shapes into
+ * the required canonical format before validation.
+ */
+function normalizeGeneratedLesson(
+  lesson,
+  syllabusDay
+) {
+  if (
+    !lesson ||
+    typeof lesson !== "object" ||
+    Array.isArray(lesson)
+  ) {
+    throw new Error(
+      "Groq returned an invalid lesson object."
+    );
+  }
+
+
+  /*
+   * learningOutcome
+   *
+   * Required final format:
+   *
+   * [
+   *   "string",
+   *   "string"
+   * ]
+   */
+
+
+  if (
+    typeof lesson.learningOutcome === "string"
+  ) {
+    const value =
+      lesson.learningOutcome.trim();
+
+    lesson.learningOutcome =
+      value ? [value] : [];
+  }
+
+
+  else if (
+    lesson.learningOutcome &&
+    typeof lesson.learningOutcome === "object" &&
+    !Array.isArray(lesson.learningOutcome)
+  ) {
+    const candidate =
+      lesson.learningOutcome.items ||
+      lesson.learningOutcome.outcomes ||
+      lesson.learningOutcome.points ||
+      lesson.learningOutcome.text ||
+      lesson.learningOutcome.content;
+
+
+    if (Array.isArray(candidate)) {
+      lesson.learningOutcome =
+        candidate
+          .map(item => String(item).trim())
+          .filter(Boolean);
+    }
+
+    else if (candidate) {
+      lesson.learningOutcome = [
+        String(candidate).trim()
+      ];
+    }
+
+    else {
+      lesson.learningOutcome = [];
+    }
+  }
+
+
+  /*
+   * If Groq returned null, undefined, or another
+   * unexpected type, convert it to an empty array.
+   */
+  if (
+    !Array.isArray(
+      lesson.learningOutcome
+    )
+  ) {
+    lesson.learningOutcome = [];
+  }
+
+
+  /*
+   * Last-resort safe fallback.
+   *
+   * This prevents an otherwise valid lesson from
+   * failing only because Groq omitted learningOutcome.
+   */
+  if (
+    lesson.learningOutcome.length === 0
+  ) {
+    const chapter =
+      String(
+        syllabusDay?.chapter ||
+        syllabusDay?.title ||
+        "today's NEET topic"
+      ).trim();
+
+    lesson.learningOutcome = [
+      `Understand the important NEET concepts, facts, and applications covered in ${chapter}.`
+    ];
+  }
+
+
+  /*
+   * Ensure every outcome is a clean string.
+   */
+  lesson.learningOutcome =
+    lesson.learningOutcome
+      .map(item => String(item).trim())
+      .filter(Boolean);
+
+
+  /*
+   * ----------------------------------------------------
+   * NORMALIZE MCQ ANSWER INDEX
+   * ----------------------------------------------------
+   *
+   * The canonical format is:
+   *
+   * 0 = option A
+   * 1 = option B
+   * 2 = option C
+   * 3 = option D
+   *
+   * This is mainly a safety layer if a lesson response
+   * happens to contain MCQs despite the prompt.
+   */
+
+  if (Array.isArray(lesson.mcqs)) {
+    lesson.mcqs =
+      lesson.mcqs.map(mcq => {
+        if (
+          !mcq ||
+          typeof mcq !== "object"
+        ) {
+          return mcq;
+        }
+
+        if (
+          !Number.isInteger(mcq.answer)
+        ) {
+          const raw =
+            mcq.correctAnswer ??
+            mcq.correct_answer ??
+            mcq.correctOption ??
+            mcq.correct_option;
+
+          if (typeof raw === "string") {
+            const value =
+              raw.trim().toUpperCase();
+
+            if (/^[ABCD]$/.test(value)) {
+              mcq.answer =
+                value.charCodeAt(0) - 65;
+            }
+
+            else if (/^\d+$/.test(value)) {
+              const number =
+                Number(value);
+
+              if (
+                number >= 0 &&
+                number <= 3
+              ) {
+                mcq.answer = number;
+              }
+
+              else if (
+                number >= 1 &&
+                number <= 4
+              ) {
+                mcq.answer =
+                  number - 1;
+              }
+            }
+          }
+        }
+
+        return mcq;
+      });
+  }
+
+
+  return lesson;
+}
+
 
 function findLastGeneratedDay() {
   if (!fs.existsSync(DATA_DIR)) {
@@ -146,6 +357,7 @@ function findLastGeneratedDay() {
 
   return highest;
 }
+
 
 function calculateCourseDate(
   startDate,
@@ -186,6 +398,7 @@ function calculateCourseDate(
     .slice(0, 10);
 }
 
+
 function createPublishAt(
   courseDate,
   publishTime
@@ -194,6 +407,7 @@ function createPublishAt(
     `${courseDate}T${publishTime}:00+05:30`
   );
 }
+
 
 function uniqueMcqs(mcqs) {
   const seen = new Set();
@@ -215,6 +429,7 @@ function uniqueMcqs(mcqs) {
 
   return result;
 }
+
 
 async function main() {
   const syllabus =
@@ -247,11 +462,20 @@ async function main() {
   console.log("==============================================");
   console.log(" VIDHWAAN NEET — DAILY AI GENERATOR");
   console.log("==============================================");
-  console.log(`Last generated : ${lastDay}`);
-  console.log(`Next day       : ${nextDay}`);
-  console.log(`Total days     : ${totalDays}`);
   console.log(
-    `Model          : ${process.env.GROQ_MODEL || "openai/gpt-oss-120b"}`
+    `Last generated : ${lastDay}`
+  );
+  console.log(
+    `Next day       : ${nextDay}`
+  );
+  console.log(
+    `Total days     : ${totalDays}`
+  );
+  console.log(
+    `Model          : ${
+      process.env.GROQ_MODEL ||
+      "openai/gpt-oss-120b"
+    }`
   );
   console.log(
     "Strategy       : lesson + topic MCQs"
@@ -309,11 +533,20 @@ async function main() {
     getTopics(day);
 
   console.log("");
-  console.log(`Syllabus day : ${nextDay}`);
-  console.log(`Course date  : ${courseDate}`);
-  console.log(`Publish at   : ${publishAt}`);
-  console.log(`Topics found : ${topics.length}`);
+  console.log(
+    `Syllabus day : ${nextDay}`
+  );
+  console.log(
+    `Course date  : ${courseDate}`
+  );
+  console.log(
+    `Publish at   : ${publishAt}`
+  );
+  console.log(
+    `Topics found : ${topics.length}`
+  );
   console.log("");
+
 
   /*
    * ------------------------------------------------------
@@ -333,11 +566,23 @@ async function main() {
       await generateLesson(
         buildLessonPrompt(day)
       );
+
+    /*
+     * IMPORTANT:
+     * Normalize BEFORE strict validation.
+     */
+    lesson =
+      normalizeGeneratedLesson(
+        lesson,
+        day
+      );
+
   } catch (error) {
     fail(
       `Lesson generation failed:\n${error.message}`
     );
   }
+
 
   /*
    * ------------------------------------------------------
@@ -362,13 +607,13 @@ async function main() {
     `Lesson sections: ${lesson.sections.length}`
   );
 
+
   /*
    * ------------------------------------------------------
    * STEP 3
    * MCQs
    *
    * One small Groq request per topic.
-   * This is the important TPM protection.
    * ------------------------------------------------------
    */
 
@@ -400,7 +645,9 @@ async function main() {
         );
 
       if (
-        !Array.isArray(result?.mcqs)
+        !Array.isArray(
+          result?.mcqs
+        )
       ) {
         console.warn(
           `No MCQs returned for topic: ${topic}`
@@ -419,7 +666,9 @@ async function main() {
         continue;
       }
 
-      for (const mcq of result.mcqs) {
+      for (
+        const mcq of result.mcqs
+      ) {
         allMcqs.push({
           ...mcq,
           topic
@@ -437,19 +686,16 @@ async function main() {
     }
   }
 
+
   const mcqs =
     uniqueMcqs(allMcqs);
 
-  /*
-   * We intentionally DO NOT enforce a minimum.
-   * If Groq produces 24 valid questions, save 24.
-   * If it produces 58, save 58.
-   */
 
   console.log("");
   console.log(
     `Valid MCQs collected: ${mcqs.length}`
   );
+
 
   /*
    * ------------------------------------------------------
@@ -459,7 +705,9 @@ async function main() {
 
   const generated = {
     day: nextDay,
+
     courseDate,
+
     publishAt,
 
     title:
@@ -492,8 +740,11 @@ async function main() {
     }
   };
 
+
   /*
-   * Final safety validation.
+   * ------------------------------------------------------
+   * FINAL SAFETY VALIDATION
+   * ------------------------------------------------------
    */
 
   try {
@@ -506,14 +757,18 @@ async function main() {
     validateMcqs(
       generated.mcqs
     );
+
   } catch (error) {
     fail(
       `Final validation failed:\n${error.message}`
     );
   }
 
+
   /*
-   * Write ONLY after every critical validation passes.
+   * ------------------------------------------------------
+   * WRITE ONLY AFTER VALIDATION
+   * ------------------------------------------------------
    */
 
   fs.writeFileSync(
@@ -526,21 +781,35 @@ async function main() {
     "utf8"
   );
 
+
   console.log("");
   console.log("==============================================");
   console.log(" DAILY NEET LESSON GENERATED");
   console.log("==============================================");
-  console.log(`Day       : ${nextDay}`);
-  console.log(`Date      : ${courseDate}`);
-  console.log(`Sections  : ${generated.sections.length}`);
-  console.log(`Topics    : ${topics.length}`);
-  console.log(`MCQs      : ${generated.mcqs.length}`);
+  console.log(
+    `Day       : ${nextDay}`
+  );
+  console.log(
+    `Date      : ${courseDate}`
+  );
+  console.log(
+    `Sections  : ${generated.sections.length}`
+  );
+  console.log(
+    `Topics    : ${topics.length}`
+  );
+  console.log(
+    `MCQs      : ${generated.mcqs.length}`
+  );
   console.log(
     `Output    : ${path.relative(ROOT, outputFile)}`
   );
-  console.log("Validation: PASSED");
+  console.log(
+    "Validation: PASSED"
+  );
   console.log("==============================================");
 }
+
 
 main().catch(error => {
   fail(
