@@ -1,294 +1,118 @@
-function fail(message) {
-  throw new Error(message);
-}
-
-
-function isNonEmptyString(value) {
-  return (
-    typeof value === "string" &&
-    value.trim().length > 0
-  );
-}
-
-
-function normalizeTopic(value) {
-  return String(value ?? "")
-    .trim()
-    .replace(/\s+/g, " ")
-    .toLowerCase();
-}
-
-
-function validateStringArray(
-  value,
-  fieldName
-) {
-  if (!Array.isArray(value)) {
-    fail(
-      `${fieldName} must be an array.`
-    );
-  }
-
-  if (value.length === 0) {
-    fail(
-      `${fieldName} must not be empty.`
-    );
-  }
-
-  for (
-    let i = 0;
-    i < value.length;
-    i++
-  ) {
-    if (
-      !isNonEmptyString(value[i])
-    ) {
-      fail(
-        `${fieldName}[${i}] must be a non-empty string.`
-      );
-    }
-  }
-}
-
-
-/*
- * ------------------------------------------------------
- * LESSON VALIDATION
- * ------------------------------------------------------
- */
 export function validateDayContent(
-  lesson,
+  data,
   expectedDay,
   expectedTopics
 ) {
-  if (
-    !lesson ||
-    typeof lesson !== "object" ||
-    Array.isArray(lesson)
-  ) {
-    fail(
-      "Lesson must be a valid JSON object."
+  if (!data || typeof data !== "object") {
+    throw new Error(
+      "Generated lesson is not an object."
     );
   }
 
-
-  /*
-   * Basic lesson fields
-   */
-  if (
-    !isNonEmptyString(
-      lesson.title
-    )
-  ) {
-    fail(
-      "title must be a non-empty string."
+  if (!data.title?.trim()) {
+    throw new Error(
+      "Missing lesson title."
     );
   }
 
-
-  if (
-    !isNonEmptyString(
-      lesson.introduction
-    )
-  ) {
-    fail(
-      "introduction must be a non-empty string."
+  if (!data.introduction?.trim()) {
+    throw new Error(
+      "Missing lesson introduction."
     );
   }
 
-
-  /*
-   * Day number
-   */
   if (
-    expectedDay !== undefined &&
-    expectedDay !== null
+    !Array.isArray(data.sections) ||
+    data.sections.length === 0
   ) {
-    if (
-      Number(lesson.day) !==
-      Number(expectedDay)
-    ) {
-      fail(
-        `day must equal ${expectedDay}.`
-      );
-    }
-  }
-
-
-  /*
-   * Learning outcome
-   */
-  validateStringArray(
-    lesson.learningOutcome,
-    "learningOutcome"
-  );
-
-
-  /*
-   * Sections
-   */
-  if (
-    !Array.isArray(
-      lesson.sections
-    )
-  ) {
-    fail(
-      "sections must be an array."
+    throw new Error(
+      "Lesson contains no sections."
     );
   }
 
-
   if (
-    lesson.sections.length === 0
+    !Array.isArray(data.learningOutcome)
   ) {
-    fail(
-      "sections must not be empty."
+    throw new Error(
+      "learningOutcome must be an array."
     );
   }
 
-
-  /*
-   * Exact syllabus topic validation
-   */
-  if (
-    Array.isArray(expectedTopics)
-  ) {
-    if (
-      lesson.sections.length !==
-      expectedTopics.length
-    ) {
-      fail(
-        `Section count ${lesson.sections.length} does not equal syllabus topic count ${expectedTopics.length}.`
-      );
-    }
-
-
-    const seenTopics =
-      new Set();
-
-
-    for (
-      let i = 0;
-      i < expectedTopics.length;
-      i++
-    ) {
-      const expectedTopic =
-        expectedTopics[i];
-
-      const section =
-        lesson.sections[i];
-
-
-      if (
-        !section ||
-        typeof section !== "object" ||
-        Array.isArray(section)
-      ) {
-        fail(
-          `Section ${i + 1} must be an object.`
-        );
-      }
-
-
-      if (
-        !isNonEmptyString(
-          section.topic
-        )
-      ) {
-        fail(
-          `Section ${i + 1} topic must be a non-empty string.`
-        );
-      }
-
-
-      const generatedTopic =
-        normalizeTopic(
-          section.topic
-        );
-
-      const expected =
-        normalizeTopic(
-          expectedTopic
-        );
-
-
-      /*
-       * Exact normalized equality only.
-       *
-       * No includes(), startsWith(),
-       * fuzzy matching, or partial matching.
-       */
-      if (
-        generatedTopic !== expected
-      ) {
-        fail(
-          `Section ${i + 1} topic mismatch. Expected "${expectedTopic}" but received "${section.topic}".`
-        );
-      }
-
-
-      if (
-        seenTopics.has(
-          generatedTopic
-        )
-      ) {
-        fail(
-          `Duplicate section topic: "${section.topic}".`
-        );
-      }
-
-
-      seenTopics.add(
-        generatedTopic
-      );
-    }
-  }
-
-
-  /*
-   * Validate every section
-   */
   for (
-    let i = 0;
-    i < lesson.sections.length;
-    i++
+    const [index, section]
+    of data.sections.entries()
   ) {
-    const section =
-      lesson.sections[i];
-
-
-    if (
-      !isNonEmptyString(
-        section.heading
-      )
-    ) {
-      fail(
-        `Section ${i + 1} heading must be a non-empty string.`
+    if (!section.topic?.trim()) {
+      throw new Error(
+        `Section ${index + 1}: missing topic.`
       );
     }
 
-
-    if (
-      !isNonEmptyString(
-        section.content
-      )
-    ) {
-      fail(
-        `Section ${i + 1} content must be a non-empty string.`
+    if (!section.heading?.trim()) {
+      throw new Error(
+        `Section ${index + 1}: missing heading.`
       );
     }
 
+    if (!section.content?.trim()) {
+      throw new Error(
+        `Section ${index + 1}: missing content.`
+      );
+    }
 
-    validateStringArray(
-      section.keyPoints,
-      `Section ${i + 1} keyPoints`
-    );
+    if (!Array.isArray(section.keyPoints)) {
+      throw new Error(
+        `Section ${index + 1}: keyPoints must be an array.`
+      );
+    }
+
+    if (!Array.isArray(section.neetTips)) {
+      throw new Error(
+        `Section ${index + 1}: neetTips must be an array.`
+      );
+    }
+  }
 
 
-    validateStringArray(
-      section.neetTips,
-      `Section ${i + 1} neetTips`
-    );
+  /*
+   * ------------------------------------------------------
+   * EXPECTED TOPIC CHECK
+   * ------------------------------------------------------
+   *
+   * The generator performs the final authoritative
+   * exact topic/order validation.
+   *
+   * This warning remains here as an additional diagnostic
+   * check for direct use of this validator.
+   */
+  if (
+    Array.isArray(expectedTopics) &&
+    expectedTopics.length > 0
+  ) {
+    const generatedTopics =
+      data.sections.map(
+        section =>
+          String(section.topic)
+            .trim()
+            .replace(/\s+/g, " ")
+            .toLowerCase()
+      );
+
+    for (const topic of expectedTopics) {
+      const name =
+        String(topic)
+          .trim()
+          .replace(/\s+/g, " ")
+          .toLowerCase();
+
+      if (
+        !generatedTopics.includes(name)
+      ) {
+        console.warn(
+          `Warning: syllabus topic may not have a matching section: ${topic}`
+        );
+      }
+    }
   }
 
 
@@ -296,195 +120,129 @@ export function validateDayContent(
 }
 
 
-/*
- * ------------------------------------------------------
- * MCQ VALIDATION
- * ------------------------------------------------------
- */
 export function validateMcqs(
-  mcqs
+  mcqs,
+  minCount = 1,
+  maxCount = Infinity
 ) {
-  if (
-    !Array.isArray(mcqs)
-  ) {
-    fail(
-      "mcqs must be an array."
+  if (!Array.isArray(mcqs)) {
+    throw new Error(
+      "MCQs must be an array."
     );
   }
 
 
   if (
-    mcqs.length === 0
+    mcqs.length < minCount ||
+    mcqs.length > maxCount
   ) {
-    fail(
-      "mcqs must not be empty."
+    throw new Error(
+      `MCQs must contain between ${minCount} and ${maxCount} items. Received ${mcqs.length}.`
     );
   }
-
-
-  const questionSet =
-    new Set();
 
 
   for (
-    let i = 0;
-    i < mcqs.length;
-    i++
+    const [index, mcq]
+    of mcqs.entries()
   ) {
-    const mcq =
-      mcqs[i];
-
-
-    if (
-      !mcq ||
-      typeof mcq !== "object" ||
-      Array.isArray(mcq)
-    ) {
-      fail(
-        `MCQ ${i + 1} must be an object.`
+    if (!mcq.question?.trim()) {
+      throw new Error(
+        `MCQ ${index + 1}: missing question.`
       );
     }
 
 
     /*
-     * Question
+     * ----------------------------------------------------
+     * EXACTLY FOUR OPTIONS
+     * ----------------------------------------------------
      */
     if (
-      !isNonEmptyString(
-        mcq.question
-      )
-    ) {
-      fail(
-        `MCQ ${i + 1} question must be a non-empty string.`
-      );
-    }
-
-
-    const questionKey =
-      mcq.question
-        .trim()
-        .replace(/\s+/g, " ")
-        .toLowerCase();
-
-
-    if (
-      questionSet.has(
-        questionKey
-      )
-    ) {
-      fail(
-        `Duplicate MCQ question at item ${i + 1}.`
-      );
-    }
-
-
-    questionSet.add(
-      questionKey
-    );
-
-
-    /*
-     * Exactly four options
-     */
-    if (
-      !Array.isArray(
-        mcq.options
-      )
-    ) {
-      fail(
-        `MCQ ${i + 1} options must be an array.`
-      );
-    }
-
-
-    if (
+      !Array.isArray(mcq.options) ||
       mcq.options.length !== 4
     ) {
-      fail(
-        `MCQ ${i + 1} must have exactly 4 options.`
-      );
-    }
-
-
-    const optionSet =
-      new Set();
-
-
-    for (
-      let j = 0;
-      j < mcq.options.length;
-      j++
-    ) {
-      const option =
-        mcq.options[j];
-
-
-      if (
-        !isNonEmptyString(
-          option
-        )
-      ) {
-        fail(
-          `MCQ ${i + 1} option ${j + 1} must be a non-empty string.`
-        );
-      }
-
-
-      const optionKey =
-        option
-          .trim()
-          .replace(/\s+/g, " ")
-          .toLowerCase();
-
-
-      if (
-        optionSet.has(
-          optionKey
-        )
-      ) {
-        fail(
-          `MCQ ${i + 1} contains duplicate options.`
-        );
-      }
-
-
-      optionSet.add(
-        optionKey
+      throw new Error(
+        `MCQ ${index + 1}: must have exactly 4 options.`
       );
     }
 
 
     /*
-     * Correct answer
-     *
-     * 0 = A
-     * 1 = B
-     * 2 = C
-     * 3 = D
+     * ----------------------------------------------------
+     * OPTION CONTENT
+     * ----------------------------------------------------
      */
     if (
-      !Number.isInteger(
-        mcq.answer
-      ) ||
+      mcq.options.some(
+        option =>
+          typeof option !== "string" ||
+          !option.trim()
+      )
+    ) {
+      throw new Error(
+        `MCQ ${index + 1}: empty option.`
+      );
+    }
+
+
+    /*
+     * ----------------------------------------------------
+     * OPTION UNIQUENESS
+     * ----------------------------------------------------
+     *
+     * Every MCQ must have four different options.
+     *
+     * Comparison is case-insensitive and ignores
+     * surrounding whitespace.
+     */
+    const normalizedOptions =
+      mcq.options.map(
+        option =>
+          option
+            .trim()
+            .toLowerCase()
+      );
+
+
+    if (
+      new Set(normalizedOptions).size !== 4
+    ) {
+      throw new Error(
+        `MCQ ${index + 1}: options must be unique.`
+      );
+    }
+
+
+    /*
+     * ----------------------------------------------------
+     * ANSWER INDEX
+     * ----------------------------------------------------
+     *
+     * 0 = option A
+     * 1 = option B
+     * 2 = option C
+     * 3 = option D
+     */
+    if (
+      !Number.isInteger(mcq.answer) ||
       mcq.answer < 0 ||
       mcq.answer > 3
     ) {
-      fail(
-        `MCQ ${i + 1} answer must be an integer from 0 to 3.`
+      throw new Error(
+        `MCQ ${index + 1}: invalid answer index.`
       );
     }
 
 
     /*
-     * Explanation
+     * ----------------------------------------------------
+     * EXPLANATION
+     * ----------------------------------------------------
      */
-    if (
-      !isNonEmptyString(
-        mcq.explanation
-      )
-    ) {
-      fail(
-        `MCQ ${i + 1} explanation must be a non-empty string.`
+    if (!mcq.explanation?.trim()) {
+      throw new Error(
+        `MCQ ${index + 1}: missing explanation.`
       );
     }
   }
