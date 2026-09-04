@@ -355,85 +355,6 @@ jobs:
 
 
       # ============================================================
-      # HASH JS
-      # ============================================================
-
-      - name: Hash JavaScript
-        run: |
-          set -euo pipefail
-
-          HASH=$(sha256sum dist/js/app.js | cut -c1-12)
-
-          mv \
-            dist/js/app.js \
-            "dist/js/app.${HASH}.js"
-
-          echo "APP_JS=app.${HASH}.js" >> "$GITHUB_ENV"
-
-          echo "Hashed JavaScript: app.${HASH}.js"
-
-
-      # ============================================================
-      # HASH CSS
-      # ============================================================
-
-      - name: Hash CSS
-        run: |
-          set -euo pipefail
-
-          HASH=$(sha256sum dist/css/main.css | cut -c1-12)
-
-          mv \
-            dist/css/main.css \
-            "dist/css/main.${HASH}.css"
-
-          echo "MAIN_CSS=main.${HASH}.css" >> "$GITHUB_ENV"
-
-          echo "Hashed CSS: main.${HASH}.css"
-
-
-      # ============================================================
-      # UPDATE INDEX.HTML
-      #
-      # public source:
-      #
-      # ./css/main.css
-      # ./js/app.js
-      #
-      # becomes:
-      #
-      # ./css/main.<hash>.css
-      # ./js/app.<hash>.js
-      # ============================================================
-
-      - name: Update Hashed Asset References
-        run: |
-          set -euo pipefail
-
-          node <<'NODE'
-          const fs = require("fs");
-
-          const file = "dist/index.html";
-
-          let html = fs.readFileSync(file, "utf8");
-
-          html = html.replace(
-            /(?:\.\/)?css\/main\.css(?:\?[^"' ]*)?/g,
-            `./css/${process.env.MAIN_CSS}`
-          );
-
-          html = html.replace(
-            /(?:\.\/)?js\/app\.js(?:\?[^"' ]*)?/g,
-            `./js/${process.env.APP_JS}`
-          );
-
-          fs.writeFileSync(file, html);
-
-          console.log("Hashed asset references updated.");
-          NODE
-
-
-      # ============================================================
       # FINAL HTML MINIFICATION
       # ============================================================
 
@@ -514,8 +435,8 @@ jobs:
           test -f dist/sw.js
           test -f dist/_headers
 
-          test -f "dist/js/${APP_JS}"
-          test -f "dist/css/${MAIN_CSS}"
+          test -f dist/js/app.js
+          test -f dist/css/main.css
 
           test -f dist/data/app-config.json
           test -f dist/data/syllabus.json
@@ -528,8 +449,8 @@ jobs:
           echo "OK: index.html"
           echo "OK: manifest.json"
           echo "OK: sw.js"
-          echo "OK: ${APP_JS}"
-          echo "OK: ${MAIN_CSS}"
+          echo "OK: app.js"
+          echo "OK: main.css"
           echo "OK: app-config.json"
           echo "OK: syllabus.json"
           echo "OK: icon-192.png"
