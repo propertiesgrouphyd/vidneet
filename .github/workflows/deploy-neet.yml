@@ -1,10 +1,6 @@
 name: VIDHWAAN NEET PWA DEPLOY
 
 on:
-  push:
-    branches:
-      - main
-
   workflow_dispatch:
 
 permissions:
