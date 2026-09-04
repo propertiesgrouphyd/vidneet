@@ -1,6 +1,6 @@
 "use strict";
 
-const SW_VERSION = "vidhwaan-neet-live-v14";
+const SW_VERSION = "vidhwaan-neet-live-v15";
 
 self.addEventListener("install", event => {
     event.waitUntil(
