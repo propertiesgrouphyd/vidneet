@@ -46,7 +46,6 @@ jobs:
       # INSTALL BUILD TOOLS
       #
       # Same approach as the working AIVidhya deployment.
-      # Install globally so there is NO npx executable problem.
       # ============================================================
 
       - name: Install Production Tools
@@ -83,10 +82,7 @@ jobs:
       # ============================================================
       # VALIDATE NEET SOURCE
       #
-      # IMPORTANT:
       # generator/ is OUTSIDE public/ and is NOT deployed.
-      #
-      # day-001.json etc. are NOT required for this deployment.
       # ============================================================
 
       - name: Validate NEET Source
@@ -148,15 +144,6 @@ jobs:
       # PREPARE PRODUCTION DIST
       #
       # ONLY public/ becomes the deployed website.
-      #
-      # generator/
-      # scripts/
-      # config/
-      # syllabus.json
-      # package.json
-      # backup files
-      #
-      # are NOT deployed.
       # ============================================================
 
       - name: Prepare Production Dist
@@ -210,12 +197,6 @@ jobs:
 
           # --------------------------------------------------------
           # LESSON FILES
-          #
-          # Optional at first deployment.
-          #
-          # When the 01:00 generator creates day-001.json,
-          # day-002.json, etc., they will automatically be included
-          # in the next deployment.
           # --------------------------------------------------------
 
           if compgen -G "public/data/day-*.json" > /dev/null; then
@@ -301,9 +282,6 @@ jobs:
       # MINIFY SERVICE WORKER
       #
       # MUST remain sw.js.
-      #
-      # Do NOT hash this filename because the application registers
-      # ./sw.js.
       # ============================================================
 
       - name: Minify Service Worker
@@ -352,6 +330,57 @@ jobs:
             console.log(`Minified: ${file}`);
           }
           NODE
+
+
+      # ============================================================
+      # CACHE VERSION
+      #
+      # Stable filenames are preserved.
+      # A new URL is generated on every deployment.
+      # ============================================================
+
+      - name: Generate Asset Version
+        run: |
+          set -euo pipefail
+
+          VERSION=$(date +%s)
+
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+
+          echo "Asset version: $VERSION"
+
+
+      # ============================================================
+      # CACHE BUST HTML ASSETS
+      #
+      # IMPORTANT:
+      # Filenames remain:
+      #
+      #   ./js/app.js
+      #   ./css/main.css
+      #   ./manifest.json
+      #
+      # Only the query string changes per deployment.
+      # ============================================================
+
+      - name: Apply Asset Cache Busting
+        run: |
+          set -euo pipefail
+
+          sed -i \
+            "s|src=\"./js/app.js\"|src=\"./js/app.js?v=$VERSION\"|g" \
+            dist/index.html
+
+          sed -i \
+            "s|href=\"./css/main.css\"|href=\"./css/main.css?v=$VERSION\"|g" \
+            dist/index.html
+
+          sed -i \
+            "s|href=\"./manifest.json\"|href=\"./manifest.json?v=$VERSION\"|g" \
+            dist/index.html
+
+          echo "Asset cache busting applied."
+          echo "Version: $VERSION"
 
 
       # ============================================================
@@ -459,6 +488,31 @@ jobs:
           echo "OK: logo.png"
 
           echo
+          echo "Checking cache-busted asset references..."
+
+          grep -F "./js/app.js?v=${VERSION}" dist/index.html
+          grep -F "./css/main.css?v=${VERSION}" dist/index.html
+
+          echo "OK: app.js cache-busting reference"
+          echo "OK: main.css cache-busting reference"
+
+          echo
+          echo "Checking that hashed filenames are NOT present..."
+
+          if find dist/js -maxdepth 1 -type f -name 'app.*.js' | grep -q .; then
+            echo "ERROR: hashed JavaScript filename found"
+            exit 1
+          fi
+
+          if find dist/css -maxdepth 1 -type f -name 'main.*.css' | grep -q .; then
+            echo "ERROR: hashed CSS filename found"
+            exit 1
+          fi
+
+          echo "OK: no hashed JavaScript filename"
+          echo "OK: no hashed CSS filename"
+
+          echo
           echo "Checking deployment isolation..."
 
           test ! -d dist/generator
@@ -538,3 +592,4 @@ jobs:
 
           echo "Cloudflare Pages project: $PROJECT_NAME"
           echo "Deployment directory: dist/"
+          echo "Asset version: $VERSION"
