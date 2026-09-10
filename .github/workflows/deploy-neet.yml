@@ -11,7 +11,9 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+
   deploy:
+
     runs-on: ubuntu-latest
 
     env:
@@ -40,8 +42,6 @@ jobs:
 
       # ============================================================
       # INSTALL BUILD TOOLS
-      #
-      # Same approach as the working AIVidhya deployment.
       # ============================================================
 
       - name: Install Production Tools
@@ -72,6 +72,7 @@ jobs:
       - name: Install Project Dependencies
         run: |
           set -euo pipefail
+
           npm ci
 
 
@@ -95,6 +96,7 @@ jobs:
           node --check generator/generate-day.js
           node --check public/js/app.js
           node --check public/sw.js
+          node --check scripts/protect-data.js
 
           echo
           echo "Checking required production files..."
@@ -120,6 +122,9 @@ jobs:
           test -f public/data/syllabus.json
           echo "OK: public/data/syllabus.json"
 
+          test -f scripts/protect-data.js
+          echo "OK: scripts/protect-data.js"
+
           test -f public/icons/icon-192.png
           echo "OK: public/icons/icon-192.png"
 
@@ -139,7 +144,10 @@ jobs:
       # ============================================================
       # PREPARE PRODUCTION DIST
       #
-      # ONLY public/ becomes the deployed website.
+      # Only public/ becomes the deployed website.
+      #
+      # Lesson JSON files are NOT copied directly.
+      # They are protected separately below.
       # ============================================================
 
       - name: Prepare Production Dist
@@ -185,24 +193,6 @@ jobs:
           cp public/manifest.json dist/manifest.json
 
           # --------------------------------------------------------
-          # STATIC DATA
-          # --------------------------------------------------------
-
-          cp public/data/app-config.json dist/data/app-config.json
-          cp public/data/syllabus.json dist/data/syllabus.json
-
-          # --------------------------------------------------------
-          # LESSON FILES
-          # --------------------------------------------------------
-
-          if compgen -G "public/data/day-*.json" > /dev/null; then
-            cp public/data/day-*.json dist/data/
-            echo "Generated lesson files copied."
-          else
-            echo "No generated day files yet — continuing."
-          fi
-
-          # --------------------------------------------------------
           # ICONS
           # --------------------------------------------------------
 
@@ -213,6 +203,309 @@ jobs:
 
           echo
           echo "Production source prepared."
+
+
+      # ============================================================
+      # PROTECT LESSON DATA
+      #
+      # IMPORTANT:
+      #
+      # protect-data.js recreates dist/data.
+      #
+      # Therefore this MUST run before app-config.json and
+      # syllabus.json are copied into dist/data.
+      #
+      # Source:
+      #   public/data/day-*.json
+      #
+      # Output:
+      #   dist/data/day-*.dat
+      #
+      # Plain lesson JSON is never deployed.
+      # ============================================================
+
+      - name: Protect NEET Lesson Data
+        env:
+          NEET_DATA_KEY: ${{ secrets.NEET_DATA_KEY }}
+        run: |
+          set -euo pipefail
+
+          echo
+          echo "============================================================"
+          echo " VIDHWAAN NEET — PROTECTING LESSON DATA"
+          echo "============================================================"
+
+          if [ -z "${NEET_DATA_KEY:-}" ]; then
+            echo "ERROR: NEET_DATA_KEY GitHub secret is missing."
+            exit 1
+          fi
+
+          node scripts/protect-data.js
+
+          echo
+          echo "Lesson data protection: PASSED"
+
+
+      # ============================================================
+      # COPY STATIC DATA
+      #
+      # These are configuration files, NOT daily lesson files.
+      #
+      # app-config.json remains readable because the frontend
+      # needs it for course configuration.
+      #
+      # syllabus.json remains outside the protected lesson system
+      # and is not used as a student daily lesson file.
+      # ============================================================
+
+      - name: Copy Static Data
+        run: |
+          set -euo pipefail
+
+          echo
+          echo "============================================================"
+          echo " COPYING STATIC DATA"
+          echo "============================================================"
+
+          cp public/data/app-config.json \
+            dist/data/app-config.json
+
+          cp public/data/syllabus.json \
+            dist/data/syllabus.json
+
+          echo "OK: app-config.json"
+          echo "OK: syllabus.json"
+
+
+      # ============================================================
+      # VERIFY PROTECTED LESSON DATA
+      #
+      # Before continuing, make absolutely sure that:
+      #
+      #   - every source lesson has a .dat
+      #   - no day-*.json exists in dist/data
+      # ============================================================
+
+      - name: Verify Protected Lesson Data
+        run: |
+          set -euo pipefail
+
+          echo
+          echo "============================================================"
+          echo " VERIFYING PROTECTED LESSON DATA"
+          echo "============================================================"
+
+          SOURCE_COUNT=$(
+            find public/data \
+              -maxdepth 1 \
+              -type f \
+              -name 'day-*.json' \
+              | wc -l
+          )
+
+          DAT_COUNT=$(
+            find dist/data \
+              -maxdepth 1 \
+              -type f \
+              -name 'day-*.dat' \
+              | wc -l
+          )
+
+          JSON_COUNT=$(
+            find dist/data \
+              -maxdepth 1 \
+              -type f \
+              -name 'day-*.json' \
+              | wc -l
+          )
+
+          echo "Source lesson JSON files : $SOURCE_COUNT"
+          echo "Protected DAT files       : $DAT_COUNT"
+          echo "Deployed lesson JSON      : $JSON_COUNT"
+
+          if [ "$SOURCE_COUNT" -eq 0 ]; then
+            echo "ERROR: No source lesson JSON files found."
+            exit 1
+          fi
+
+          if [ "$DAT_COUNT" -ne "$SOURCE_COUNT" ]; then
+            echo "ERROR: Lesson protection count mismatch."
+            echo "Source=$SOURCE_COUNT DAT=$DAT_COUNT"
+            exit 1
+          fi
+
+          if [ "$JSON_COUNT" -ne 0 ]; then
+            echo "ERROR: Plain lesson JSON files found in dist/data."
+            find dist/data \
+              -maxdepth 1 \
+              -type f \
+              -name 'day-*.json' \
+              -print
+            exit 1
+          fi
+
+          echo
+          echo "OK: Every lesson has a protected .dat file."
+          echo "OK: No plaintext day-*.json files are deployed."
+          echo
+          echo "PROTECTED DATA VERIFICATION: PASSED"
+
+
+      # ============================================================
+      # INJECT LESSON DECRYPTION KEY
+      #
+      # app.js contains:
+      #
+      #   "__NEET_DATA_KEY__"
+      #
+      # GitHub replaces that placeholder with the secret.
+      #
+      # IMPORTANT:
+      # This happens BEFORE JavaScript minification/obfuscation.
+      # ============================================================
+
+      - name: Inject NEET Lesson Decryption Key
+        env:
+          NEET_DATA_KEY: ${{ secrets.NEET_DATA_KEY }}
+        run: |
+          set -euo pipefail
+
+          echo
+          echo "============================================================"
+          echo " INJECTING NEET LESSON DECRYPTION KEY"
+          echo "============================================================"
+
+          if [ -z "${NEET_DATA_KEY:-}" ]; then
+            echo "ERROR: NEET_DATA_KEY GitHub secret is missing."
+            exit 1
+          fi
+
+          node --input-type=module <<'NODE'
+          import fs from "node:fs";
+
+          const file =
+            "dist/js/app.js";
+
+          const key =
+            process.env.NEET_DATA_KEY;
+
+          const placeholder =
+            "__NEET_DATA_KEY__";
+
+          const source =
+            fs.readFileSync(
+              file,
+              "utf8"
+            );
+
+
+          const occurrences =
+            source.split(
+              placeholder
+            ).length - 1;
+
+
+          if (
+            occurrences !== 1
+          ) {
+            throw new Error(
+              `Expected exactly one NEET_DATA_KEY placeholder. Found ${occurrences}.`
+            );
+          }
+
+
+          if (
+            !/^[A-Za-z0-9+/]+={0,2}$/.test(
+              key
+            )
+          ) {
+            throw new Error(
+              "NEET_DATA_KEY is not valid Base64."
+            );
+          }
+
+
+          const keyBytes =
+            Buffer.from(
+              key,
+              "base64"
+            );
+
+
+          if (
+            keyBytes.length !== 32
+          ) {
+            throw new Error(
+              `NEET_DATA_KEY must decode to exactly 32 bytes. Received ${keyBytes.length}.`
+            );
+          }
+
+
+          /*
+           * JSON.stringify safely creates a JavaScript
+           * string literal for the Base64 key.
+           */
+
+          const replacement =
+            JSON.stringify(
+              key
+            );
+
+
+          const target =
+            `"${placeholder}"`;
+
+
+          const updated =
+            source.replace(
+              target,
+              replacement
+            );
+
+
+          if (
+            updated === source
+          ) {
+            throw new Error(
+              "NEET_DATA_KEY placeholder replacement failed."
+            );
+          }
+
+
+          if (
+            updated.includes(
+              placeholder
+            )
+          ) {
+            throw new Error(
+              "NEET_DATA_KEY placeholder still exists after injection."
+            );
+          }
+
+
+          fs.writeFileSync(
+            file,
+            updated,
+            "utf8"
+          );
+
+          console.log(
+            "NEET_DATA_KEY injected successfully."
+          );
+
+          console.log(
+            "Verified: 256-bit key."
+          );
+
+          console.log(
+            "Verified: placeholder removed."
+          );
+          NODE
+
+          node --check dist/js/app.js
+
+          echo
+          echo "KEY INJECTION: PASSED"
 
 
       # ============================================================
@@ -275,6 +568,42 @@ jobs:
 
 
       # ============================================================
+      # VERIFY DECRYPTION KEY IN FINAL APP
+      #
+      # The placeholder must NOT exist after minification and
+      # obfuscation.
+      #
+      # The final application must still contain the injected key.
+      # ============================================================
+
+      - name: Verify NEET Decryption Key Injection
+        run: |
+          set -euo pipefail
+
+          echo
+          echo "============================================================"
+          echo " VERIFYING NEET DECRYPTION KEY"
+          echo "============================================================"
+
+          if grep -Fq "__NEET_DATA_KEY__" dist/js/app.js; then
+            echo "ERROR: NEET_DATA_KEY placeholder remains in final app.js."
+            exit 1
+          fi
+
+          echo "OK: NEET_DATA_KEY placeholder is absent."
+
+          if ! grep -Fq "NEET" dist/js/app.js; then
+            echo "ERROR: Final app.js verification failed."
+            exit 1
+          fi
+
+          echo "OK: Final app.js generated successfully."
+
+          echo
+          echo "DECRYPTION KEY VERIFICATION: PASSED"
+
+
+      # ============================================================
       # MINIFY SERVICE WORKER
       #
       # MUST remain sw.js.
@@ -297,7 +626,9 @@ jobs:
       # ============================================================
       # MINIFY JSON
       #
-      # Keep filenames unchanged because app.js fetches them.
+      # Only static JSON files.
+      #
+      # Lesson JSON files are NOT present in dist/data.
       # ============================================================
 
       - name: Minify JSON
@@ -305,7 +636,8 @@ jobs:
           set -euo pipefail
 
           node <<'NODE'
-          const fs = require("fs");
+          const fs =
+            require("fs");
 
           const files = [
             "dist/manifest.json",
@@ -313,26 +645,37 @@ jobs:
             "dist/data/syllabus.json"
           ];
 
-          for (const file of files) {
-            const data = JSON.parse(
-              fs.readFileSync(file, "utf8")
-            );
+
+          for (
+            const file of files
+          ) {
+
+            const data =
+              JSON.parse(
+                fs.readFileSync(
+                  file,
+                  "utf8"
+                )
+              );
+
 
             fs.writeFileSync(
               file,
               JSON.stringify(data)
             );
 
-            console.log(`Minified: ${file}`);
+
+            console.log(
+              `Minified: ${file}`
+            );
           }
           NODE
 
 
       # ============================================================
-      # CACHE VERSION
+      # GENERATE ASSET VERSION
       #
-      # Stable filenames are preserved.
-      # A new URL is generated on every deployment.
+      # Used for HTML cache busting.
       # ============================================================
 
       - name: Generate Asset Version
@@ -349,14 +692,8 @@ jobs:
       # ============================================================
       # CACHE BUST HTML ASSETS
       #
-      # IMPORTANT:
-      # Filenames remain:
-      #
-      #   ./js/app.js
-      #   ./css/main.css
-      #   ./manifest.json
-      #
-      # Only the query string changes per deployment.
+      # Filenames remain stable.
+      # Query string changes on every deployment.
       # ============================================================
 
       - name: Apply Asset Cache Busting
@@ -483,30 +820,104 @@ jobs:
           echo "OK: favicon.ico"
           echo "OK: logo.png"
 
+
+          echo
+          echo "Checking protected lesson files..."
+
+          SOURCE_COUNT=$(
+            find public/data \
+              -maxdepth 1 \
+              -type f \
+              -name 'day-*.json' \
+              | wc -l
+          )
+
+          DAT_COUNT=$(
+            find dist/data \
+              -maxdepth 1 \
+              -type f \
+              -name 'day-*.dat' \
+              | wc -l
+          )
+
+          JSON_COUNT=$(
+            find dist/data \
+              -maxdepth 1 \
+              -type f \
+              -name 'day-*.json' \
+              | wc -l
+          )
+
+
+          if [ "$SOURCE_COUNT" -eq 0 ]; then
+            echo "ERROR: No source lesson files found."
+            exit 1
+          fi
+
+
+          if [ "$DAT_COUNT" -ne "$SOURCE_COUNT" ]; then
+            echo "ERROR: DAT count does not match source lesson count."
+            echo "Source=$SOURCE_COUNT DAT=$DAT_COUNT"
+            exit 1
+          fi
+
+
+          if [ "$JSON_COUNT" -ne 0 ]; then
+            echo "ERROR: Plain day JSON files found in dist/data."
+            find dist/data \
+              -maxdepth 1 \
+              -type f \
+              -name 'day-*.json' \
+              -print
+            exit 1
+          fi
+
+
+          echo "OK: $DAT_COUNT protected lesson files"
+          echo "OK: 0 plaintext lesson JSON files"
+
+
           echo
           echo "Checking cache-busted asset references..."
 
-          grep -F "./js/app.js?v=${VERSION}" dist/index.html
-          grep -F "./css/main.css?v=${VERSION}" dist/index.html
+          grep -F "./js/app.js?v=${VERSION}" \
+            dist/index.html
+
+          grep -F "./css/main.css?v=${VERSION}" \
+            dist/index.html
 
           echo "OK: app.js cache-busting reference"
           echo "OK: main.css cache-busting reference"
 
+
           echo
           echo "Checking that hashed filenames are NOT present..."
 
-          if find dist/js -maxdepth 1 -type f -name 'app.*.js' | grep -q .; then
+          if find dist/js \
+            -maxdepth 1 \
+            -type f \
+            -name 'app.*.js' \
+            | grep -q .; then
+
             echo "ERROR: hashed JavaScript filename found"
             exit 1
           fi
 
-          if find dist/css -maxdepth 1 -type f -name 'main.*.css' | grep -q .; then
+
+          if find dist/css \
+            -maxdepth 1 \
+            -type f \
+            -name 'main.*.css' \
+            | grep -q .; then
+
             echo "ERROR: hashed CSS filename found"
             exit 1
           fi
 
+
           echo "OK: no hashed JavaScript filename"
           echo "OK: no hashed CSS filename"
+
 
           echo
           echo "Checking deployment isolation..."
@@ -519,13 +930,44 @@ jobs:
           echo "OK: scripts not deployed"
           echo "OK: config not deployed"
 
+
           echo
-          echo "Generated lesson files currently present:"
-          find dist/data -maxdepth 1 -name 'day-*.json' -type f | sort || true
+          echo "Checking lesson JSON does not exist anywhere in dist..."
+
+          if find dist \
+            -type f \
+            -name 'day-*.json' \
+            | grep -q .; then
+
+            echo "ERROR: Plain day JSON found somewhere in dist:"
+            find dist \
+              -type f \
+              -name 'day-*.json' \
+              -print
+
+            exit 1
+          fi
+
+          echo "OK: no plaintext day-*.json anywhere in dist"
+
+
+          echo
+          echo "PROTECTED LESSON FILES:"
+
+          find dist/data \
+            -maxdepth 1 \
+            -name 'day-*.dat' \
+            -type f \
+            | sort
+
 
           echo
           echo "FINAL BUILD FILES:"
-          find dist -type f | sort
+
+          find dist \
+            -type f \
+            | sort
+
 
           echo
           echo "============================================================"
