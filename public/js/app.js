@@ -66,8 +66,20 @@ const DEFAULT_TIMEZONE = "Asia/Kolkata";
 const CONFIG_URL = "./data/app-config.json";
 const DATA_DIRECTORY = "./data/";
 const DAY_PREFIX = "day-";
-const DAY_SUFFIX = ".json";
+const DAY_SUFFIX = ".dat";
 
+
+/*
+ * ============================================================
+ * NEET LESSON DATA DECRYPTION KEY
+ * ============================================================
+ *
+ * GitHub Actions replaces this placeholder during deployment
+ * using the NEET_DATA_KEY repository secret.
+ */
+
+const NEET_DATA_KEY =
+    "__NEET_DATA_KEY__";
 
 /* ============================================================
    APPLICATION STATE
@@ -919,7 +931,7 @@ async function openDay(dayNumber) {
 
 
 /* ============================================================
-   LOAD ONE DAILY JSON
+   LOAD ONE DAILY PROTECTED LESSON
    ============================================================ */
 
 async function loadDayJSON(
@@ -944,7 +956,7 @@ async function loadDayJSON(
                 cache: "no-store",
                 headers: {
                     "Accept":
-                        "application/json"
+                        "application/octet-stream"
                 }
             }
         );
@@ -958,12 +970,352 @@ async function loadDayJSON(
     }
 
 
-    const data =
-        await response.json();
+    /*
+     * Read the protected binary lesson.
+     */
+
+    const encryptedData =
+        await response.arrayBuffer();
 
 
-    return data;
+    /*
+     * Decrypt → decompress → JSON.
+     */
+
+    return await decryptLessonData(
+        encryptedData
+    );
 }
+
+
+/* ============================================================
+   DECRYPT PROTECTED LESSON DATA
+   ============================================================ */
+
+async function decryptLessonData(
+    encryptedData
+) {
+
+    /*
+     * ========================================================
+     * VALIDATE ENCRYPTION KEY
+     * ========================================================
+     */
+
+    if (
+        typeof NEET_DATA_KEY !== "string" ||
+        !NEET_DATA_KEY
+    ) {
+        throw new Error(
+            "NEET lesson decryption key is unavailable."
+        );
+    }
+
+
+    /*
+     * ========================================================
+     * BASE64 → 32-BYTE AES KEY
+     * ========================================================
+     */
+
+    let keyBytes;
+
+    try {
+
+        const binaryString =
+            atob(
+                NEET_DATA_KEY
+            );
+
+
+        keyBytes =
+            new Uint8Array(
+                binaryString.length
+            );
+
+
+        for (
+            let index = 0;
+            index < binaryString.length;
+            index++
+        ) {
+
+            keyBytes[index] =
+                binaryString.charCodeAt(
+                    index
+                );
+        }
+
+    } catch (error) {
+
+        throw new Error(
+            "NEET lesson decryption key is invalid."
+        );
+    }
+
+
+    if (
+        keyBytes.length !== 32
+    ) {
+        throw new Error(
+            "NEET lesson decryption key must be 256-bit."
+        );
+    }
+
+
+    /*
+     * ========================================================
+     * VALIDATE PROTECTED DATA
+     * ========================================================
+     *
+     * Format:
+     *
+     * [12-byte IV]
+     * [16-byte authentication tag]
+     * [encrypted gzip payload]
+     */
+
+    const data =
+        new Uint8Array(
+            encryptedData
+        );
+
+
+    const IV_LENGTH =
+        12;
+
+    const AUTH_TAG_LENGTH =
+        16;
+
+
+    if (
+        data.byteLength <=
+        IV_LENGTH +
+        AUTH_TAG_LENGTH
+    ) {
+        throw new Error(
+            "Protected lesson data is incomplete."
+        );
+    }
+
+
+    /*
+     * ========================================================
+     * EXTRACT IV
+     * ========================================================
+     */
+
+    const iv =
+        data.slice(
+            0,
+            IV_LENGTH
+        );
+
+
+    /*
+     * ========================================================
+     * EXTRACT AUTHENTICATION TAG
+     * ========================================================
+     */
+
+    const authTag =
+        data.slice(
+            IV_LENGTH,
+            IV_LENGTH +
+            AUTH_TAG_LENGTH
+        );
+
+
+    /*
+     * ========================================================
+     * EXTRACT CIPHERTEXT
+     * ========================================================
+     */
+
+    const ciphertext =
+        data.slice(
+            IV_LENGTH +
+            AUTH_TAG_LENGTH
+        );
+
+
+    /*
+     * Web Crypto AES-GCM expects the authentication
+     * tag to be appended to the ciphertext.
+     */
+
+    const encryptedWithTag =
+        new Uint8Array(
+            ciphertext.length +
+            authTag.length
+        );
+
+
+    encryptedWithTag.set(
+        ciphertext,
+        0
+    );
+
+
+    encryptedWithTag.set(
+        authTag,
+        ciphertext.length
+    );
+
+
+    /*
+     * ========================================================
+     * IMPORT AES-256-GCM KEY
+     * ========================================================
+     */
+
+    let cryptoKey;
+
+    try {
+
+        cryptoKey =
+            await crypto.subtle.importKey(
+                "raw",
+                keyBytes,
+                {
+                    name: "AES-GCM"
+                },
+                false,
+                [
+                    "decrypt"
+                ]
+            );
+
+    } catch (error) {
+
+        throw new Error(
+            "Unable to initialize lesson decryption."
+        );
+    }
+
+
+    /*
+     * ========================================================
+     * AES-256-GCM DECRYPT
+     * ========================================================
+     */
+
+    let compressedData;
+
+    try {
+
+        compressedData =
+            await crypto.subtle.decrypt(
+                {
+                    name: "AES-GCM",
+                    iv,
+                    tagLength: 128
+                },
+                cryptoKey,
+                encryptedWithTag
+            );
+
+    } catch (error) {
+
+        throw new Error(
+            "Lesson data decryption failed."
+        );
+    }
+
+
+    /*
+     * ========================================================
+     * GZIP DECOMPRESSION
+     * ========================================================
+     */
+
+    if (
+        typeof DecompressionStream ===
+        "undefined"
+    ) {
+        throw new Error(
+            "This browser does not support lesson decompression."
+        );
+    }
+
+
+    let decompressedData;
+
+    try {
+
+        const stream =
+            new Blob(
+                [compressedData]
+            )
+                .stream()
+                .pipeThrough(
+                    new DecompressionStream(
+                        "gzip"
+                    )
+                );
+
+
+        decompressedData =
+            await new Response(
+                stream
+            ).arrayBuffer();
+
+    } catch (error) {
+
+        throw new Error(
+            "Lesson data decompression failed."
+        );
+    }
+
+
+    /*
+     * ========================================================
+     * UTF-8 → JSON
+     * ========================================================
+     */
+
+    let jsonText;
+
+    try {
+
+        jsonText =
+            new TextDecoder(
+                "utf-8",
+                {
+                    fatal: true
+                }
+            ).decode(
+                decompressedData
+            );
+
+    } catch (error) {
+
+        throw new Error(
+            "Lesson data encoding is invalid."
+        );
+    }
+
+
+    /*
+     * ========================================================
+     * JSON PARSE
+     * ========================================================
+     */
+
+    try {
+
+        return JSON.parse(
+            jsonText
+        );
+
+    } catch (error) {
+
+        throw new Error(
+            "Decrypted lesson data is not valid JSON."
+        );
+    }
+}
+
 
 
 /* ============================================================
@@ -2485,33 +2837,75 @@ function registerServiceWorker() {
 
     window.addEventListener(
         "load",
-        () => {
+        async () => {
 
-            navigator.serviceWorker
-                .register(
-                    "./sw.js",
+            try {
+
+                const registration =
+                    await navigator.serviceWorker.register(
+                        "./sw.js",
+                        {
+                            scope: "./"
+                        }
+                    );
+
+
+                console.log(
+                    "VIDHWAAN NEET service worker registered:",
+                    registration.scope
+                );
+
+
+                /*
+                 * Listen BEFORE requesting the update.
+                 *
+                 * This avoids a race where the new service
+                 * worker activates before controllerchange
+                 * is registered.
+                 */
+
+                let reloading = false;
+
+
+                navigator.serviceWorker.addEventListener(
+                    "controllerchange",
+                    () => {
+
+                        if (reloading) {
+                            return;
+                        }
+
+
+                        reloading = true;
+
+                        window.location.reload();
+                    },
                     {
-                        scope: "./"
-                    }
-                )
-                .then(
-                    registration => {
-
-                        console.log(
-                            "VIDHWAAN NEET service worker registered:",
-                            registration.scope
-                        );
-                    }
-                )
-                .catch(
-                    error => {
-
-                        console.warn(
-                            "Service worker registration failed:",
-                            error
-                        );
+                        once: true
                     }
                 );
+
+
+                /*
+                 * Immediately check for a newly deployed
+                 * service worker.
+                 */
+
+                await registration.update();
+
+
+            } catch (error) {
+
+                /*
+                 * Service-worker failure must never prevent
+                 * the NEET application from opening.
+                 */
+
+                console.warn(
+                    "VIDHWAAN NEET service worker update failed:",
+                    error
+                );
+            }
         }
     );
 }
