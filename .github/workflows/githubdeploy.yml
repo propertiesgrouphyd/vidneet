@@ -217,13 +217,6 @@ jobs:
       # ============================================================
       # PROTECT LESSON DATA
       #
-      # IMPORTANT:
-      #
-      # protect-data.js recreates dist/data.
-      #
-      # Therefore this MUST run before app-config.json and
-      # syllabus.json are copied into dist/data.
-      #
       # Source:
       #   public/data/day-*.json
       #
@@ -259,11 +252,6 @@ jobs:
       # COPY STATIC DATA
       #
       # These are configuration files, NOT daily lesson files.
-      #
-      # app-config.json remains readable because the frontend
-      # needs it for course configuration.
-      #
-      # syllabus.json remains outside the protected lesson system.
       # ============================================================
 
       - name: Copy Static Data
@@ -287,11 +275,6 @@ jobs:
 
       # ============================================================
       # VERIFY PROTECTED LESSON DATA
-      #
-      # Before continuing, make absolutely sure that:
-      #
-      #   - every source lesson has a .dat
-      #   - no day-*.json exists in dist/data
       # ============================================================
 
       - name: Verify Protected Lesson Data
@@ -366,10 +349,7 @@ jobs:
       #
       #   "__NEET_DATA_KEY__"
       #
-      # GitHub replaces that placeholder with the secret.
-      #
-      # IMPORTANT:
-      # This happens BEFORE JavaScript minification/obfuscation.
+      # Injection happens BEFORE JavaScript minification/obfuscation.
       # ============================================================
 
       - name: Inject NEET Lesson Decryption Key
@@ -391,38 +371,62 @@ jobs:
           node --input-type=module <<'NODE'
           import fs from "node:fs";
 
-          const file = "dist/js/app.js";
-          const key = process.env.NEET_DATA_KEY;
-          const placeholder = "__NEET_DATA_KEY__";
+          const file =
+            "dist/js/app.js";
 
-          const source = fs.readFileSync(file, "utf8");
+          const key =
+            process.env.NEET_DATA_KEY;
+
+          const placeholder =
+            "__NEET_DATA_KEY__";
+
+          const source =
+            fs.readFileSync(
+              file,
+              "utf8"
+            );
 
           const occurrences =
-            source.split(placeholder).length - 1;
+            source.split(
+              placeholder
+            ).length - 1;
 
-          if (occurrences !== 1) {
+          if (
+            occurrences !== 1
+          ) {
             throw new Error(
               `Expected exactly one NEET_DATA_KEY placeholder. Found ${occurrences}.`
             );
           }
 
-          if (!/^[A-Za-z0-9+/]+={0,2}$/.test(key)) {
+          if (
+            !/^[A-Za-z0-9+/]+={0,2}$/.test(
+              key
+            )
+          ) {
             throw new Error(
               "NEET_DATA_KEY is not valid Base64."
             );
           }
 
           const keyBytes =
-            Buffer.from(key, "base64");
+            Buffer.from(
+              key,
+              "base64"
+            );
 
-          if (keyBytes.length !== 32) {
+          if (
+            keyBytes.length !== 32
+          ) {
             throw new Error(
               `NEET_DATA_KEY must decode to exactly 32 bytes. Received ${keyBytes.length}.`
             );
           }
 
           const replacement =
-            JSON.stringify(key);
+            JSON.stringify(
+              key
+            );
 
           const target =
             `"${placeholder}"`;
@@ -433,13 +437,19 @@ jobs:
               replacement
             );
 
-          if (updated === source) {
+          if (
+            updated === source
+          ) {
             throw new Error(
               "NEET_DATA_KEY placeholder replacement failed."
             );
           }
 
-          if (updated.includes(placeholder)) {
+          if (
+            updated.includes(
+              placeholder
+            )
+          ) {
             throw new Error(
               "NEET_DATA_KEY placeholder still exists after injection."
             );
@@ -472,6 +482,8 @@ jobs:
 
       # ============================================================
       # MINIFY CSS
+      #
+      # CSS is minified and then explicitly converted to one line.
       # ============================================================
 
       - name: Minify CSS
@@ -486,10 +498,14 @@ jobs:
           node <<'NODE'
           const fs = require("fs");
 
-          const file = "dist/css/main.css";
+          const file =
+            "dist/css/main.css";
 
           const source =
-            fs.readFileSync(file, "utf8");
+            fs.readFileSync(
+              file,
+              "utf8"
+            );
 
           const singleLine =
             source
@@ -511,7 +527,6 @@ jobs:
       # MINIFY JAVASCRIPT
       #
       # app.js is NOT manually forced to one line.
-      # Terser + obfuscator control the final JavaScript format.
       # ============================================================
 
       - name: Minify JavaScript
@@ -555,9 +570,6 @@ jobs:
 
       # ============================================================
       # VERIFY DECRYPTION KEY IN FINAL APP
-      #
-      # The placeholder must NOT exist after minification and
-      # obfuscation.
       # ============================================================
 
       - name: Verify NEET Decryption Key Injection
@@ -589,8 +601,6 @@ jobs:
 
       # ============================================================
       # GENERATE ASSET VERSION
-      #
-      # Used for HTML cache busting.
       # ============================================================
 
       - name: Generate Asset Version
@@ -634,7 +644,7 @@ jobs:
       # ============================================================
       # MINIFY HTML
       #
-      # HTML is intentionally forced to one physical line.
+      # HTML is explicitly converted to one physical line.
       # ============================================================
 
       - name: Minify HTML
@@ -656,10 +666,14 @@ jobs:
           node <<'NODE'
           const fs = require("fs");
 
-          const file = "dist/index.html";
+          const file =
+            "dist/index.html";
 
           const source =
-            fs.readFileSync(file, "utf8");
+            fs.readFileSync(
+              file,
+              "utf8"
+            );
 
           const singleLine =
             source
@@ -679,6 +693,10 @@ jobs:
 
       # ============================================================
       # VERIFY HTML AND CSS SINGLE LINE
+      #
+      # IMPORTANT:
+      # Uses Node byte-level verification.
+      # Does NOT use grep for newline detection.
       # ============================================================
 
       - name: Verify HTML And CSS Single Line
@@ -690,32 +708,37 @@ jobs:
           echo " VERIFYING HTML / CSS FORMAT"
           echo "============================================================"
 
-          if grep -q '[[:space:]]*$' /dev/null 2>/dev/null; then
-            true
-          fi
+          node <<'NODE'
+          const fs = require("fs");
 
-          if grep -Fq $'\n' dist/index.html; then
-            echo "ERROR: index.html contains newline characters."
-            exit 1
-          fi
+          const files = [
+            "dist/index.html",
+            "dist/css/main.css"
+          ];
 
-          if grep -Fq $'\r' dist/index.html; then
-            echo "ERROR: index.html contains carriage returns."
-            exit 1
-          fi
+          for (const file of files) {
+            const data =
+              fs.readFileSync(file);
 
-          if grep -Fq $'\n' dist/css/main.css; then
-            echo "ERROR: main.css contains newline characters."
-            exit 1
-          fi
+            for (const byte of data) {
+              if (
+                byte === 10 ||
+                byte === 13
+              ) {
+                throw new Error(
+                  `${file} contains newline or carriage-return bytes.`
+                );
+              }
+            }
 
-          if grep -Fq $'\r' dist/css/main.css; then
-            echo "ERROR: main.css contains carriage returns."
-            exit 1
-          fi
+            console.log(
+              `OK: ${file} is single-line.`
+            );
+          }
+          NODE
 
-          echo "OK: index.html is single-line."
-          echo "OK: main.css is single-line."
+          echo
+          echo "HTML / CSS FORMAT VERIFICATION: PASSED"
 
 
       # ============================================================
@@ -803,11 +826,13 @@ jobs:
 
           if [ "$JSON_COUNT" -ne 0 ]; then
             echo "ERROR: Plain day JSON files found in dist/data."
+
             find dist/data \
               -maxdepth 1 \
               -type f \
               -name 'day-*.json' \
               -print
+
             exit 1
           fi
 
@@ -884,15 +909,20 @@ jobs:
           echo "OK: no plaintext day-*.json anywhere in dist"
 
           echo
-          echo "Checking HTML and CSS are single-line..."
+          echo "Checking HTML and CSS physical line count..."
 
-          if grep -q $'\n' dist/index.html; then
-            echo "ERROR: HTML is not single-line."
+          HTML_LINES=$(wc -l < dist/index.html)
+          CSS_LINES=$(wc -l < dist/css/main.css)
+
+          if [ "$HTML_LINES" -ne 0 ]; then
+            echo "ERROR: index.html is not single-line."
+            echo "Lines reported: $HTML_LINES"
             exit 1
           fi
 
-          if grep -q $'\n' dist/css/main.css; then
-            echo "ERROR: CSS is not single-line."
+          if [ "$CSS_LINES" -ne 0 ]; then
+            echo "ERROR: main.css is not single-line."
+            echo "Lines reported: $CSS_LINES"
             exit 1
           fi
 
@@ -900,7 +930,7 @@ jobs:
           echo "OK: CSS single-line"
 
           echo
-          echo "Checking service worker remains present..."
+          echo "Checking service worker..."
 
           test -f dist/sw.js
 
@@ -908,7 +938,7 @@ jobs:
           echo "OK: sw.js was not manually single-lined"
 
           echo
-          echo "Checking manifest remains present..."
+          echo "Checking manifest..."
 
           test -f dist/manifest.json
 
