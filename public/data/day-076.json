@@ -1,0 +1,2652 @@
+{
+  "day": 76,
+  "courseDate": "2026-11-13",
+  "publishAt": "2026-11-13T06:00:00+05:30",
+  "title": "Human Nervous System – Neurons and Organisation (Day 76)",
+  "introduction": "This lesson systematically covers the structural and functional aspects of the human nervous system as outlined in the NEET syllabus, focusing on neurons, their components, major divisions of the nervous system, and reflex mechanisms.",
+  "sections": [
+    {
+      "topic": "Neural control and coordination",
+      "heading": "Neural Control and Coordination Overview",
+      "content": "Neural control integrates sensory input, central processing, and motor output to maintain homeostasis and execute voluntary and involuntary actions. Coordination is achieved through precise timing of neuronal firing and synaptic transmission across networks.",
+      "keyPoints": [
+        "Integration of sensory, integrative and motor pathways",
+        "Homeostatic regulation via feedback loops"
+      ],
+      "neetTips": [
+        "Link each step of a pathway to its functional outcome for quick recall."
+      ]
+    },
+    {
+      "topic": "Nervous system overview",
+      "heading": "Overall Organization of the Nervous System",
+      "content": "The nervous system is divided into the central nervous system (CNS) – brain and spinal cord – and the peripheral nervous system (PNS) – cranial, spinal nerves and ganglia. It transmits electrochemical signals rapidly over long distances.",
+      "keyPoints": [
+        "CNS = brain + spinal cord",
+        "PNS = all nerves outside CNS"
+      ],
+      "neetTips": [
+        "Remember the CNS‑PNS split; it is a frequent MCQ theme."
+      ]
+    },
+    {
+      "topic": "Neuron as structural and functional unit",
+      "heading": "Neuron – Basic Structural‑Functional Unit",
+      "content": "A neuron consists of a soma, dendrites, axon and terminals. It generates and propagates action potentials, processes synaptic inputs, and releases neurotransmitters to communicate with other cells.",
+      "keyPoints": [
+        "Excitable cell specialized for signal transmission",
+        "Action potential generated at axon hillock"
+      ],
+      "neetTips": [
+        "Associate ‘neuron = signal carrier’ with each component’s role."
+      ]
+    },
+    {
+      "topic": "Cell body",
+      "heading": "Cell Body (Soma)",
+      "content": "The soma contains the nucleus, Nissl bodies (RER), mitochondria and cytoplasm, supporting protein synthesis and metabolic activities essential for neuronal maintenance.",
+      "keyPoints": [
+        "Houses nucleus and Nissl substance",
+        "Site of protein synthesis"
+      ],
+      "neetTips": [
+        "Link Nissl bodies to rough ER for easy recall."
+      ]
+    },
+    {
+      "topic": "Dendrites",
+      "heading": "Dendrites – Input Region",
+      "content": "Dendrites are branched extensions that receive excitatory or inhibitory neurotransmitters, converting them into graded potentials that travel toward the soma.",
+      "keyPoints": [
+        "Receive synaptic inputs",
+        "Conduct graded potentials"
+      ],
+      "neetTips": [
+        "Think ‘D for receive, D for dendrite’."
+      ]
+    },
+    {
+      "topic": "Axon",
+      "heading": "Axon – Output Conduit",
+      "content": "The axon conducts action potentials away from the soma toward axon terminals. Its length can range from micrometres to over a metre, and its conduction speed is enhanced by myelination.",
+      "keyPoints": [
+        "Unidirectional propagation of action potentials",
+        "Can be myelinated or unmyelinated"
+      ],
+      "neetTips": [
+        "Remember ‘A for away from soma’."
+      ]
+    },
+    {
+      "topic": "Axon terminals",
+      "heading": "Axon Terminals (Synaptic Boutons)",
+      "content": "Axon terminals contain synaptic vesicles loaded with neurotransmitters. Upon arrival of an action potential, calcium influx triggers vesicle fusion and neurotransmitter release into the synaptic cleft.",
+      "keyPoints": [
+        "Site of neurotransmitter release",
+        "Calcium‑dependent exocytosis"
+      ],
+      "neetTips": [
+        "Associate ‘terminal = transmitter release’."
+      ]
+    },
+    {
+      "topic": "Myelin sheath",
+      "heading": "Myelin Sheath and Its Function",
+      "content": "Myelin, formed by Schwann cells (PNS) or oligodendrocytes (CNS), wraps the axon in concentric layers, insulating it and increasing conduction velocity via saltatory conduction.",
+      "keyPoints": [
+        "Insulates axon",
+        "Enables saltatory conduction"
+      ],
+      "neetTips": [
+        "Recall ‘Myelin = speed‑boost’."
+      ]
+    },
+    {
+      "topic": "Nodes of Ranvier",
+      "heading": "Nodes of Ranvier – Gaps in Myelin",
+      "content": "These periodic gaps expose the axonal membrane to extracellular fluid, allowing regeneration of the action potential and rapid propagation along myelinated fibers.",
+      "keyPoints": [
+        "Expose voltage‑gated Na⁺ channels",
+        "Facilitate saltatory conduction"
+      ],
+      "neetTips": [
+        "Nodes = ‘re‑node’ the signal."
+      ]
+    },
+    {
+      "topic": "Sensory neurons",
+      "heading": "Sensory (Afferent) Neurons",
+      "content": "Sensory neurons transmit peripheral receptor information to the CNS. Their cell bodies reside in dorsal root or cranial ganglia, and they possess long peripheral processes.",
+      "keyPoints": [
+        "Carry information from receptors to CNS",
+        "Cell bodies in sensory ganglia"
+      ],
+      "neetTips": [
+        "Afferent = towards CNS; link with ‘sensory’."
+      ]
+    },
+    {
+      "topic": "Motor neurons",
+      "heading": "Motor (Efferent) Neurons",
+      "content": "Motor neurons convey commands from the CNS to effectors (muscles or glands). Their cell bodies lie in the CNS, and axons exit via ventral roots to peripheral targets.",
+      "keyPoints": [
+        "Transmit CNS impulses to effectors",
+        "Cell bodies in CNS"
+      ],
+      "neetTips": [
+        "Efferent = away from CNS; remember ‘motor = move’."
+      ]
+    },
+    {
+      "topic": "Interneurons",
+      "heading": "Interneurons – Integrative Neurons",
+      "content": "Interneurons reside entirely within the CNS, linking sensory and motor pathways, and are essential for reflexes, pattern generation and higher cognition.",
+      "keyPoints": [
+        "Located wholly in CNS",
+        "Form synaptic bridges between afferent and efferent neurons"
+      ],
+      "neetTips": [
+        "‘Inter’ = between; central role in processing."
+      ]
+    },
+    {
+      "topic": "Nerve fibres",
+      "heading": "Nerve Fibres – Bundles of Axons",
+      "content": "A nerve fibre is a single axon, either myelinated or unmyelinated. Groups of fibres with similar functions form nerves, classified as sensory, motor or mixed.",
+      "keyPoints": [
+        "Single axon unit",
+        "Classified by function (sensory, motor, mixed)"
+      ],
+      "neetTips": [
+        "Fibre = individual axon; nerve = bundle."
+      ]
+    },
+    {
+      "topic": "Afferent neurons",
+      "heading": "Afferent Neurons (Sensory)",
+      "content": "Afferent neurons carry impulses from peripheral receptors toward the CNS. They are synonymous with sensory neurons and have cell bodies in peripheral ganglia.",
+      "keyPoints": [
+        "Convey sensory information to CNS",
+        "Cell bodies in dorsal root ganglia"
+      ],
+      "neetTips": [
+        "Afferent = ‘arriving’ at CNS."
+      ]
+    },
+    {
+      "topic": "Efferent neurons",
+      "heading": "Efferent Neurons (Motor)",
+      "content": "Efferent neurons transmit impulses from the CNS to muscles or glands. Their cell bodies are in the CNS, and axons exit via ventral roots.",
+      "keyPoints": [
+        "Carry motor commands away from CNS",
+        "Cell bodies in CNS nuclei"
+      ],
+      "neetTips": [
+        "Efferent = ‘exiting’ from CNS."
+      ]
+    },
+    {
+      "topic": "Central nervous system",
+      "heading": "Central Nervous System (CNS)",
+      "content": "The CNS comprises the brain and spinal cord, protected by meninges and cerebrospinal fluid. It processes sensory data, generates responses, and stores memory.",
+      "keyPoints": [
+        "Brain + spinal cord",
+        "Protected by meninges, CSF"
+      ],
+      "neetTips": [
+        "CNS = command centre; always first in pathways."
+      ]
+    },
+    {
+      "topic": "Peripheral nervous system",
+      "heading": "Peripheral Nervous System (PNS)",
+      "content": "The PNS includes all nerves and ganglia outside the CNS. It is subdivided into the somatic (voluntary) and autonomic (involuntary) systems.",
+      "keyPoints": [
+        "Cranial + spinal nerves + ganglia",
+        "Divided into somatic & autonomic"
+      ],
+      "neetTips": [
+        "PNS = peripheral relay; remember its two branches."
+      ]
+    },
+    {
+      "topic": "Brain",
+      "heading": "Brain – Principal CNS Organ",
+      "content": "The brain consists of cerebrum, cerebellum, and brainstem. It integrates sensory inputs, coordinates motor output, regulates autonomic functions and houses higher cognition.",
+      "keyPoints": [
+        "Cerebrum = higher functions",
+        "Cerebellum = coordination",
+        "Brainstem = vital centers"
+      ],
+      "neetTips": [
+        "Link each part with its primary role for quick mapping."
+      ]
+    },
+    {
+      "topic": "Spinal cord",
+      "heading": "Spinal Cord – Conduit and Reflex Center",
+      "content": "The spinal cord extends from the medulla to L1/L2, containing gray matter (neuronal cell bodies) and white matter (ascending/descending tracts). It mediates reflex arcs independent of the brain.",
+      "keyPoints": [
+        "Gray matter = processing nuclei",
+        "White matter = tracts"
+      ],
+      "neetTips": [
+        "Remember ‘spinal = reflex highway’."
+      ]
+    },
+    {
+      "topic": "Cranial nerves",
+      "heading": "Cranial Nerves (I–XII)",
+      "content": "Twelve paired nerves emerge directly from the brain. They are classified as sensory, motor or mixed and serve head, neck and some thoracic organs.",
+      "keyPoints": [
+        "I–XII nomenclature",
+        "Sensory, motor or mixed"
+      ],
+      "neetTips": [
+        "Mnemonic ‘Some Say Marry Money, But My Brother Says Big Brains May Offer Solutions’ helps recall functions."
+      ]
+    },
+    {
+      "topic": "Spinal nerves",
+      "heading": "Spinal Nerves (31 Pairs)",
+      "content": "Each spinal nerve arises from the ventral and dorsal roots of the spinal cord, forming a mixed nerve that supplies a specific dermatome and myotome.",
+      "keyPoints": [
+        "31 pairs – cervical to sacral",
+        "Mixed sensory‑motor"
+      ],
+      "neetTips": [
+        "Remember ‘ventral = motor, dorsal = sensory’."
+      ]
+    },
+    {
+      "topic": "Somatic nervous system",
+      "heading": "Somatic Nervous System (SNS)",
+      "content": "The SNS controls voluntary skeletal muscle activity. Afferent fibers convey touch, pain, temperature; efferent fibers are motor neurons innervating skeletal muscles.",
+      "keyPoints": [
+        "Voluntary control of skeletal muscles",
+        "Sensory input from skin, joints"
+      ],
+      "neetTips": [
+        "SNS = ‘skeletal, not smooth’."
+      ]
+    },
+    {
+      "topic": "Autonomic nervous system",
+      "heading": "Autonomic Nervous System (ANS)",
+      "content": "The ANS regulates involuntary functions of smooth muscle, cardiac muscle and glands. It is divided into sympathetic and parasympathetic divisions, each with distinct pathways.",
+      "keyPoints": [
+        "Involuntary control of visceral organs",
+        "Two divisions: sympathetic & parasympathetic"
+      ],
+      "neetTips": [
+        "ANS = ‘automatic’, always active."
+      ]
+    },
+    {
+      "topic": "Sympathetic nervous system",
+      "heading": "Sympathetic Division (Thoracolumbar)",
+      "content": "Originates from T1–L2 spinal segments. Preganglionic fibers are short; post‑ganglionic fibers are long, releasing norepinephrine at most effectors (except sweat glands).",
+      "keyPoints": [
+        "Fight‑or‑flight response",
+        "Preganglionic = short, cholinergic"
+      ],
+      "neetTips": [
+        "Sympathetic = ‘short pre‑ganglionic’."
+      ]
+    },
+    {
+      "topic": "Parasympathetic nervous system",
+      "heading": "Parasympathetic Division (Craniosacral)",
+      "content": "Arises from cranial nerves III, VII, IX, X and sacral S2–S4. Preganglionic fibers are long; post‑ganglionic fibers are short, using acetylcholine at all effectors.",
+      "keyPoints": [
+        "Rest‑and‑digest response",
+        "Long pre‑ganglionic, short post‑ganglionic"
+      ],
+      "neetTips": [
+        "Parasympathetic = ‘long pre‑ganglionic’."
+      ]
+    },
+    {
+      "topic": "Reflex action",
+      "heading": "Reflex Action – Rapid Automatic Response",
+      "content": "A reflex is an involuntary, stereotyped response to a specific stimulus, designed to protect the body or maintain posture. It bypasses conscious brain centers for speed.",
+      "keyPoints": [
+        "Involuntary, stereotyped, protective"
+      ],
+      "neetTips": [
+        "Recall ‘reflex = fast, no brain involvement’."
+      ]
+    },
+    {
+      "topic": "Reflex arc",
+      "heading": "Reflex Arc – Structural Pathway",
+      "content": "The reflex arc comprises a sensory receptor, afferent neuron, integration centre (often a single interneuron in the spinal cord), efferent neuron and effector organ. Simple spinal reflexes involve one interneuron (monosynaptic).",
+      "keyPoints": [
+        "Receptor → afferent → integration → efferent → effector",
+        "Monosynaptic stretch reflex is the simplest"
+      ],
+      "neetTips": [
+        "Visualise the five‑step arc; it appears in many NEET diagrams."
+      ]
+    }
+  ],
+  "learningOutcome": [
+    "Identify and describe the structure and function of each neuronal component",
+    "Differentiate sensory, motor, afferent and efferent pathways and their locations",
+    "Explain the organization of CNS and PNS and their subdivisions",
+    "Compare sympathetic and parasympathetic divisions in terms of anatomy and neurotransmitters",
+    "Illustrate the reflex arc and its clinical significance"
+  ],
+  "mcqs": [
+    {
+      "question": "Which part of a neuron primarily integrates incoming synaptic potentials before initiating an action potential?",
+      "options": [
+        "Dendrites",
+        "Axon hillock",
+        "Myelin sheath",
+        "Node of Ranvier"
+      ],
+      "answer": 1,
+      "explanation": "The axon hillock contains a high density of voltage‑gated Na⁺ channels and sums excitatory and inhibitory inputs to decide whether to fire an action potential.",
+      "topic": "Neural control and coordination"
+    },
+    {
+      "question": "Which statement correctly distinguishes the sympathetic and parasympathetic divisions of the autonomic nervous system?",
+      "options": [
+        "Sympathetic fibers arise from thoracolumbar spinal cord, parasympathetic from craniosacral regions",
+        "Sympathetic uses acetylcholine at all synapses, parasympathetic uses norepinephrine",
+        "Parasympathetic pre‑ganglionic fibers are longer than sympathetic ones",
+        "Sympathetic innervates only blood vessels"
+      ],
+      "answer": 0,
+      "explanation": "The sympathetic division originates from thoracic and lumbar spinal segments (T1‑L2), whereas the parasympathetic division arises from cranial nerves III, VII, IX, X and sacral spinal segments (S2‑S4).",
+      "topic": "Neural control and coordination"
+    },
+    {
+      "question": "In the monosynaptic stretch reflex, the sensory neuron synapses directly with which type of neuron?",
+      "options": [
+        "Interneuron",
+        "Motor neuron",
+        "Sensory neuron",
+        "Autonomic neuron"
+      ],
+      "answer": 1,
+      "explanation": "The muscle spindle afferent (Ia) fiber makes a direct excitatory synapse onto the alpha motor neuron that innervates the same muscle, forming a monosynaptic reflex.",
+      "topic": "Neural control and coordination"
+    },
+    {
+      "question": "Which of the following is NOT a characteristic of myelinated nerve fibers?",
+      "options": [
+        "Increased conduction velocity",
+        "Presence of nodes of Ranvier",
+        "Continuous conduction without regeneration",
+        "Insulation by Schwann cells"
+      ],
+      "answer": 2,
+      "explanation": "Myelinated fibers conduct impulses by saltatory conduction, where the action potential jumps from node to node; conduction is not continuous without regeneration.",
+      "topic": "Neural control and coordination"
+    },
+    {
+      "question": "The afferent limb of a reflex arc is carried by:",
+      "options": [
+        "Motor neurons",
+        "Interneurons",
+        "Sensory neurons",
+        "Efferent fibers"
+      ],
+      "answer": 2,
+      "explanation": "Afferent (sensory) neurons transmit the stimulus from receptors to the central nervous system, forming the input side of the reflex arc.",
+      "topic": "Neural control and coordination"
+    },
+    {
+      "question": "Which cranial nerve is purely motor and controls a skeletal muscle of the eye?",
+      "options": [
+        "Olfactory (I)",
+        "Optic (II)",
+        "Trochlear (IV)",
+        "Trigeminal (V)"
+      ],
+      "answer": 2,
+      "explanation": "The trochlear nerve (cranial nerve IV) is a purely motor nerve that innervates the superior oblique muscle of the eye.",
+      "topic": "Neural control and coordination"
+    },
+    {
+      "question": "Which statement about the central nervous system (CNS) is correct?",
+      "options": [
+        "It contains only the brain",
+        "It is protected by the vertebral column and meninges",
+        "It includes peripheral nerves",
+        "It lacks myelinated fibers"
+      ],
+      "answer": 1,
+      "explanation": "The CNS, comprising the brain and spinal cord, is enclosed by the vertebral column and protected by three meninges (dura, arachnoid, pia).",
+      "topic": "Neural control and coordination"
+    },
+    {
+      "question": "In the autonomic nervous system, pre‑ganglionic fibers of the sympathetic division release which neurotransmitter at the ganglionic synapse?",
+      "options": [
+        "Acetylcholine",
+        "Norepinephrine",
+        "Dopamine",
+        "Epinephrine"
+      ],
+      "answer": 0,
+      "explanation": "All pre‑ganglionic autonomic fibers, whether sympathetic or parasympathetic, release acetylcholine onto nicotinic receptors of post‑ganglionic neurons.",
+      "topic": "Neural control and coordination"
+    },
+    {
+      "question": "Which pair correctly matches a part of the nervous system with its primary role?",
+      "options": [
+        "Central nervous system – integration of sensory information and coordination of responses",
+        "Peripheral nervous system – secretion of endocrine hormones",
+        "Autonomic nervous system – voluntary control of skeletal muscles",
+        "Somatic nervous system – regulation of heart rate"
+      ],
+      "answer": 0,
+      "explanation": "The CNS (brain and spinal cord) integrates sensory inputs and coordinates motor outputs, whereas the other options describe incorrect functions.",
+      "topic": "Nervous system overview"
+    },
+    {
+      "question": "The protective coverings that surround the brain and spinal cord are collectively called:",
+      "options": [
+        "Meninges",
+        "Cerebrospinal fluid",
+        "Neuroglia",
+        "Ventricular system"
+      ],
+      "answer": 0,
+      "explanation": "The meninges (dura mater, arachnoid mater, and pia mater) form the protective layers of the central nervous system.",
+      "topic": "Nervous system overview"
+    },
+    {
+      "question": "Which statement best distinguishes the sympathetic division from the parasympathetic division of the autonomic nervous system?",
+      "options": [
+        "Sympathetic division prepares the body for \"fight or flight\"; parasympathetic division promotes \"rest and digest\" activities",
+        "Sympathetic division controls voluntary movements; parasympathetic division controls involuntary movements",
+        "Sympathetic division innervates only the heart; parasympathetic division innervates only the digestive tract",
+        "Sympathetic division uses acetylcholine at all synapses; parasympathetic division uses norepinephrine at all synapses"
+      ],
+      "answer": 0,
+      "explanation": "The sympathetic division activates emergency responses (fight‑or‑flight) whereas the parasympathetic division maintains routine, restorative functions (rest‑and‑digest).",
+      "topic": "Nervous system overview"
+    },
+    {
+      "question": "In a typical multi‑synaptic reflex arc, the sensory neuron synapses primarily with which type of neuron?",
+      "options": [
+        "Interneuron",
+        "Motor neuron",
+        "Glial cell",
+        "Efferent neuron"
+      ],
+      "answer": 0,
+      "explanation": "In most reflex arcs, the afferent (sensory) neuron transmits the impulse to an interneuron in the spinal cord, which then relays it to the efferent (motor) neuron.",
+      "topic": "Nervous system overview"
+    },
+    {
+      "question": "Which of the following structures is NOT part of the peripheral nervous system?",
+      "options": [
+        "Spinal cord",
+        "Cranial nerves",
+        "Spinal nerves",
+        "Peripheral ganglia"
+      ],
+      "answer": 0,
+      "explanation": "The spinal cord is a component of the central nervous system; all other listed structures belong to the peripheral nervous system.",
+      "topic": "Nervous system overview"
+    },
+    {
+      "question": "The somatic nervous system primarily controls:",
+      "options": [
+        "Skeletal (voluntary) muscles",
+        "Cardiac muscle",
+        "Smooth muscle of the gastrointestinal tract",
+        "Endocrine glands"
+      ],
+      "answer": 0,
+      "explanation": "The somatic division innervates skeletal muscles, enabling voluntary movements, whereas autonomic divisions control cardiac, smooth muscle, and glands.",
+      "topic": "Nervous system overview"
+    },
+    {
+      "question": "The main functional significance of the myelin sheath surrounding many axons is to:",
+      "options": [
+        "Increase the speed of nerve impulse conduction",
+        "Synthesize neurotransmitters",
+        "Generate action potentials",
+        "Store calcium ions"
+      ],
+      "answer": 0,
+      "explanation": "Myelin acts as electrical insulation, allowing rapid saltatory conduction of action potentials along the axon.",
+      "topic": "Nervous system overview"
+    },
+    {
+      "question": "In a reflex action, the afferent (sensory) pathway conveys information from:",
+      "options": [
+        "Sensory receptors to the central nervous system",
+        "The central nervous system to effectors",
+        "The central nervous system to sensory receptors",
+        "Effectors to the central nervous system"
+      ],
+      "answer": 0,
+      "explanation": "Afferent fibers carry sensory information from receptors toward the CNS, where it is processed before a response is generated.",
+      "topic": "Nervous system overview"
+    },
+    {
+      "question": "Which part of a neuron primarily receives incoming synaptic signals?",
+      "options": [
+        "Dendrites",
+        "Axon hillock",
+        "Myelin sheath",
+        "Axon terminal"
+      ],
+      "answer": 0,
+      "explanation": "Dendrites are specialized extensions that increase the surface area for receiving neurotransmitters from other neurons.",
+      "topic": "Neuron as structural and functional unit"
+    },
+    {
+      "question": "The specific region of a neuron where an action potential is usually initiated is the:",
+      "options": [
+        "Axon terminal",
+        "Cell body (soma)",
+        "Nodes of Ranvier",
+        "Axon hillock"
+      ],
+      "answer": 3,
+      "explanation": "The axon hillock has a high density of voltage‑gated Na⁺ channels, making it the site where the threshold is reached and the action potential starts.",
+      "topic": "Neuron as structural and functional unit"
+    },
+    {
+      "question": "Myelination of an axon speeds up nerve impulse conduction mainly because it:",
+      "options": [
+        "Increases membrane resistance and decreases capacitance",
+        "Decreases membrane resistance",
+        "Increases axon diameter",
+        "Provides more ion channels along the membrane"
+      ],
+      "answer": 0,
+      "explanation": "Myelin insulates the axon, raising transverse resistance and lowering capacitance, which allows rapid depolarization at the nodes of Ranvier (saltatory conduction).",
+      "topic": "Neuron as structural and functional unit"
+    },
+    {
+      "question": "A neuron whose cell body resides in the central nervous system and whose axon projects to skeletal muscles is a:",
+      "options": [
+        "Sensory neuron",
+        "Motor neuron",
+        "Interneuron",
+        "Afferent neuron"
+      ],
+      "answer": 1,
+      "explanation": "Motor (efferent) neurons have their soma in the CNS and send axons to peripheral effectors such as skeletal muscles.",
+      "topic": "Neuron as structural and functional unit"
+    },
+    {
+      "question": "In a typical multipolar neuron, Nissl bodies are most abundant in the:",
+      "options": [
+        "Dendrites",
+        "Axon terminal",
+        "Cell body",
+        "Nodes of Ranvier"
+      ],
+      "answer": 2,
+      "explanation": "Nissl bodies (rough ER with ribosomes) are located in the soma and are involved in protein synthesis required for neuronal maintenance.",
+      "topic": "Neuron as structural and functional unit"
+    },
+    {
+      "question": "The periodic gaps observed in the myelin sheath of a myelinated axon are called:",
+      "options": [
+        "Nodes of Ranvier",
+        "Schwann cells",
+        "Synaptic cleft",
+        "Axon hillock"
+      ],
+      "answer": 0,
+      "explanation": "Nodes of Ranvier are short, unmyelinated segments that allow the influx of ions, enabling saltatory conduction of the action potential.",
+      "topic": "Neuron as structural and functional unit"
+    },
+    {
+      "question": "Which statement correctly distinguishes sensory neurons from interneurons?",
+      "options": [
+        "Sensory neurons transmit impulses from CNS to effectors",
+        "Interneurons transmit impulses from receptors to CNS",
+        "Sensory neurons convey information from receptors to CNS",
+        "Interneurons directly innervate muscles"
+      ],
+      "answer": 2,
+      "explanation": "Sensory (afferent) neurons carry information from peripheral receptors toward the CNS, whereas interneurons process information within the CNS.",
+      "topic": "Neuron as structural and functional unit"
+    },
+    {
+      "question": "Which organelle in the neuronal cell body is chiefly responsible for synthesizing proteins required for axonal growth?",
+      "options": [
+        "Rough endoplasmic reticulum",
+        "Smooth endoplasmic reticulum",
+        "Lysosome",
+        "Peroxisome"
+      ],
+      "answer": 0,
+      "explanation": "The rough endoplasmic reticulum, studded with ribosomes, is the main site of protein synthesis in the soma, providing proteins for axonal transport and membrane renewal.",
+      "topic": "Cell body"
+    },
+    {
+      "question": "Nissl bodies in the neuronal cell body are most readily visualized by which staining method?",
+      "options": [
+        "Hematoxylin‑eosin stain",
+        "Nissl (Cresyl violet) stain",
+        "Golgi silver stain",
+        "Luxol fast blue stain"
+      ],
+      "answer": 1,
+      "explanation": "Cresyl violet, a Nissl stain, binds to the RNA-rich Nissl substance (rough ER) making these granules prominent under the microscope.",
+      "topic": "Cell body"
+    },
+    {
+      "question": "The region of a neuron that characteristically lacks Nissl substance is:",
+      "options": [
+        "Cell body",
+        "Dendrites",
+        "Axon hillock",
+        "Nucleus"
+      ],
+      "answer": 2,
+      "explanation": "Nissl substance (rough ER) is absent from the axon hillock, which is specialized for initiation of action potentials rather than protein synthesis.",
+      "topic": "Cell body"
+    },
+    {
+      "question": "Which statement about the neuronal cell body (soma) is FALSE?",
+      "options": [
+        "It contains the nucleus that houses neuronal DNA.",
+        "It is the primary site for generation of action potentials.",
+        "It houses Nissl bodies involved in protein synthesis.",
+        "It contains abundant mitochondria to meet high metabolic demand."
+      ],
+      "answer": 1,
+      "explanation": "Action potentials are generated at the axon hillock, not in the soma; the soma’s main roles are metabolic and integrative.",
+      "topic": "Cell body"
+    },
+    {
+      "question": "During chromatolysis, a hallmark change observed in the neuronal cell body is:",
+      "options": [
+        "Swelling of Nissl bodies",
+        "Disappearance of Nissl substance",
+        "Increase in dendritic spine density",
+        "Formation of a myelin sheath around the soma"
+      ],
+      "answer": 1,
+      "explanation": "Chromatolysis, a response to axonal injury, leads to dissolution of Nissl substance, reflecting halted protein synthesis.",
+      "topic": "Cell body"
+    },
+    {
+      "question": "Among the following, which neuron type typically possesses the largest cell body (soma) in the peripheral nervous system?",
+      "options": [
+        "Sensory neuron",
+        "Motor neuron",
+        "Interneuron",
+        "Purkinje cell"
+      ],
+      "answer": 1,
+      "explanation": "Motor neurons have relatively large somata to accommodate extensive protein synthesis needed for maintaining long axons and neuromuscular junctions.",
+      "topic": "Cell body"
+    },
+    {
+      "question": "The principal functional role of the neuronal cell body (soma) is to:",
+      "options": [
+        "Transmit electrical impulses along the axon",
+        "Integrate synaptic inputs and synthesize cellular components",
+        "Form the myelin sheath around the axon",
+        "Release neurotransmitters into the synaptic cleft"
+      ],
+      "answer": 1,
+      "explanation": "The soma integrates incoming signals and houses the machinery (nucleus, rough ER, Golgi) for synthesizing proteins, lipids, and neurotransmitters required for neuronal maintenance.",
+      "topic": "Cell body"
+    },
+    {
+      "question": "Which statement about dendrites is correct?",
+      "options": [
+        "They receive synaptic inputs from other neurons",
+        "They contain Nissl bodies",
+        "They generate action potentials",
+        "They are covered by myelin sheath"
+      ],
+      "answer": 0,
+      "explanation": "Dendrites are specialized for receiving chemical signals (neurotransmitters) from other neurons; they do not generate action potentials, lack myelin, and Nissl bodies are mainly in the soma.",
+      "topic": "Dendrites"
+    },
+    {
+      "question": "Dendritic spines are primarily associated with which type of neurotransmission?",
+      "options": [
+        "Excitatory glutamatergic synapses",
+        "Inhibitory GABAergic synapses",
+        "Cholinergic synapses",
+        "Dopaminergic synapses"
+      ],
+      "answer": 0,
+      "explanation": "Spiny dendrites host the majority of excitatory glutamatergic synapses, increasing surface area for these inputs.",
+      "topic": "Dendrites"
+    },
+    {
+      "question": "The passive spread of graded potentials in dendrites is best described by which principle?",
+      "options": [
+        "Ohm's law",
+        "Cable theory",
+        "Fleming's left-hand rule",
+        "Dalton's law"
+      ],
+      "answer": 1,
+      "explanation": "Cable theory models how voltage changes attenuate and spread along dendritic cylinders, accounting for resistance and capacitance.",
+      "topic": "Dendrites"
+    },
+    {
+      "question": "Which organelle is most abundant in dendrites to meet the high energy demand of synaptic activity?",
+      "options": [
+        "Nissl bodies",
+        "Mitochondria",
+        "Lysosomes",
+        "Centrioles"
+      ],
+      "answer": 1,
+      "explanation": "Mitochondria are plentiful in dendrites to supply ATP required for ion pumps and neurotransmitter recycling during synaptic transmission.",
+      "topic": "Dendrites"
+    },
+    {
+      "question": "In a typical multipolar neuron, the structure that contributes the greatest surface area for synaptic contacts is:",
+      "options": [
+        "Axon hillock",
+        "Dendritic arbor",
+        "Myelinated axon",
+        "Node of Ranvier"
+      ],
+      "answer": 1,
+      "explanation": "The extensive branching of the dendritic arbor provides a large membrane area for forming thousands of synapses.",
+      "topic": "Dendrites"
+    },
+    {
+      "question": "Which type of dendrite is characterized by numerous short protrusions that increase its surface area?",
+      "options": [
+        "Smooth dendrite",
+        "Spiny dendrite",
+        "Primary dendrite",
+        "Apical dendrite"
+      ],
+      "answer": 1,
+      "explanation": "Spiny dendrites bear many small protrusions (spines) that markedly enlarge the membrane area for synaptic inputs.",
+      "topic": "Dendrites"
+    },
+    {
+      "question": "The term \"electrotonic potential\" refers to:",
+      "options": [
+        "Action potential in axon",
+        "Graded potential in dendrite",
+        "Refractory period",
+        "Synaptic vesicle release"
+      ],
+      "answer": 1,
+      "explanation": "Electrotonic (or graded) potentials are subthreshold voltage changes that spread passively along dendrites and cell bodies.",
+      "topic": "Dendrites"
+    },
+    {
+      "question": "Which specialized regions of a myelinated axon allow rapid saltatory conduction of nerve impulses?",
+      "options": [
+        "Nodes of Ranvier",
+        "Axon hillock",
+        "Axon terminal",
+        "Myelin sheath"
+      ],
+      "answer": 0,
+      "explanation": "The gaps in the myelin sheath called Nodes of Ranvier contain high densities of voltage‑gated Na⁺ channels, permitting the action potential to jump from node to node, which speeds up conduction.",
+      "topic": "Axon"
+    },
+    {
+      "question": "What is the primary functional role of the axon hillock in a neuron?",
+      "options": [
+        "Synaptic vesicle release",
+        "Generation of action potential",
+        "Myelin formation",
+        "Reuptake of neurotransmitters"
+      ],
+      "answer": 1,
+      "explanation": "The axon hillock (initial segment) has a low threshold for depolarization and a high density of voltage‑gated Na⁺ channels, making it the site where an action potential is usually initiated.",
+      "topic": "Axon"
+    },
+    {
+      "question": "In a typical myelinated peripheral nerve fiber, the distance between two successive nodes of Ranvier is approximately:",
+      "options": [
+        "0.1–2 mm",
+        "10–20 µm",
+        "5–10 cm",
+        "0.5–1 µm"
+      ],
+      "answer": 0,
+      "explanation": "Nodes of Ranvier are spaced about 0.1 to 2 mm apart in most myelinated axons, allowing efficient saltatory propagation of the action potential.",
+      "topic": "Axon"
+    },
+    {
+      "question": "Which type of axonal transport moves mitochondria, vesicles, and proteins from the neuronal cell body toward the synaptic terminal?",
+      "options": [
+        "Retrograde transport",
+        "Anterograde transport",
+        "Lateral diffusion",
+        "Cytoplasmic streaming"
+      ],
+      "answer": 1,
+      "explanation": "Anterograde transport, mediated by kinesin motor proteins along microtubules, carries organelles and cargo from the soma to the axon terminal.",
+      "topic": "Axon"
+    },
+    {
+      "question": "If an axon is damaged but its myelin sheath remains intact, the most likely physiological consequence is:",
+      "options": [
+        "Increased neurotransmitter release",
+        "Decreased conduction velocity",
+        "Complete loss of action potential generation",
+        "Enhanced synaptic plasticity"
+      ],
+      "answer": 1,
+      "explanation": "Axonal injury disrupts the continuity of the membrane, slowing the spread of depolarization even though myelin still insulates; thus conduction velocity falls.",
+      "topic": "Axon"
+    },
+    {
+      "question": "Which ion channels are densely concentrated at the axon initial segment to facilitate the initiation of an action potential?",
+      "options": [
+        "Voltage‑gated K⁺ channels",
+        "Voltage‑gated Na⁺ channels",
+        "Ligand‑gated Ca²⁺ channels",
+        "Mechanically gated Cl⁻ channels"
+      ],
+      "answer": 1,
+      "explanation": "The axon initial segment contains a high density of voltage‑gated Na⁺ channels, lowering the threshold for action‑potential generation.",
+      "topic": "Axon"
+    },
+    {
+      "question": "Demyelination of an axon, as seen in multiple sclerosis, most directly leads to which change in nerve impulse transmission?",
+      "options": [
+        "No change in conduction",
+        "Slower conduction and possible conduction block",
+        "Faster conduction",
+        "Increased amplitude of the action potential"
+      ],
+      "answer": 1,
+      "explanation": "Loss of myelin reduces membrane resistance and increases capacitance, causing the action potential to propagate more slowly and may result in conduction block.",
+      "topic": "Axon"
+    },
+    {
+      "question": "Which structure in the axon terminal is primarily responsible for the release of neurotransmitters into the synaptic cleft?",
+      "options": [
+        "Synaptic vesicles",
+        "Dendritic spines",
+        "Myelin sheath",
+        "Nodes of Ranvier"
+      ],
+      "answer": 0,
+      "explanation": "Synaptic vesicles store neurotransmitters and fuse with the presynaptic membrane to release their contents into the synaptic cleft.",
+      "topic": "Axon terminals"
+    },
+    {
+      "question": "The influx of which ion into the axon terminal triggers neurotransmitter release?",
+      "options": [
+        "Na+",
+        "K+",
+        "Ca2+",
+        "Cl-"
+      ],
+      "answer": 2,
+      "explanation": "Voltage‑gated Ca2+ channels open upon depolarisation, allowing Ca2+ entry that initiates vesicle fusion and neurotransmitter release.",
+      "topic": "Axon terminals"
+    },
+    {
+      "question": "At a neuromuscular junction, the neurotransmitter released from the axon terminal is:",
+      "options": [
+        "Acetylcholine",
+        "Dopamine",
+        "GABA",
+        "Glutamate"
+      ],
+      "answer": 0,
+      "explanation": "The motor end‑plate uses acetylcholine as the excitatory neurotransmitter to stimulate muscle contraction.",
+      "topic": "Axon terminals"
+    },
+    {
+      "question": "Which of the following best describes the \"active zone\" of an axon terminal?",
+      "options": [
+        "Region where voltage‑gated Na+ channels are concentrated",
+        "Site of synaptic vesicle docking and fusion",
+        "Area containing mitochondria for ATP production",
+        "Segment of myelin sheath"
+      ],
+      "answer": 1,
+      "explanation": "The active zone is a specialised area of the presynaptic membrane where synaptic vesicles dock, fuse, and release neurotransmitters.",
+      "topic": "Axon terminals"
+    },
+    {
+      "question": "In a chemical synapse, the space between the presynaptic axon terminal and the postsynaptic membrane is called:",
+      "options": [
+        "Synaptic cleft",
+        "Nodes of Ranvier",
+        "Axoplasmic reticulum",
+        "Myelin sheath"
+      ],
+      "answer": 0,
+      "explanation": "The synaptic cleft is the extracellular gap (~20‑40 nm) separating the pre‑ and postsynaptic membranes where neurotransmitters diffuse.",
+      "topic": "Axon terminals"
+    },
+    {
+      "question": "Which protein is essential for the docking of synaptic vesicles at the axon terminal membrane?",
+      "options": [
+        "Synaptobrevin",
+        "SNAP-25",
+        "Myelin basic protein",
+        "Neurofilament"
+      ],
+      "answer": 1,
+      "explanation": "SNAP-25, a component of the SNARE complex, interacts with synaptobrevin and syntaxin to mediate vesicle docking and fusion.",
+      "topic": "Axon terminals"
+    },
+    {
+      "question": "Which organelle is abundant in axon terminals to meet the high energy demand of neurotransmitter release?",
+      "options": [
+        "Nucleus",
+        "Lysosome",
+        "Mitochondrion",
+        "Golgi apparatus"
+      ],
+      "answer": 2,
+      "explanation": "Mitochondria generate ATP required for vesicle cycling, Ca2+ buffering, and other processes essential for synaptic transmission.",
+      "topic": "Axon terminals"
+    },
+    {
+      "question": "Which glial cell type is responsible for forming the myelin sheath around peripheral nerve axons?",
+      "options": [
+        "Oligodendrocytes",
+        "Schwann cells",
+        "Astrocytes",
+        "Microglia"
+      ],
+      "answer": 1,
+      "explanation": "In the peripheral nervous system, Schwann cells wrap around the axon to produce the multilamellar myelin sheath.",
+      "topic": "Myelin sheath"
+    },
+    {
+      "question": "The myelin sheath enhances the speed of nerve impulse conduction primarily by:",
+      "options": [
+        "Decreasing membrane capacitance",
+        "Increasing membrane resistance",
+        "Both decreasing capacitance and increasing resistance",
+        "Increasing axonal diameter"
+      ],
+      "answer": 2,
+      "explanation": "Myelin reduces the capacitance and increases the resistance of the axonal membrane, allowing rapid saltatory conduction between nodes.",
+      "topic": "Myelin sheath"
+    },
+    {
+      "question": "The short, unmyelinated gaps between successive myelin segments are called:",
+      "options": [
+        "Nodes of Ranvier",
+        "Synaptic clefts",
+        "Axon hillocks",
+        "Internodes"
+      ],
+      "answer": 0,
+      "explanation": "These gaps are known as Nodes of Ranvier and are crucial sites where action potentials are regenerated.",
+      "topic": "Myelin sheath"
+    },
+    {
+      "question": "In the central nervous system, which cell type synthesizes the myelin sheath?",
+      "options": [
+        "Schwann cells",
+        "Oligodendrocytes",
+        "Satellite cells",
+        "Ependymal cells"
+      ],
+      "answer": 1,
+      "explanation": "Oligodendrocytes extend multiple processes to myelinate several CNS axons simultaneously.",
+      "topic": "Myelin sheath"
+    },
+    {
+      "question": "Which neurological disorder is chiefly characterized by demyelination of central nervous system axons?",
+      "options": [
+        "Guillain‑Barré syndrome",
+        "Multiple sclerosis",
+        "Charcot‑Marie‑Tooth disease",
+        "Myasthenia gravis"
+      ],
+      "answer": 1,
+      "explanation": "Multiple sclerosis involves immune‑mediated loss of CNS myelin, leading to impaired conduction.",
+      "topic": "Myelin sheath"
+    },
+    {
+      "question": "Compared with unmyelinated fibers, myelinated fibers have a higher ratio of:",
+      "options": [
+        "Axon diameter to total fiber diameter",
+        "Myelin thickness to axon diameter",
+        "Node length to internode length",
+        "Capacitance to resistance"
+      ],
+      "answer": 0,
+      "explanation": "Myelination allows a relatively thin myelin sheath around a larger axon, giving a higher axon‑to‑fiber diameter ratio.",
+      "topic": "Myelin sheath"
+    },
+    {
+      "question": "Which of the following statements about Nodes of Ranvier is correct?",
+      "options": [
+        "They are sites where action potentials are generated de novo",
+        "They contain a high density of voltage‑gated Na⁺ channels",
+        "They are absent in myelinated axons",
+        "They are formed by Schwann cell nuclei"
+      ],
+      "answer": 1,
+      "explanation": "Nodes of Ranvier are rich in voltage‑gated sodium channels, enabling rapid depolarization during saltatory conduction.",
+      "topic": "Myelin sheath"
+    },
+    {
+      "question": "What are Nodes of Ranvier?",
+      "options": [
+        "Gaps in the myelin sheath where the axonal membrane is exposed",
+        "Thickened segments of the myelin sheath",
+        "Sites where neurotransmitters are released",
+        "Points where an axon branches into collaterals"
+      ],
+      "answer": 0,
+      "explanation": "Nodes of Ranvier are the short, unmyelinated gaps between adjacent myelin segments along a myelinated axon, exposing the axolemma to the extracellular fluid.",
+      "topic": "Nodes of Ranvier"
+    },
+    {
+      "question": "How do Nodes of Ranvier contribute to saltatory conduction?",
+      "options": [
+        "They allow continuous propagation of the action potential along the entire axon",
+        "They enable regeneration of the action potential at intervals, markedly increasing conduction speed",
+        "They shorten the refractory period of the neuron",
+        "They increase the synthesis of neurotransmitters at the axon terminal"
+      ],
+      "answer": 1,
+      "explanation": "At each node, voltage‑gated Na⁺ channels regenerate the action potential, so the impulse jumps from node to node, which speeds up transmission compared with continuous conduction.",
+      "topic": "Nodes of Ranvier"
+    },
+    {
+      "question": "In the peripheral nervous system, Nodes of Ranvier are formed by which glial cell?",
+      "options": [
+        "Oligodendrocytes",
+        "Schwann cells",
+        "Astrocytes",
+        "Microglia"
+      ],
+      "answer": 1,
+      "explanation": "Schwann cells wrap around peripheral axons, leaving periodic gaps that become the Nodes of Ranvier.",
+      "topic": "Nodes of Ranvier"
+    },
+    {
+      "question": "The typical internodal distance (distance between two consecutive Nodes of Ranvier) in a myelinated peripheral axon is about:",
+      "options": [
+        "0.1 µm",
+        "1 µm",
+        "1–2 mm",
+        "1–2 cm"
+      ],
+      "answer": 2,
+      "explanation": "In peripheral nerves, the myelin sheath can extend for 1–2 mm between adjacent nodes, allowing rapid saltatory conduction.",
+      "topic": "Nodes of Ranvier"
+    },
+    {
+      "question": "Loss or damage of Nodes of Ranvier is most directly implicated in which neurological disorder?",
+      "options": [
+        "Myasthenia gravis",
+        "Multiple sclerosis",
+        "Parkinson's disease",
+        "Muscular dystrophy"
+      ],
+      "answer": 1,
+      "explanation": "Multiple sclerosis involves demyelination and disruption of the Nodes of Ranvier in the CNS, impairing saltatory conduction.",
+      "topic": "Nodes of Ranvier"
+    },
+    {
+      "question": "How does axonal diameter affect the length of internodal segments between Nodes of Ranvier?",
+      "options": [
+        "Larger diameter axons have shorter internodal distances",
+        "Larger diameter axons have longer internodal distances",
+        "Axonal diameter does not influence internodal length",
+        "Large‑diameter axons lack Nodes of Ranvier"
+      ],
+      "answer": 1,
+      "explanation": "Larger axons tend to have longer internodal lengths, which further enhances conduction velocity.",
+      "topic": "Nodes of Ranvier"
+    },
+    {
+      "question": "Which ion channels are highly concentrated at the Nodes of Ranvier?",
+      "options": [
+        "Voltage‑gated Na⁺ channels",
+        "Voltage‑gated K⁺ channels",
+        "Ligand‑gated Ca²⁺ channels",
+        "HCN channels"
+      ],
+      "answer": 0,
+      "explanation": "Voltage‑gated sodium channels are densely packed at the nodes, allowing rapid depolarization and regeneration of the action potential.",
+      "topic": "Nodes of Ranvier"
+    },
+    {
+      "question": "Which structural feature distinguishes most sensory neurons of the peripheral nervous system?",
+      "options": [
+        "Multipolar with many dendrites",
+        "Pseudounipolar with a single process that bifurcates",
+        "Bipolar with two processes",
+        "Unipolar with only one process"
+      ],
+      "answer": 1,
+      "explanation": "Most peripheral sensory neurons are pseudounipolar; a single process leaves the cell body and splits into peripheral and central branches.",
+      "topic": "Sensory neurons"
+    },
+    {
+      "question": "The receptor potential generated in a sensory receptor is:",
+      "options": [
+        "An all-or-none action potential",
+        "Graded and proportional to stimulus intensity",
+        "Independent of stimulus strength",
+        "A hyperpolarizing potential"
+      ],
+      "answer": 1,
+      "explanation": "Receptor potentials are graded; their amplitude varies with the strength of the stimulus and can trigger action potentials if threshold is reached.",
+      "topic": "Sensory neurons"
+    },
+    {
+      "question": "Which of the following sensory modalities is mediated by free nerve endings?",
+      "options": [
+        "Vision",
+        "Hearing",
+        "Pain and temperature",
+        "Taste"
+      ],
+      "answer": 2,
+      "explanation": "Free nerve endings are the primary receptors for nociception (pain) and thermoreception (temperature).",
+      "topic": "Sensory neurons"
+    },
+    {
+      "question": "In the reflex arc, the first neuron that carries information from the skin to the spinal cord is:",
+      "options": [
+        "Motor neuron",
+        "Interneuron",
+        "Sensory (afferent) neuron",
+        "Efferent neuron"
+      ],
+      "answer": 2,
+      "explanation": "The afferent sensory neuron receives the stimulus at the skin and transmits the impulse to the spinal cord, forming the first element of the reflex arc.",
+      "topic": "Sensory neurons"
+    },
+    {
+      "question": "The myelination of sensory axons in the peripheral nervous system is provided by:",
+      "options": [
+        "Oligodendrocytes",
+        "Schwann cells",
+        "Astrocytes",
+        "Microglia"
+      ],
+      "answer": 1,
+      "explanation": "In the PNS, Schwann cells wrap around axons to form the myelin sheath, increasing conduction velocity of sensory impulses.",
+      "topic": "Sensory neurons"
+    },
+    {
+      "question": "Which statement about the adaptation of sensory receptors is correct?",
+      "options": [
+        "Slowly adapting receptors fire only at the onset of a stimulus",
+        "Rapidly adapting receptors continue to fire throughout a constant stimulus",
+        "Slowly adapting receptors generate action potentials throughout the duration of a stimulus",
+        "Rapidly adapting receptors are only found in the visual system"
+      ],
+      "answer": 2,
+      "explanation": "Slowly adapting (tonic) receptors maintain firing as long as the stimulus persists, whereas rapidly adapting (phasic) receptors respond mainly at stimulus onset and offset.",
+      "topic": "Sensory neurons"
+    },
+    {
+      "question": "The term \"afferent\" in the context of sensory neurons refers to:",
+      "options": [
+        "Transmission of impulses away from the CNS",
+        "Transmission of impulses toward the CNS",
+        "Synaptic transmission within the CNS only",
+        "Motor output to effectors"
+      ],
+      "answer": 1,
+      "explanation": "Afferent pathways carry sensory information from peripheral receptors toward the central nervous system.",
+      "topic": "Sensory neurons"
+    },
+    {
+      "question": "Which part of a motor neuron contains the nucleus?",
+      "options": [
+        "Dendrite",
+        "Axon terminal",
+        "Cell body (soma)",
+        "Myelin sheath"
+      ],
+      "answer": 2,
+      "explanation": "The nucleus of a neuron is located in the cell body, also called the soma, which houses the genetic material.",
+      "topic": "Motor neurons"
+    },
+    {
+      "question": "Motor neurons are classified as which type of efferent neuron?",
+      "options": [
+        "Afferent neuron",
+        "Interneuron",
+        "Somatic efferent neuron",
+        "Autonomic efferent neuron"
+      ],
+      "answer": 2,
+      "explanation": "Motor neurons that innervate skeletal muscles belong to the somatic nervous system and are therefore somatic efferent neurons.",
+      "topic": "Motor neurons"
+    },
+    {
+      "question": "The cell bodies of lower motor neurons are located in:",
+      "options": [
+        "Dorsal root ganglion",
+        "Ventral horn of spinal cord",
+        "Cerebellar cortex",
+        "Medulla oblongata"
+      ],
+      "answer": 1,
+      "explanation": "Lower motor neuron cell bodies reside in the ventral (anterior) horn of the spinal cord gray matter.",
+      "topic": "Motor neurons"
+    },
+    {
+      "question": "In a typical motor neuron, the region of rapid depolarization that propagates the action potential is:",
+      "options": [
+        "Nodes of Ranvier",
+        "Synaptic cleft",
+        "Axon hillock",
+        "Myelin sheath"
+      ],
+      "answer": 0,
+      "explanation": "Action potentials jump from one Node of Ranvier to the next in a myelinated axon, a process called saltatory conduction.",
+      "topic": "Motor neurons"
+    },
+    {
+      "question": "Which neurotransmitter is released at the neuromuscular junction by motor neurons?",
+      "options": [
+        "Acetylcholine",
+        "Dopamine",
+        "Norepinephrine",
+        "GABA"
+      ],
+      "answer": 0,
+      "explanation": "Motor neurons release acetylcholine at the neuromuscular junction, which binds to nicotinic receptors on skeletal muscle fibers.",
+      "topic": "Motor neurons"
+    },
+    {
+      "question": "Damage to the upper motor neurons leads to which of the following clinical signs?",
+      "options": [
+        "Flaccid paralysis",
+        "Hyperreflexia",
+        "Loss of sensation",
+        "Muscle atrophy without spasticity"
+      ],
+      "answer": 1,
+      "explanation": "Upper motor neuron lesions remove inhibitory control, resulting in exaggerated reflexes (hyperreflexia) and spasticity.",
+      "topic": "Motor neurons"
+    },
+    {
+      "question": "Which statement correctly distinguishes motor neurons from sensory neurons?",
+      "options": [
+        "Motor neurons have cell bodies in dorsal root ganglia",
+        "Motor neurons transmit impulses from receptors to CNS",
+        "Motor neurons are efferent and innervate effectors",
+        "Motor neurons lack axons"
+      ],
+      "answer": 2,
+      "explanation": "Motor neurons are efferent pathways that carry signals from the CNS to effectors such as muscles, unlike sensory neurons which are afferent.",
+      "topic": "Motor neurons"
+    },
+    {
+      "question": "Which statement correctly describes interneurons?",
+      "options": [
+        "They transmit impulses from the CNS to effectors (motor neurons)",
+        "They carry sensory information to the CNS (sensory neurons)",
+        "They connect other neurons within the CNS and process information",
+        "They form the myelin sheath around axons"
+      ],
+      "answer": 2,
+      "explanation": "Interneurons are neurons whose cell bodies and synaptic connections are confined to the central nervous system; they link other neurons and integrate signals.",
+      "topic": "Interneurons"
+    },
+    {
+      "question": "In a simple spinal reflex arc, where is the interneuron located?",
+      "options": [
+        "In the sensory receptor organ",
+        "In the gray matter of the spinal cord",
+        "Within the motor neuron's axon",
+        "In the peripheral nerve trunk"
+      ],
+      "answer": 1,
+      "explanation": "The interneuron of a monosynaptic reflex resides in the spinal cord gray matter, receiving input from the sensory neuron and transmitting to the motor neuron.",
+      "topic": "Interneurons"
+    },
+    {
+      "question": "Which type of interneuron primarily integrates sensory input and modulates motor output?",
+      "options": [
+        "Association interneuron",
+        "Relay interneuron",
+        "Motor interneuron",
+        "Sensory interneuron"
+      ],
+      "answer": 0,
+      "explanation": "Association (or integrating) interneurons receive multiple inputs, combine them, and influence motor pathways, unlike relay interneurons that simply pass signals.",
+      "topic": "Interneurons"
+    },
+    {
+      "question": "Interneurons in the CNS are generally:",
+      "options": [
+        "Myelinated with long axons",
+        "Unmyelinated with short axons",
+        "Myelinated with short axons",
+        "Unmyelinated with long axons"
+      ],
+      "answer": 1,
+      "explanation": "Most CNS interneurons have short, often unmyelinated axons because they function over short distances for rapid local processing.",
+      "topic": "Interneurons"
+    },
+    {
+      "question": "Which neurotransmitter is most commonly released by excitatory interneurons in the spinal cord?",
+      "options": [
+        "GABA",
+        "Glycine",
+        "Glutamate",
+        "Acetylcholine"
+      ],
+      "answer": 2,
+      "explanation": "Glutamate is the principal excitatory neurotransmitter used by many spinal interneurons to activate downstream neurons.",
+      "topic": "Interneurons"
+    },
+    {
+      "question": "In the autonomic nervous system, interneurons are primarily found in:",
+      "options": [
+        "Sympathetic chain ganglia",
+        "Parasympathetic cranial nuclei",
+        "Central nervous system integrating centers",
+        "Pre‑ganglionic fibers"
+      ],
+      "answer": 2,
+      "explanation": "Interneurons that coordinate autonomic responses are located in CNS regions such as the hypothalamus and brainstem, not in peripheral ganglia.",
+      "topic": "Interneurons"
+    },
+    {
+      "question": "Which of the following best differentiates interneurons from motor neurons?",
+      "options": [
+        "Interneurons have dendrites, motor neurons do not",
+        "Interneurons synapse onto other neurons, motor neurons synapse onto effector cells",
+        "Interneurons are located only in the peripheral nervous system",
+        "Interneurons conduct impulses faster than motor neurons"
+      ],
+      "answer": 1,
+      "explanation": "Motor neurons terminate on muscles or glands (effectors), whereas interneurons form synapses with other neurons within the CNS.",
+      "topic": "Interneurons"
+    },
+    {
+      "question": "What is the relationship between the diameter of peripheral nerve fibres and their conduction velocity?",
+      "options": [
+        "Larger diameter leads to slower conduction",
+        "Larger diameter leads to faster conduction",
+        "Diameter does not affect conduction velocity",
+        "Smaller diameter leads to faster conduction"
+      ],
+      "answer": 1,
+      "explanation": "In peripheral nerves, a larger axonal diameter reduces internal resistance, allowing faster propagation of the action potential.",
+      "topic": "Nerve fibres"
+    },
+    {
+      "question": "How do the nodes of Ranvier in myelinated nerve fibres primarily enhance signal transmission?",
+      "options": [
+        "Increase metabolic demand of the axon",
+        "Facilitate continuous conduction along the axon",
+        "Enable saltatory conduction, increasing speed",
+        "Provide sites for neurotransmitter release"
+      ],
+      "answer": 2,
+      "explanation": "The gaps (nodes) allow the action potential to jump from one node to the next (saltatory conduction), markedly speeding up impulse propagation.",
+      "topic": "Nerve fibres"
+    },
+    {
+      "question": "Which type of peripheral nerve fibre predominantly transmits slow, chronic pain signals?",
+      "options": [
+        "Aα fibers",
+        "Aβ fibers",
+        "Aδ fibers",
+        "C fibers"
+      ],
+      "answer": 3,
+      "explanation": "Unmyelinated C fibres conduct impulses slowly and are responsible for dull, lingering pain sensations.",
+      "topic": "Nerve fibres"
+    },
+    {
+      "question": "Match the nerve fibre type with its typical sensory or motor function.",
+      "options": [
+        "Aα – proprioception",
+        "Aβ – autonomic control",
+        "Aγ – pain transmission",
+        "C – fast touch"
+      ],
+      "answer": 0,
+      "explanation": "Aα fibres are large, myelinated fibres that convey proprioceptive information from muscle spindles and Golgi tendon organs.",
+      "topic": "Nerve fibres"
+    },
+    {
+      "question": "Efferent nerve fibres are defined as fibres that:",
+      "options": [
+        "Carry impulses from sense organs to CNS",
+        "Carry impulses from CNS to effectors",
+        "Interconnect CNS regions",
+        "Are only present in the autonomic nervous system"
+      ],
+      "answer": 1,
+      "explanation": "Efferent fibres transmit motor commands from the central nervous system to muscles or glands.",
+      "topic": "Nerve fibres"
+    },
+    {
+      "question": "Which statement about the myelin sheath of peripheral nerve fibres is FALSE?",
+      "options": [
+        "It is formed by Schwann cells",
+        "It increases membrane capacitance",
+        "It reduces leakage of ions",
+        "It shortens the refractory period"
+      ],
+      "answer": 1,
+      "explanation": "Myelin actually decreases membrane capacitance, allowing faster voltage changes; the statement that it increases capacitance is incorrect.",
+      "topic": "Nerve fibres"
+    },
+    {
+      "question": "In a mixed spinal nerve, the ventral root contains a greater proportion of which type of fibres?",
+      "options": [
+        "Ventral root",
+        "Dorsal root",
+        "Both equally",
+        "Neither, as spinal nerves contain only unmyelinated fibres"
+      ],
+      "answer": 0,
+      "explanation": "The ventral (motor) root mainly carries myelinated efferent fibres (Aα, Aβ), whereas the dorsal (sensory) root has a mix of myelinated and unmyelinated fibres.",
+      "topic": "Nerve fibres"
+    },
+    {
+      "question": "Which of the following best describes an afferent neuron?",
+      "options": [
+        "It integrates information within the CNS",
+        "It conducts impulses from sensory receptors to the CNS",
+        "It transmits impulses from the CNS to effectors",
+        "It releases acetylcholine at the neuromuscular junction"
+      ],
+      "answer": 1,
+      "explanation": "Afferent (sensory) neurons carry sensory information from peripheral receptors toward the central nervous system.",
+      "topic": "Afferent neurons"
+    },
+    {
+      "question": "The cell bodies of most afferent (sensory) neurons of the spinal nerves are located in:",
+      "options": [
+        "Anterior horn of the spinal cord",
+        "Dorsal root ganglion",
+        "Ventral root",
+        "Autonomic ganglia"
+      ],
+      "answer": 1,
+      "explanation": "Sensory neuron cell bodies reside in the dorsal root (spinal) ganglia, positioned just outside the spinal cord.",
+      "topic": "Afferent neurons"
+    },
+    {
+      "question": "Which statement about the myelination of afferent fibers is correct?",
+      "options": [
+        "All afferent fibers are unmyelinated, resulting in slow conduction",
+        "Only pain fibers are myelinated",
+        "Large‑diameter afferent fibers are myelinated, giving them faster conduction than small‑diameter unmyelinated fibers",
+        "Myelination does not affect conduction velocity in afferent neurons"
+      ],
+      "answer": 2,
+      "explanation": "Large‑diameter sensory fibers (e.g., Aα, Aβ) are myelinated and conduct impulses rapidly, whereas small‑diameter C fibers are unmyelinated and conduct slowly.",
+      "topic": "Afferent neurons"
+    },
+    {
+      "question": "A mechanoreceptor in the skin that detects light touch is connected to which type of afferent neuron?",
+      "options": [
+        "Fast‑conducting, myelinated Aβ fibers",
+        "Slow‑conducting, unmyelinated C fibers",
+        "Fast‑conducting, myelinated Aδ fibers",
+        "Slow‑conducting, myelinated B fibers"
+      ],
+      "answer": 0,
+      "explanation": "Light‑touch mechanoreceptors are innervated by large, myelinated Aβ fibers that have high conduction velocity.",
+      "topic": "Afferent neurons"
+    },
+    {
+      "question": "In a simple monosynaptic stretch reflex, the afferent neuron synapses directly with which neuronal element?",
+      "options": [
+        "Interneuron in the spinal cord",
+        "Motor neuron in the ventral horn",
+        "Sensory neuron in the dorsal root ganglion",
+        "Higher brain centre"
+      ],
+      "answer": 1,
+      "explanation": "The stretch reflex is monosynaptic: the sensory (afferent) neuron contacts the alpha motor neuron in the ventral horn directly.",
+      "topic": "Afferent neurons"
+    },
+    {
+      "question": "Which of the following distinguishes afferent neurons from efferent neurons?",
+      "options": [
+        "Afferent neurons release norepinephrine at their terminals",
+        "Afferent neurons have cell bodies in the ventral horn",
+        "Afferent neurons transmit information toward the CNS, whereas efferent neurons transmit away from the CNS",
+        "Afferent neurons are always unmyelinated"
+      ],
+      "answer": 2,
+      "explanation": "The defining difference is the direction of impulse flow: afferent (sensory) toward the CNS, efferent (motor) away from the CNS.",
+      "topic": "Afferent neurons"
+    },
+    {
+      "question": "A patient loses sensation in the distal part of a limb but retains normal muscle strength. Which lesion is most consistent with this finding?",
+      "options": [
+        "Damage to the ventral (motor) root of the spinal nerve",
+        "Lesion of the dorsal root ganglion",
+        "Injury to the anterior horn cells",
+        "Blockage of the sympathetic chain"
+      ],
+      "answer": 1,
+      "explanation": "A lesion of the dorsal root ganglion disrupts afferent pathways, causing sensory loss while sparing motor function.",
+      "topic": "Afferent neurons"
+    },
+    {
+      "question": "Efferent neurons are primarily responsible for which of the following functions?",
+      "options": [
+        "Transmitting sensory information to the central nervous system",
+        "Carrying motor impulses from the central nervous system to effectors",
+        "Integrating information within the central nervous system",
+        "Forming the myelin sheath around axons"
+      ],
+      "answer": 1,
+      "explanation": "Efferent (motor) neurons convey impulses away from the CNS to muscles or glands, enabling movement or secretion.",
+      "topic": "Efferent neurons"
+    },
+    {
+      "question": "Which characteristic is true of somatic efferent neurons?",
+      "options": [
+        "They innervate cardiac muscle",
+        "They release acetylcholine at all synapses",
+        "Their cell bodies are located in the ventral horn of the spinal cord",
+        "Their pre‑ganglionic fibers synapse in autonomic ganglia"
+      ],
+      "answer": 2,
+      "explanation": "Somatic motor neuron cell bodies reside in the ventral (anterior) horn of the spinal cord and directly innervate skeletal muscles.",
+      "topic": "Efferent neurons"
+    },
+    {
+      "question": "The neurotransmitter released at the neuromuscular junction by skeletal‑muscle efferent fibers is:",
+      "options": [
+        "Norepinephrine",
+        "Acetylcholine",
+        "Dopamine",
+        "GABA"
+      ],
+      "answer": 1,
+      "explanation": "Acetylcholine is the excitatory neurotransmitter released by somatic motor neurons at the neuromuscular junction.",
+      "topic": "Efferent neurons"
+    },
+    {
+      "question": "In the autonomic efferent pathway, the cell body of the pre‑ganglionic neuron is located in:",
+      "options": [
+        "The peripheral ganglion",
+        "The spinal cord or brainstem",
+        "The target organ",
+        "The dorsal root ganglion"
+      ],
+      "answer": 1,
+      "explanation": "Pre‑ganglionic autonomic neurons have their cell bodies in the CNS – the spinal cord (sympathetic) or brainstem (parasympathetic).",
+      "topic": "Efferent neurons"
+    },
+    {
+      "question": "Which statement correctly describes the myelination of autonomic efferent fibers?",
+      "options": [
+        "Both pre‑ganglionic and post‑ganglionic fibers are heavily myelinated",
+        "Pre‑ganglionic fibers are myelinated while most post‑ganglionic fibers are unmyelinated",
+        "Only post‑ganglionic fibers are myelinated",
+        "Neither are myelinated"
+      ],
+      "answer": 1,
+      "explanation": "Pre‑ganglionic fibers are myelinated (B fibers), whereas post‑ganglionic fibers are generally unmyelinated (C fibers).",
+      "topic": "Efferent neurons"
+    },
+    {
+      "question": "During a simple spinal reflex, the efferent component of the reflex arc consists of:",
+      "options": [
+        "Sensory receptor",
+        "Afferent sensory neuron",
+        "Interneuron in the spinal cord",
+        "Motor neuron that innervates the effector muscle"
+      ],
+      "answer": 3,
+      "explanation": "The motor (efferent) neuron transmits the response from the spinal cord to the effector muscle, completing the reflex arc.",
+      "topic": "Efferent neurons"
+    },
+    {
+      "question": "A key difference between sympathetic and parasympathetic efferent pathways is the location of their ganglia. Which option correctly states this difference?",
+      "options": [
+        "Sympathetic ganglia are located close to the target organ, while parasympathetic ganglia are near the spinal cord",
+        "Both have ganglia within the CNS",
+        "Sympathetic ganglia are located near the spinal cord (paravertebral or pre‑vertebral), whereas parasympathetic ganglia are situated near or within the target organ",
+        "Parasympathetic ganglia are absent in the human body"
+      ],
+      "answer": 2,
+      "explanation": "Sympathetic ganglia lie close to the spinal cord (chain or pre‑vertebral), while parasympathetic ganglia are found in or adjacent to the target organs.",
+      "topic": "Efferent neurons"
+    },
+    {
+      "question": "Which part of the central nervous system is primarily responsible for coordination of voluntary movements and balance?",
+      "options": [
+        "Cerebellum",
+        "Medulla oblongata",
+        "Hypothalamus",
+        "Basal ganglia"
+      ],
+      "answer": 0,
+      "explanation": "The cerebellum fine‑tunes motor activity, maintains posture and balance, and coordinates voluntary movements.",
+      "topic": "Central nervous system"
+    },
+    {
+      "question": "The primary motor cortex is located in which lobe of the brain?",
+      "options": [
+        "Parietal lobe",
+        "Frontal lobe",
+        "Temporal lobe",
+        "Occipital lobe"
+      ],
+      "answer": 1,
+      "explanation": "The primary motor cortex (Brodmann area 4) lies in the precentral gyrus of the frontal lobe and initiates voluntary muscle contractions.",
+      "topic": "Central nervous system"
+    },
+    {
+      "question": "Which statement about the blood‑brain barrier (BBB) is correct?",
+      "options": [
+        "It is formed by myelin sheaths of oligodendrocytes",
+        "It is a layer of pia mater that restricts diffusion",
+        "It is formed by tight junctions between endothelial cells of cerebral capillaries",
+        "It is present only in the spinal cord"
+      ],
+      "answer": 2,
+      "explanation": "The BBB results from tight junctions between endothelial cells of cerebral capillaries, limiting passage of many substances from blood to brain tissue.",
+      "topic": "Central nervous system"
+    },
+    {
+      "question": "In the spinal cord, the dorsal (posterior) horns mainly contain cell bodies of which neurons?",
+      "options": [
+        "Motor (efferent) neurons",
+        "Sensory (afferent) neurons",
+        "Interneurons",
+        "Autonomic preganglionic neurons"
+      ],
+      "answer": 1,
+      "explanation": "The dorsal horns receive afferent sensory information; their gray matter houses the cell bodies of sensory neurons.",
+      "topic": "Central nervous system"
+    },
+    {
+      "question": "Which ventricle is continuous with the central canal of the spinal cord?",
+      "options": [
+        "Third ventricle",
+        "Fourth ventricle",
+        "Lateral ventricle",
+        "Aqueduct of Sylvius"
+      ],
+      "answer": 1,
+      "explanation": "The fourth ventricle narrows to form the cerebral aqueduct and continues inferiorly as the central canal of the spinal cord.",
+      "topic": "Central nervous system"
+    },
+    {
+      "question": "The meningeal layer that is directly adherent to the surface of the brain and spinal cord is:",
+      "options": [
+        "Arachnoid mater",
+        "Dura mater",
+        "Pia mater",
+        "Falx cerebri"
+      ],
+      "answer": 2,
+      "explanation": "Pia mater is a thin, delicate membrane that closely follows the contours of the brain and spinal cord.",
+      "topic": "Central nervous system"
+    },
+    {
+      "question": "What is the primary function of the basal ganglia within the central nervous system?",
+      "options": [
+        "Regulation of body temperature",
+        "Initiation and regulation of voluntary motor movements",
+        "Integration of visual and auditory information",
+        "Production of cerebrospinal fluid"
+      ],
+      "answer": 1,
+      "explanation": "The basal ganglia modulate motor control, influencing the initiation, planning and smooth execution of voluntary movements.",
+      "topic": "Central nervous system"
+    },
+    {
+      "question": "Which statement correctly distinguishes the somatic and autonomic divisions of the peripheral nervous system?",
+      "options": [
+        "Somatic innervates skeletal muscle; autonomic innervates cardiac muscle and glands",
+        "Somatic functions are involuntary; autonomic functions are voluntary",
+        "Somatic fibers are unmyelinated; autonomic fibers are myelinated",
+        "Somatic division includes only cranial nerves"
+      ],
+      "answer": 0,
+      "explanation": "The somatic division supplies skeletal muscles for voluntary movement, whereas the autonomic division controls involuntary activities of cardiac muscle, smooth muscle and glands.",
+      "topic": "Peripheral nervous system"
+    },
+    {
+      "question": "The cell bodies of sensory neurons of the peripheral nervous system are located in",
+      "options": [
+        "Dorsal root (spinal) ganglia",
+        "Ventral root ganglia",
+        "Autonomic (pre‑)ganglia",
+        "Substantia gelatinosa of the spinal cord"
+      ],
+      "answer": 0,
+      "explanation": "Sensory (afferent) neuron cell bodies reside in the dorsal root ganglia (also called spinal ganglia) outside the spinal cord.",
+      "topic": "Peripheral nervous system"
+    },
+    {
+      "question": "Which cranial nerve is purely motor and part of the peripheral nervous system?",
+      "options": [
+        "Optic nerve (II)",
+        "Trochlear nerve (IV)",
+        "Vagus nerve (X)",
+        "Facial nerve (VII)"
+      ],
+      "answer": 1,
+      "explanation": "The trochlear nerve (cranial nerve IV) contains only motor fibers that innervate the superior oblique muscle of the eye.",
+      "topic": "Peripheral nervous system"
+    },
+    {
+      "question": "In the peripheral nervous system, the myelination of axons is provided by",
+      "options": [
+        "Schwann cells",
+        "Oligodendrocytes",
+        "Astrocytes",
+        "Microglia"
+      ],
+      "answer": 0,
+      "explanation": "Schwann cells wrap around peripheral axons to form the myelin sheath, whereas oligodendrocytes perform this function in the central nervous system.",
+      "topic": "Peripheral nervous system"
+    },
+    {
+      "question": "The sympathetic division of the autonomic nervous system originates from which region of the spinal cord?",
+      "options": [
+        "Cervical enlargement",
+        "Thoracolumbar region (T1–L2)",
+        "Sacral region (S2–S4)",
+        "Lumbar enlargement"
+      ],
+      "answer": 1,
+      "explanation": "Sympathetic pre‑ganglionic neurons arise from the intermediolateral cell column of the thoracolumbar spinal cord (T1 to L2).",
+      "topic": "Peripheral nervous system"
+    },
+    {
+      "question": "Which pathway correctly describes a simple spinal reflex arc involving the peripheral nervous system?",
+      "options": [
+        "Sensory neuron → spinal interneuron → motor neuron → effector muscle",
+        "Motor neuron → spinal interneuron → sensory neuron → effector muscle",
+        "Sensory neuron → brain → motor neuron → effector muscle",
+        "Motor neuron → brain → sensory neuron → effector muscle"
+      ],
+      "answer": 0,
+      "explanation": "A typical monosynaptic or polysynaptic reflex arc consists of an afferent sensory neuron, one or more interneurons in the spinal cord, and an efferent motor neuron that activates the effector.",
+      "topic": "Peripheral nervous system"
+    },
+    {
+      "question": "Parasympathetic pre‑ganglionic fibers in the peripheral nervous system are characterized by which pattern of fiber length?",
+      "options": [
+        "Long pre‑ganglionic, short post‑ganglionic",
+        "Short pre‑ganglionic, long post‑ganglionic",
+        "Both long pre‑ and post‑ganglionic",
+        "Both short pre‑ and post‑ganglionic"
+      ],
+      "answer": 0,
+      "explanation": "Parasympathetic pathways have long pre‑ganglionic fibers that reach near or within the target organ, followed by short post‑ganglionic fibers to the effector.",
+      "topic": "Peripheral nervous system"
+    },
+    {
+      "question": "Which cerebral lobe is primarily responsible for processing visual information?",
+      "options": [
+        "Frontal lobe",
+        "Parietal lobe",
+        "Occipital lobe",
+        "Temporal lobe"
+      ],
+      "answer": 2,
+      "explanation": "The occipital lobe, located at the posterior part of the cerebral cortex, contains the primary visual cortex (V1) that receives and interprets visual signals.",
+      "topic": "Brain"
+    },
+    {
+      "question": "The thick band of nerve fibers that connects the two cerebral hemispheres is called:",
+      "options": [
+        "Corpus callosum",
+        "Anterior commissure",
+        "Posterior pituitary",
+        "Medulla oblongata"
+      ],
+      "answer": 0,
+      "explanation": "The corpus callosum is the largest commissural fiber tract, allowing interhemispheric communication of sensory, motor, and cognitive information.",
+      "topic": "Brain"
+    },
+    {
+      "question": "Which part of the brain directly regulates vital autonomic functions such as heart rate and respiration?",
+      "options": [
+        "Cerebellum",
+        "Medulla oblongata",
+        "Hypothalamus",
+        "Basal ganglia"
+      ],
+      "answer": 1,
+      "explanation": "The medulla oblongata, situated in the brainstem, contains the cardiac and respiratory centers that control heart rate, blood pressure, and breathing rhythm.",
+      "topic": "Brain"
+    },
+    {
+      "question": "The primary motor cortex is located in which gyrus of the frontal lobe?",
+      "options": [
+        "Precentral gyrus",
+        "Postcentral gyrus",
+        "Superior temporal gyrus",
+        "Cingulate gyrus"
+      ],
+      "answer": 0,
+      "explanation": "The precentral gyrus, also known as Brodmann area 4, houses the upper motor neurons that initiate voluntary skeletal muscle movements.",
+      "topic": "Brain"
+    },
+    {
+      "question": "Which brain nucleus acts as the major relay station for sensory information en route to the cerebral cortex?",
+      "options": [
+        "Thalamus",
+        "Hypothalamus",
+        "Amygdala",
+        "Substantia nigra"
+      ],
+      "answer": 0,
+      "explanation": "The thalamus receives afferent sensory signals (except olfaction) and projects them to appropriate cortical areas for further processing.",
+      "topic": "Brain"
+    },
+    {
+      "question": "A lesion in Broca's area typically results in which type of speech impairment?",
+      "options": [
+        "Fluent aphasia",
+        "Non‑fluent aphasia",
+        "Wernicke's aphasia",
+        "Global aphasia"
+      ],
+      "answer": 1,
+      "explanation": "Broca's area, located in the posterior inferior frontal gyrus, governs speech production; damage leads to effortful, halting speech with relatively preserved comprehension (non‑fluent aphasia).",
+      "topic": "Brain"
+    },
+    {
+      "question": "Which structure of the limbic system is essential for the formation of new declarative memories?",
+      "options": [
+        "Hippocampus",
+        "Cerebellum",
+        "Pons",
+        "Caudate nucleus"
+      ],
+      "answer": 0,
+      "explanation": "The hippocampus consolidates short‑term declarative memories into long‑term storage; lesions cause anterograde amnesia.",
+      "topic": "Brain"
+    },
+    {
+      "question": "The maintenance of the blood‑brain barrier is primarily attributed to which type of glial cell?",
+      "options": [
+        "Astrocytes",
+        "Oligodendrocytes",
+        "Microglia",
+        "Ependymal cells"
+      ],
+      "answer": 0,
+      "explanation": "Astrocytic end‑feet surround cerebral capillaries, secreting factors that tighten endothelial junctions and thus preserve the selective permeability of the blood‑brain barrier.",
+      "topic": "Brain"
+    },
+    {
+      "question": "Which region of the spinal cord contains the cell bodies of lower motor neurons that innervate skeletal muscles?",
+      "options": [
+        "Dorsal horn",
+        "Ventral horn",
+        "Lateral horn",
+        "Central canal"
+      ],
+      "answer": 1,
+      "explanation": "The ventral (anterior) horn of the spinal cord gray matter houses the cell bodies of lower motor neurons whose axons exit via ventral roots to innervate skeletal muscles.",
+      "topic": "Spinal cord"
+    },
+    {
+      "question": "Preganglionic sympathetic neurons originate from which part of the spinal cord?",
+      "options": [
+        "Cervical enlargement",
+        "Thoracic region",
+        "Lumbar enlargement",
+        "Sacral region"
+      ],
+      "answer": 1,
+      "explanation": "Sympathetic preganglionic cell bodies are located in the intermediolateral cell column of the thoracic (T1‑L2) segments of the spinal cord.",
+      "topic": "Spinal cord"
+    },
+    {
+      "question": "Fine touch, vibration and proprioceptive sensations from the lower limbs travel to the brain primarily in which spinal tract?",
+      "options": [
+        "Spinothalamic tract",
+        "Corticospinal tract",
+        "Dorsal column‑medial lemniscal pathway",
+        "Rubrospinal tract"
+      ],
+      "answer": 2,
+      "explanation": "The dorsal column‑medial lemniscal pathway (fasciculus gracilis for lower limbs) conveys fine touch, vibration and proprioception to the medulla.",
+      "topic": "Spinal cord"
+    },
+    {
+      "question": "The anterior two‑thirds of the spinal cord receive their main arterial supply from which vessel?",
+      "options": [
+        "Anterior spinal artery",
+        "Posterior spinal arteries",
+        "Radicular arteries",
+        "Vertebral arteries"
+      ],
+      "answer": 0,
+      "explanation": "The anterior spinal artery, reinforced by radicular (segmental) arteries, supplies the anterior (ventral) two‑thirds of the spinal cord, including the anterior horns and corticospinal tracts.",
+      "topic": "Spinal cord"
+    },
+    {
+      "question": "A complete transection of the spinal cord at the T12 level would most likely result in which of the following?",
+      "options": [
+        "Loss of sensation below T12",
+        "Loss of motor function below T12",
+        "Loss of both sensation and motor function below T12",
+        "Preservation of segmental reflexes below T12"
+      ],
+      "answer": 3,
+      "explanation": "Although voluntary motor and sensory pathways are interrupted, the local spinal reflex arcs remain intact, so reflexes below the lesion are preserved.",
+      "topic": "Spinal cord"
+    },
+    {
+      "question": "Prominent lateral horns are a characteristic feature of which spinal cord region?",
+      "options": [
+        "Cervical",
+        "Thoracic",
+        "Lumbar",
+        "Sacral"
+      ],
+      "answer": 1,
+      "explanation": "Lateral (intermediolateral) horns are well developed in the thoracic segments where sympathetic preganglionic neurons reside.",
+      "topic": "Spinal cord"
+    },
+    {
+      "question": "Which statement about the central canal of the spinal cord is correct?",
+      "options": [
+        "It contains cerebrospinal fluid",
+        "It is continuous with the fourth ventricle",
+        "It is lined by ependymal cells",
+        "All of the above"
+      ],
+      "answer": 3,
+      "explanation": "The central canal is a CSF‑filled cavity lined by ependymal cells and is continuous with the ventricular system via the fourth ventricle.",
+      "topic": "Spinal cord"
+    },
+    {
+      "question": "Which cranial nerve is responsible for taste sensation from the anterior two‑thirds of the tongue?",
+      "options": [
+        "Facial (VII)",
+        "Glossopharyngeal (IX)",
+        "Vagus (X)",
+        "Trigeminal (V)"
+      ],
+      "answer": 0,
+      "explanation": "The facial nerve (VII) carries taste fibers from the anterior two‑thirds of the tongue via the chorda tympani.",
+      "topic": "Cranial nerves"
+    },
+    {
+      "question": "Which cranial nerve supplies parasympathetic fibers to the lacrimal gland?",
+      "options": [
+        "Oculomotor (III)",
+        "Facial (VII)",
+        "Trochlear (IV)",
+        "Abducens (VI)"
+      ],
+      "answer": 1,
+      "explanation": "Parasympathetic secretomotor fibers to the lacrimal gland travel in the facial nerve (VII) through the greater petrosal and pterygopalatine ganglia.",
+      "topic": "Cranial nerves"
+    },
+    {
+      "question": "Which cranial nerve is a purely motor nerve that innervates the intrinsic and extrinsic muscles of the tongue?",
+      "options": [
+        "Glossopharyngeal (IX)",
+        "Hypoglossal (XII)",
+        "Vagus (X)",
+        "Accessory (XI)"
+      ],
+      "answer": 1,
+      "explanation": "The hypoglossal nerve (XII) is the only cranial nerve that is exclusively motor and supplies all tongue muscles.",
+      "topic": "Cranial nerves"
+    },
+    {
+      "question": "Taste from the posterior one‑third of the tongue is carried by which cranial nerve?",
+      "options": [
+        "Facial (VII)",
+        "Glossopharyngeal (IX)",
+        "Vagus (X)",
+        "Trigeminal (V)"
+      ],
+      "answer": 1,
+      "explanation": "The glossopharyngeal nerve (IX) conveys taste sensation from the posterior one‑third of the tongue via the tympanic branch.",
+      "topic": "Cranial nerves"
+    },
+    {
+      "question": "Sensory innervation of the skin of the face is provided by which cranial nerve?",
+      "options": [
+        "Trigeminal (V)",
+        "Facial (VII)",
+        "Oculomotor (III)",
+        "Vestibulocochlear (VIII)"
+      ],
+      "answer": 0,
+      "explanation": "The trigeminal nerve (V) is the principal sensory nerve of the face, supplying cutaneous sensation to all facial regions.",
+      "topic": "Cranial nerves"
+    },
+    {
+      "question": "The afferent limb of the corneal (blink) reflex is mediated by which cranial nerve?",
+      "options": [
+        "Facial (VII)",
+        "Trigeminal (V)",
+        "Oculomotor (III)",
+        "Abducens (VI)"
+      ],
+      "answer": 1,
+      "explanation": "Sensory fibers from the cornea travel via the nasociliary branch of the ophthalmic division of the trigeminal nerve (V1) to initiate the reflex.",
+      "topic": "Cranial nerves"
+    },
+    {
+      "question": "Which cranial nerve carries both general somatic afferent and special visceral efferent fibers and contributes to innervation of the soft palate muscles?",
+      "options": [
+        "Glossopharyngeal (IX)",
+        "Vagus (X)",
+        "Accessory (XI)",
+        "Hypoglossal (XII)"
+      ],
+      "answer": 1,
+      "explanation": "The vagus nerve (X) provides motor (special visceral efferent) innervation to the soft palate muscles through the pharyngeal plexus, while also carrying general somatic afferent fibers.",
+      "topic": "Cranial nerves"
+    },
+    {
+      "question": "How many pairs of spinal nerves are present in the human body?",
+      "options": [
+        "30",
+        "31",
+        "32",
+        "33"
+      ],
+      "answer": 1,
+      "explanation": "Humans have 31 pairs of spinal nerves: 8 cervical, 12 thoracic, 5 lumbar, 5 sacral, and 1 coccygeal.",
+      "topic": "Spinal nerves"
+    },
+    {
+      "question": "Which spinal nerves are formed by the union of ventral and dorsal roots at the intervertebral foramen?",
+      "options": [
+        "Cervical nerves only",
+        "Thoracic nerves only",
+        "All spinal nerves",
+        "Sacral nerves only"
+      ],
+      "answer": 2,
+      "explanation": "At each spinal segment, the dorsal (sensory) and ventral (motor) roots merge to form a mixed spinal nerve; this occurs for all spinal nerves.",
+      "topic": "Spinal nerves"
+    },
+    {
+      "question": "The dermatome supplied by the T10 spinal nerve corresponds to which region of the body?",
+      "options": [
+        "Upper abdomen above the umbilicus",
+        "Umbilical region",
+        "Lower abdomen below the umbilicus",
+        "Groin region"
+      ],
+      "answer": 1,
+      "explanation": "The T10 dermatome is classically mapped to the area around the umbilicus.",
+      "topic": "Spinal nerves"
+    },
+    {
+      "question": "A lesion of the ventral primary ramus of the L4 spinal nerve would most likely cause weakness of which muscle action?",
+      "options": [
+        "Extension of the knee",
+        "Flexion of the hip",
+        "Dorsiflexion of the foot",
+        "Plantarflexion of the foot"
+      ],
+      "answer": 0,
+      "explanation": "The L4 ventral ramus contributes to the femoral nerve, which innervates quadriceps muscles responsible for knee extension.",
+      "topic": "Spinal nerves"
+    },
+    {
+      "question": "Which statement correctly describes the composition of a typical spinal nerve?",
+      "options": [
+        "Contains only sensory fibers",
+        "Contains only motor fibers",
+        "Contains both sensory and motor fibers",
+        "Contains only autonomic fibers"
+      ],
+      "answer": 2,
+      "explanation": "Spinal nerves are mixed nerves; they carry afferent (sensory) fibers from dorsal roots and efferent (motor) fibers from ventral roots.",
+      "topic": "Spinal nerves"
+    },
+    {
+      "question": "The spinal nerve that exits above its corresponding vertebra is:",
+      "options": [
+        "C1",
+        "C5",
+        "T1",
+        "L2"
+      ],
+      "answer": 1,
+      "explanation": "In the cervical region, spinal nerves C1–C7 exit above the vertebra of the same number; C5 therefore exits above the C5 vertebra.",
+      "topic": "Spinal nerves"
+    },
+    {
+      "question": "In the patellar (knee‑jerk) reflex arc, which spinal segment provides the afferent (sensory) input?",
+      "options": [
+        "L2",
+        "L4",
+        "S1",
+        "T12"
+      ],
+      "answer": 1,
+      "explanation": "The patellar reflex is mediated primarily by the L4 spinal segment (with contribution from L2–L3), transmitting sensory input via the femoral nerve.",
+      "topic": "Spinal nerves"
+    },
+    {
+      "question": "Which of the following best describes the somatic nervous system?",
+      "options": [
+        "Controls involuntary smooth muscle activity",
+        "Relays sensory information from internal organs to CNS",
+        "Innervates skeletal muscles and mediates voluntary movements",
+        "Regulates endocrine secretions"
+      ],
+      "answer": 2,
+      "explanation": "The somatic nervous system supplies skeletal muscles and is responsible for voluntary motor control, unlike the autonomic system which governs involuntary functions.",
+      "topic": "Somatic nervous system"
+    },
+    {
+      "question": "The efferent fibers of the somatic nervous system originate from which part of the CNS?",
+      "options": [
+        "Hypothalamus",
+        "Ventral horn of the spinal cord",
+        "Cerebellar nuclei",
+        "Dorsal root ganglion"
+      ],
+      "answer": 1,
+      "explanation": "Somatic motor neurons have their cell bodies in the ventral (anterior) horn of the spinal cord, from where their axons exit as efferent fibers.",
+      "topic": "Somatic nervous system"
+    },
+    {
+      "question": "Which cranial nerve is primarily involved in somatic motor control of the muscles of mastication?",
+      "options": [
+        "Facial nerve (VII)",
+        "Trigeminal nerve (V)",
+        "Hypoglossal nerve (XII)",
+        "Oculomotor nerve (III)"
+      ],
+      "answer": 1,
+      "explanation": "The mandibular division of the trigeminal nerve (CN V) supplies the muscles of mastication, making it the main somatic motor cranial nerve for chewing.",
+      "topic": "Somatic nervous system"
+    },
+    {
+      "question": "In a typical reflex arc mediated by the somatic nervous system, the sensory neuron synapses directly with the motor neuron in the spinal cord. This type of reflex is called:",
+      "options": [
+        "Monosynaptic reflex",
+        "Polysynaptic reflex",
+        "Autonomic reflex",
+        "Central reflex"
+      ],
+      "answer": 0,
+      "explanation": "A monosynaptic reflex, such as the knee‑jerk (patellar) reflex, involves a single synapse between a sensory (afferent) neuron and a motor (efferent) neuron.",
+      "topic": "Somatic nervous system"
+    },
+    {
+      "question": "The myelination of somatic motor axons in the peripheral nervous system is provided by:",
+      "options": [
+        "Oligodendrocytes",
+        "Schwann cells",
+        "Satellite cells",
+        "Microglia"
+      ],
+      "answer": 1,
+      "explanation": "In the PNS, Schwann cells wrap around axons to form the myelin sheath, including those of somatic motor neurons.",
+      "topic": "Somatic nervous system"
+    },
+    {
+      "question": "Which statement correctly differentiates the somatic and autonomic nervous systems?",
+      "options": [
+        "Somatic nerves have cell bodies in dorsal root ganglia, autonomic nerves have cell bodies in the spinal cord",
+        "Somatic system controls skeletal muscles, autonomic system controls cardiac and smooth muscles",
+        "Both systems use cholinergic neurotransmission at all synapses",
+        "Autonomic system is under conscious control, somatic is not"
+      ],
+      "answer": 1,
+      "explanation": "The somatic nervous system innervates skeletal muscles, while the autonomic nervous system regulates involuntary cardiac, smooth muscle and glandular activity.",
+      "topic": "Somatic nervous system"
+    },
+    {
+      "question": "The neuromuscular junction, where a somatic motor neuron communicates with a skeletal muscle fiber, releases which neurotransmitter?",
+      "options": [
+        "Acetylcholine",
+        "Norepinephrine",
+        "Dopamine",
+        "Serotonin"
+      ],
+      "answer": 0,
+      "explanation": "Acetylcholine is the excitatory neurotransmitter released at the motor end‑plate of the neuromuscular junction, triggering muscle contraction.",
+      "topic": "Somatic nervous system"
+    },
+    {
+      "question": "Which neurotransmitter is released by preganglionic neurons of both sympathetic and parasympathetic divisions of the autonomic nervous system?",
+      "options": [
+        "Acetylcholine",
+        "Norepinephrine",
+        "Dopamine",
+        "Epinephrine"
+      ],
+      "answer": 0,
+      "explanation": "Preganglionic fibers of both divisions are cholinergic and release acetylcholine onto the postganglionic neuron.",
+      "topic": "Autonomic nervous system"
+    },
+    {
+      "question": "In the sympathetic division, the majority of postganglionic neurons release which neurotransmitter?",
+      "options": [
+        "Acetylcholine",
+        "Norepinephrine",
+        "Serotonin",
+        "GABA"
+      ],
+      "answer": 1,
+      "explanation": "Most sympathetic postganglionic neurons are adrenergic and secrete norepinephrine; only a few (e.g., sweat glands) release acetylcholine.",
+      "topic": "Autonomic nervous system"
+    },
+    {
+      "question": "Which structure receives exclusive parasympathetic innervation with no sympathetic input?",
+      "options": [
+        "Iris sphincter muscle (pupil constrictor)",
+        "Sweat glands of the forearm",
+        "Adrenal medulla",
+        "Salivary glands"
+      ],
+      "answer": 0,
+      "explanation": "The sphincter pupillae (iris sphincter) is innervated only by parasympathetic fibers; its dilator counterpart receives sympathetic input.",
+      "topic": "Autonomic nervous system"
+    },
+    {
+      "question": "The ganglia that lie alongside the vertebral column in the sympathetic chain are called:",
+      "options": [
+        "Prevertebral ganglia",
+        "Paravertebral (sympathetic chain) ganglia",
+        "Terminal ganglia",
+        "Intramural ganglia"
+      ],
+      "answer": 1,
+      "explanation": "Ganglia situated adjacent to the spinal cord form the paravertebral or sympathetic chain ganglia.",
+      "topic": "Autonomic nervous system"
+    },
+    {
+      "question": "Which effect on the heart is produced by sympathetic stimulation?",
+      "options": [
+        "Decreases heart rate",
+        "Increases contractility of cardiac muscle",
+        "Decreases AV node conduction velocity",
+        "Causes vasodilation of coronary arteries"
+      ],
+      "answer": 1,
+      "explanation": "Sympathetic activation increases both heart rate and myocardial contractility via β1‑adrenergic receptors.",
+      "topic": "Autonomic nervous system"
+    },
+    {
+      "question": "Parasympathetic actions on target organs are mediated primarily through which type of receptor?",
+      "options": [
+        "α1‑adrenergic receptors",
+        "β2‑adrenergic receptors",
+        "Muscarinic cholinergic receptors",
+        "Nicotinic neuronal receptors"
+      ],
+      "answer": 2,
+      "explanation": "Parasympathetic postganglionic fibers release acetylcholine that acts on muscarinic receptors of the target organ.",
+      "topic": "Autonomic nervous system"
+    },
+    {
+      "question": "Why is the adrenal medulla considered a modified sympathetic ganglion?",
+      "options": [
+        "It releases acetylcholine onto the adrenal cortex",
+        "It receives preganglionic sympathetic fibers and releases catecholamines directly into the bloodstream",
+        "It is innervated by parasympathetic fibers",
+        "It contains postganglionic neurons that synapse on skeletal muscle"
+      ],
+      "answer": 1,
+      "explanation": "The adrenal medulla is innervated by preganglionic sympathetic fibers; chromaffin cells act like postganglionic neurons, secreting epinephrine and norepinephrine into the blood.",
+      "topic": "Autonomic nervous system"
+    },
+    {
+      "question": "From which region of the spinal cord do the preganglionic neurons of the sympathetic nervous system originate?",
+      "options": [
+        "Cervical enlargement (C1-C5)",
+        "Thoracolumbar region (T1‑L2)",
+        "Sacral region (S2‑S4)",
+        "Cranial nerve nuclei"
+      ],
+      "answer": 1,
+      "explanation": "Sympathetic preganglionic cell bodies are located in the intermediolateral cell column of the thoracolumbar spinal cord (T1 to L2).",
+      "topic": "Sympathetic nervous system"
+    },
+    {
+      "question": "What is the primary neurotransmitter released by most sympathetic postganglionic neurons onto their target organs?",
+      "options": [
+        "Acetylcholine",
+        "Norepinephrine",
+        "Dopamine",
+        "Serotonin"
+      ],
+      "answer": 1,
+      "explanation": "The majority of sympathetic postganglionic fibers release norepinephrine, which acts on adrenergic receptors of the target tissue.",
+      "topic": "Sympathetic nervous system"
+    },
+    {
+      "question": "Which of the following is an exception where sympathetic postganglionic fibers release acetylcholine instead of norepinephrine?",
+      "options": [
+        "Sweat glands of the body",
+        "Cardiac pacemaker cells",
+        "Dilator pupillae muscle",
+        "Blood vessels of skeletal muscle"
+      ],
+      "answer": 0,
+      "explanation": "Sympathetic innervation of eccrine sweat glands uses acetylcholine acting on muscarinic receptors, unlike most other sympathetic postganglionic fibers.",
+      "topic": "Sympathetic nervous system"
+    },
+    {
+      "question": "Sympathetic stimulation of the eye produces which of the following effects?",
+      "options": [
+        "Constriction of the pupil (miosis)",
+        "Dilation of the pupil (mydriasis)",
+        "Accommodation of the lens",
+        "Increase in intra‑ocular pressure"
+      ],
+      "answer": 1,
+      "explanation": "Activation of sympathetic fibers innervating the dilator pupillae muscle causes pupil dilation (mydriasis).",
+      "topic": "Sympathetic nervous system"
+    },
+    {
+      "question": "Why is the adrenal medulla considered a modified sympathetic ganglion?",
+      "options": [
+        "It receives parasympathetic preganglionic fibers",
+        "Its chromaffin cells release epinephrine directly into the bloodstream",
+        "It secretes acetylcholine as its primary neurotransmitter",
+        "It is innervated by somatic motor neurons"
+      ],
+      "answer": 1,
+      "explanation": "The adrenal medulla receives direct sympathetic preganglionic cholinergic input; its chromaffin cells act like postganglionic neurons and secrete epinephrine (and norepinephrine) into the blood.",
+      "topic": "Sympathetic nervous system"
+    },
+    {
+      "question": "Increased heart rate during sympathetic activation is mediated primarily by which receptor subtype on the sino‑atrial node?",
+      "options": [
+        "Muscarinic M2 receptors",
+        "Alpha‑1 adrenergic receptors",
+        "Beta‑1 adrenergic receptors",
+        "Beta‑2 adrenergic receptors"
+      ],
+      "answer": 2,
+      "explanation": "Beta‑1 adrenergic receptors on the SA node respond to norepinephrine, increasing the rate of depolarization and thus heart rate.",
+      "topic": "Sympathetic nervous system"
+    },
+    {
+      "question": "During the fight‑or‑flight response, cutaneous vasoconstriction is mainly mediated by which adrenergic receptor type?",
+      "options": [
+        "Alpha‑1 adrenergic receptors",
+        "Beta‑2 adrenergic receptors",
+        "Muscarinic receptors",
+        "Nicotinic receptors"
+      ],
+      "answer": 0,
+      "explanation": "Alpha‑1 adrenergic receptors on cutaneous blood vessels cause vasoconstriction, diverting blood to skeletal muscles during stress.",
+      "topic": "Sympathetic nervous system"
+    },
+    {
+      "question": "Which of the following cranial nerves does NOT contain parasympathetic fibers?",
+      "options": [
+        "Olfactory nerve (I)",
+        "Oculomotor nerve (III)",
+        "Facial nerve (VII)",
+        "Vagus nerve (X)"
+      ],
+      "answer": 0,
+      "explanation": "The olfactory nerve (I) is purely sensory and carries no parasympathetic efferent fibers, whereas III, VII and X convey parasympathetic output to various organs.",
+      "topic": "Parasympathetic nervous system"
+    },
+    {
+      "question": "Parasympathetic pre‑ganglionic fibers are characterized by which combination of fibre lengths?",
+      "options": [
+        "Short pre‑ganglionic and long post‑ganglionic",
+        "Long pre‑ganglionic and short post‑ganglionic",
+        "Both short",
+        "Both long"
+      ],
+      "answer": 1,
+      "explanation": "Parasympathetic pathways have long pre‑ganglionic fibres that reach ganglia close to or within the target organ, and short post‑ganglionic fibres that innervate the effector.",
+      "topic": "Parasympathetic nervous system"
+    },
+    {
+      "question": "What is the principal neurotransmitter released by parasympathetic post‑ganglionic neurons?",
+      "options": [
+        "Norepinephrine",
+        "Acetylcholine",
+        "Dopamine",
+        "Serotonin"
+      ],
+      "answer": 1,
+      "explanation": "Parasympathetic post‑ganglionic neurons release acetylcholine, which acts on muscarinic receptors of the target tissues.",
+      "topic": "Parasympathetic nervous system"
+    },
+    {
+      "question": "Activation of the parasympathetic nervous system on the heart primarily results in:",
+      "options": [
+        "Increase heart rate",
+        "Decrease heart rate",
+        "Increase myocardial contractility",
+        "No effect on heart"
+      ],
+      "answer": 1,
+      "explanation": "Parasympathetic stimulation via the vagus nerve releases acetylcholine on M2 receptors in the SA node, slowing the heart rate (negative chronotropic effect).",
+      "topic": "Parasympathetic nervous system"
+    },
+    {
+      "question": "Parasympathetic stimulation of the eye leads to which pupil response?",
+      "options": [
+        "Mydriasis (pupil dilation)",
+        "Miosis (pupil constriction)",
+        "No change in pupil size",
+        "Constriction of the lens"
+      ],
+      "answer": 1,
+      "explanation": "Parasympathetic fibers (via CN III) cause contraction of the sphincter pupillae muscle, producing miosis.",
+      "topic": "Parasympathetic nervous system"
+    },
+    {
+      "question": "Where are the ganglia of the parasympathetic division typically located?",
+      "options": [
+        "Near the spinal cord",
+        "Within the target organ",
+        "In the sympathetic chain ganglia",
+        "In the adrenal medulla"
+      ],
+      "answer": 1,
+      "explanation": "Parasympathetic ganglia are usually situated in or very close to the effector organ, allowing short post‑ganglionic fibres.",
+      "topic": "Parasympathetic nervous system"
+    },
+    {
+      "question": "Which receptor subtype mediates most parasympathetic effects on smooth muscle and glands?",
+      "options": [
+        "Muscarinic M2 receptors",
+        "Muscarinic M3 receptors",
+        "Nicotinic neuronal receptors",
+        "Alpha‑1 adrenergic receptors"
+      ],
+      "answer": 1,
+      "explanation": "Muscarinic M3 receptors are the predominant subtype on smooth muscle and glandular tissue, mediating contraction and secretion in response to acetylcholine.",
+      "topic": "Parasympathetic nervous system"
+    },
+    {
+      "question": "Which sequence correctly describes the events in a simple spinal reflex arc?",
+      "options": [
+        "Receptor → Afferent neuron → Integration center → Efferent neuron → Effector",
+        "Receptor → Integration center → Afferent neuron → Effector → Efferent neuron",
+        "Receptor → Efferent neuron → Integration center → Afferent neuron → Effector",
+        "Receptor → Afferent neuron → Effector → Integration center → Efferent neuron"
+      ],
+      "answer": 0,
+      "explanation": "A reflex arc starts at the receptor, the impulse travels via an afferent neuron to the integration centre (usually the spinal cord), then via an efferent neuron to the effector.",
+      "topic": "Reflex action"
+    },
+    {
+      "question": "In the knee‑jerk (patellar) reflex, the sensory neuron directly synapses with which type of neuron?",
+      "options": [
+        "Interneuron",
+        "Motor neuron",
+        "Both interneuron and motor neuron",
+        "Sensory neuron"
+      ],
+      "answer": 1,
+      "explanation": "The patellar reflex is monosynaptic; the afferent sensory neuron synapses directly with a motor neuron that innervates the quadriceps.",
+      "topic": "Reflex action"
+    },
+    {
+      "question": "Which statement about reflex actions is FALSE?",
+      "options": [
+        "They are always under conscious control",
+        "They involve a short pathway",
+        "They protect the body from injury",
+        "They are rapid"
+      ],
+      "answer": 0,
+      "explanation": "Reflexes are automatic and do not require conscious control; they are protective, rapid, and involve short neural pathways.",
+      "topic": "Reflex action"
+    },
+    {
+      "question": "The latency period of a reflex is primarily determined by:",
+      "options": [
+        "Strength of the stimulus",
+        "Number of synapses in the reflex arc",
+        "Size of the effector muscle",
+        "Presence of myelin"
+      ],
+      "answer": 1,
+      "explanation": "Each synapse introduces a delay; fewer synapses (as in monosynaptic reflexes) result in shorter latency.",
+      "topic": "Reflex action"
+    },
+    {
+      "question": "Which of the following is an example of a polysynaptic reflex?",
+      "options": [
+        "Patellar reflex",
+        "Withdrawal reflex",
+        "Pupillary light reflex",
+        "Golgi tendon reflex"
+      ],
+      "answer": 1,
+      "explanation": "The withdrawal reflex involves one or more interneurons between the sensory and motor neurons, making it polysynaptic.",
+      "topic": "Reflex action"
+    },
+    {
+      "question": "The efferent pathway that carries impulses to skeletal muscles in a reflex action belongs to which division of the nervous system?",
+      "options": [
+        "Autonomic nervous system",
+        "Central nervous system",
+        "Somatic nervous system",
+        "Peripheral nervous system"
+      ],
+      "answer": 2,
+      "explanation": "Motor impulses to skeletal muscles are part of the somatic nervous system, a component of the peripheral nervous system.",
+      "topic": "Reflex action"
+    },
+    {
+      "question": "Why are reflex actions faster than voluntary movements?",
+      "options": [
+        "Reflexes use larger diameter axons",
+        "Reflexes have higher threshold",
+        "Reflexes bypass the brain",
+        "Reflexes involve more neurons"
+      ],
+      "answer": 2,
+      "explanation": "Reflex arcs are processed at the spinal cord level, avoiding the time required for signals to travel to and from the brain.",
+      "topic": "Reflex action"
+    },
+    {
+      "question": "Which of the following correctly lists the sequence of events in a simple spinal reflex arc?",
+      "options": [
+        "Receptor → Afferent neuron → Integration center → Efferent neuron → Effector",
+        "Receptor → Efferent neuron → Integration center → Afferent neuron → Effector",
+        "Effector → Afferent neuron → Integration center → Efferent neuron → Receptor",
+        "Receptor → Integration center → Afferent neuron → Efferent neuron → Effector"
+      ],
+      "answer": 0,
+      "explanation": "A reflex arc starts at a sensory receptor, the impulse travels via an afferent neuron to the integration centre (usually the spinal cord), then via an efferent neuron to the effector organ.",
+      "topic": "Reflex arc"
+    },
+    {
+      "question": "In the monosynaptic stretch reflex (knee‑jerk), the sensory neuron synapses directly with which type of neuron?",
+      "options": [
+        "Interneuron",
+        "Motor neuron",
+        "Sensory neuron",
+        "Glial cell"
+      ],
+      "answer": 1,
+      "explanation": "The Ia afferent from the muscle spindle makes a direct excitatory synapse on the alpha‑motor neuron that innervates the same muscle, making it a monosynaptic reflex.",
+      "topic": "Reflex arc"
+    },
+    {
+      "question": "Which statement about the dorsal root ganglion (DRG) in a reflex arc is correct?",
+      "options": [
+        "It contains the cell bodies of efferent motor neurons.",
+        "It houses the synaptic terminals of sensory neurons.",
+        "It contains the cell bodies of primary afferent neurons.",
+        "It is the site where integration of sensory input occurs."
+      ],
+      "answer": 2,
+      "explanation": "The DRG holds the cell bodies of the pseudo‑unipolar sensory neurons whose peripheral processes act as receptors and central processes enter the spinal cord.",
+      "topic": "Reflex arc"
+    },
+    {
+      "question": "A withdrawal reflex from a painful stimulus is classified as which type of reflex?",
+      "options": [
+        "Simple monosynaptic reflex",
+        "Polysynaptic reflex",
+        "Autonomic reflex",
+        "Reflex mediated by the cerebellum"
+      ],
+      "answer": 1,
+      "explanation": "Withdrawal involves at least one interneuron between the sensory and motor neurons, making it a polysynaptic reflex.",
+      "topic": "Reflex arc"
+    },
+    {
+      "question": "In a spinal reflex, the principal cause of the time delay between stimulus and response is:",
+      "options": [
+        "Length of the sensory axon",
+        "Number of synapses in the reflex pathway",
+        "Speed of neurotransmitter release at the neuromuscular junction",
+        "Presence of myelin sheath on motor axons"
+      ],
+      "answer": 1,
+      "explanation": "Each synaptic transmission adds a few milliseconds; more synapses (as in polysynaptic reflexes) increase the overall latency.",
+      "topic": "Reflex arc"
+    },
+    {
+      "question": "Which best describes the difference between a somatic reflex and an autonomic reflex?",
+      "options": [
+        "Somatic reflexes involve skeletal muscles; autonomic reflexes involve smooth muscle, cardiac muscle or glands.",
+        "Somatic reflexes are mediated only by the brain; autonomic reflexes are mediated only by the spinal cord.",
+        "Somatic reflexes have longer latency than autonomic reflexes.",
+        "Somatic reflexes do not involve interneurons, whereas autonomic reflexes always do."
+      ],
+      "answer": 0,
+      "explanation": "Somatic reflexes control skeletal muscles, while autonomic reflexes regulate involuntary effectors such as smooth muscle, cardiac muscle and glands.",
+      "topic": "Reflex arc"
+    },
+    {
+      "question": "In the stretch reflex, which change in muscle‑spindle activity will most likely increase the magnitude of the reflex contraction?",
+      "options": [
+        "Decrease in the firing rate of Ia afferents",
+        "Increase in the firing rate of Ia afferents",
+        "Inhibition of gamma motor neurons",
+        "Decrease in the length of the muscle"
+      ],
+      "answer": 1,
+      "explanation": "Higher Ia afferent firing conveys a larger stretch signal to the alpha‑motor neuron, producing a stronger contraction.",
+      "topic": "Reflex arc"
+    }
+  ],
+  "generation": {
+    "model": "openai/gpt-oss-120b",
+    "strategy": "5-10 MCQs per exact syllabus topic",
+    "topicCount": 27,
+    "mcqCount": 192
+  }
+}
