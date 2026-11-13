@@ -1,0 +1,2510 @@
+{
+  "day": 77,
+  "courseDate": "2026-11-14",
+  "publishAt": "2026-11-14T06:00:00+05:30",
+  "title": "Generation and Conduction of Nerve Impulse",
+  "introduction": "This lesson covers the complete sequence of events from resting membrane potential to synaptic transmission, emphasizing the ionic mechanisms, conduction modes, and key NEET‑focused concepts.",
+  "sections": [
+    {
+      "topic": "Resting membrane potential",
+      "heading": "Resting Membrane Potential",
+      "content": "At rest, a typical neuron exhibits a potential of –70 mV due to unequal distribution of Na⁺ and K⁺ across the plasma membrane and selective permeability, primarily to K⁺ through leak channels. The interior is negatively charged relative to the extracellular fluid.",
+      "keyPoints": [
+        "Typical value ≈ –70 mV",
+        "Dominant permeability to K⁺",
+        "Result of Na⁺/K⁺ concentration gradients"
+      ],
+      "neetTips": [
+        "Memorise –70 mV as the standard resting value for most neurons."
+      ]
+    },
+    {
+      "topic": "Polarisation",
+      "heading": "Polarisation of Neuronal Membrane",
+      "content": "Polarisation refers to the existence of a voltage difference across the neuronal membrane, maintained by ion gradients and the Na⁺/K⁺‑ATPase. It is the baseline state from which depolarisation originates.",
+      "keyPoints": [
+        "Voltage difference across membrane",
+        "Maintained by ion gradients and pump"
+      ],
+      "neetTips": [
+        "Link polarisation directly to resting potential in answers."
+      ]
+    },
+    {
+      "topic": "Role of sodium and potassium ions",
+      "heading": "Role of Na⁺ and K⁺ Ions",
+      "content": "Na⁺ is higher outside (≈145 mM) and K⁺ higher inside (≈140 mM). Na⁺ influx depolarises the membrane, while K⁺ efflux repolarises it. Their electrochemical gradients drive the action potential phases.",
+      "keyPoints": [
+        "Na⁺ gradient drives depolarisation",
+        "K⁺ gradient drives repolarisation"
+      ],
+      "neetTips": [
+        "Remember: Na⁺ in, K⁺ out during an AP."
+      ]
+    },
+    {
+      "topic": "Sodium-potassium pump",
+      "heading": "Na⁺/K⁺‑ATPase Pump",
+      "content": "The pump expels 3 Na⁺ ions and imports 2 K⁺ ions per ATP hydrolysed, maintaining the concentration gradients essential for resting potential and recovery after an action potential.",
+      "keyPoints": [
+        "3 Na⁺ out, 2 K⁺ in per ATP",
+        "Maintains gradients"
+      ],
+      "neetTips": [
+        "Pump activity accounts for the negative resting charge."
+      ]
+    },
+    {
+      "topic": "Ion distribution across membrane",
+      "heading": "Ion Distribution Across Neuronal Membrane",
+      "content": "Typical extracellular: Na⁺ 145 mM, Cl⁻ 110 mM; intracellular: K⁺ 140 mM, Cl⁻ 4 mM, proteins – negatively charged. This distribution creates both concentration and electrical gradients.",
+      "keyPoints": [
+        "High Na⁺ outside, high K⁺ inside",
+        "Negatively charged intracellular proteins"
+      ],
+      "neetTips": [
+        "Use the Nernst equation conceptually for each ion."
+      ]
+    },
+    {
+      "topic": "Action potential",
+      "heading": "Action Potential Overview",
+      "content": "An action potential is a rapid, self‑propagating depolarisation that rises to ≈+30 mV and falls back to resting level, consisting of depolarisation, repolarisation and often a brief hyperpolarisation.",
+      "keyPoints": [
+        "All‑or‑none event",
+        "Peak ≈ +30 mV"
+      ],
+      "neetTips": [
+        "Sequence: depolarisation → repolarisation → hyperpolarisation."
+      ]
+    },
+    {
+      "topic": "Depolarisation",
+      "heading": "Depolarisation Phase",
+      "content": "Voltage‑gated Na⁺ channels open when membrane potential reaches threshold (≈ –55 mV), causing a massive Na⁺ influx that drives the membrane potential toward the Na⁺ equilibrium potential (+60 mV).",
+      "keyPoints": [
+        "Threshold ≈ –55 mV",
+        "Na⁺ channels open rapidly"
+      ],
+      "neetTips": [
+        "Depolarisation is the rising limb of the AP curve."
+      ]
+    },
+    {
+      "topic": "Repolarisation",
+      "heading": "Repolarisation Phase",
+      "content": "At the peak, Na⁺ channels inactivate and voltage‑gated K⁺ channels open, allowing K⁺ efflux which restores the negative interior, bringing the membrane back toward the resting value.",
+      "keyPoints": [
+        "Na⁺ channels inactivate",
+        "K⁺ efflux repolarises"
+      ],
+      "neetTips": [
+        "Repolarisation corresponds to the falling limb of the AP."
+      ]
+    },
+    {
+      "topic": "Hyperpolarisation",
+      "heading": "Hyperpolarisation (After‑potential)",
+      "content": "K⁺ channels close slowly, so excess K⁺ leaves the cell, making the membrane potential briefly more negative than the resting level (≈ –80 mV).",
+      "keyPoints": [
+        "K⁺ channels close slowly",
+        "Membrane becomes more negative"
+      ],
+      "neetTips": [
+        "Hyperpolarisation prevents immediate re‑firing – a refractory period clue."
+      ]
+    },
+    {
+      "topic": "Threshold stimulus",
+      "heading": "Threshold Stimulus",
+      "content": "A stimulus must depolarise the membrane to the threshold (~ –55 mV) to open enough Na⁺ channels for a regenerative AP. Sub‑threshold stimuli produce only graded potentials.",
+      "keyPoints": [
+        "≈ –55 mV needed",
+        "Regenerative opening of Na⁺ channels"
+      ],
+      "neetTips": [
+        "Distinguish graded vs. all‑or‑none responses."
+      ]
+    },
+    {
+      "topic": "All-or-none principle",
+      "heading": "All‑or‑None Principle",
+      "content": "Once threshold is reached, an AP of fixed amplitude propagates without decrement along the axon; if threshold is not reached, no AP is generated.",
+      "keyPoints": [
+        "Fixed amplitude",
+        "No partial AP"
+      ],
+      "neetTips": [
+        "Use this principle to explain why stimulus strength affects frequency, not amplitude."
+      ]
+    },
+    {
+      "topic": "Propagation of nerve impulse",
+      "heading": "Propagation of Nerve Impulse",
+      "content": "The depolarisation at one segment opens Na⁺ channels in the adjacent segment, creating a wave of depolarisation that travels along the axon. Conduction can be continuous or saltatory.",
+      "keyPoints": [
+        "Local current spreads depolarisation",
+        "Wave‑like movement"
+      ],
+      "neetTips": [
+        "Remember that the impulse does not ‘jump’; local currents do."
+      ]
+    },
+    {
+      "topic": "Saltatory conduction",
+      "heading": "Saltatory Conduction",
+      "content": "In myelinated axons, the impulse jumps from one node of Ranvier to the next, dramatically increasing speed because myelin reduces capacitance and increases membrane resistance.",
+      "keyPoints": [
+        "Node‑to‑node jumping",
+        "Myelin lowers capacitance"
+      ],
+      "neetTips": [
+        "Speed ≈ 50–120 m/s – much higher than continuous conduction."
+      ]
+    },
+    {
+      "topic": "Continuous conduction",
+      "heading": "Continuous Conduction",
+      "content": "In unmyelinated fibres, the depolarisation wave must travel through every segment of the membrane, resulting in slower impulse velocity (≈ 0.5–2 m/s).",
+      "keyPoints": [
+        "Depolarisation spreads sequentially",
+        "Slower speed"
+      ],
+      "neetTips": [
+        "Contrast speed with saltatory conduction for NEET."
+      ]
+    },
+    {
+      "topic": "Myelinated nerve fibres",
+      "heading": "Myelinated Nerve Fibres",
+      "content": "These axons are wrapped by Schwann cell (PNS) or oligodendrocyte (CNS) myelin sheaths, leaving gaps (nodes of Ranvier) where voltage‑gated Na⁺ channels are concentrated.",
+      "keyPoints": [
+        "Myelin from glial cells",
+        "Nodes rich in Na⁺ channels"
+      ],
+      "neetTips": [
+        "Myelin = insulation → faster conduction."
+      ]
+    },
+    {
+      "topic": "Non-myelinated nerve fibres",
+      "heading": "Non‑myelinated Nerve Fibres",
+      "content": "Axons lack myelin; instead, Schwann cells envelop multiple axons loosely. Voltage‑gated channels are distributed uniformly, leading to continuous conduction.",
+      "keyPoints": [
+        "No myelin sheath",
+        "Uniform channel distribution"
+      ],
+      "neetTips": [
+        "Remember slower speed and continuous conduction."
+      ]
+    },
+    {
+      "topic": "Speed of impulse conduction",
+      "heading": "Speed of Impulse Conduction",
+      "content": "Conduction velocity depends on axon diameter and myelination: larger diameter and myelinated fibres conduct faster. Approximate ranges: myelinated 50–120 m/s, unmyelinated 0.5–2 m/s.",
+      "keyPoints": [
+        "Diameter ↑ → speed ↑",
+        "Myelination ↑ → speed ↑"
+      ],
+      "neetTips": [
+        "NEET often asks to rank fibres by speed."
+      ]
+    },
+    {
+      "topic": "Synapse",
+      "heading": "Synapse Overview",
+      "content": "A synapse is the junction between a presynaptic terminal and a postsynaptic membrane, separated by a 20‑40 nm synaptic cleft, allowing signal transmission via electrical or chemical means.",
+      "keyPoints": [
+        "Presynaptic, cleft, postsynaptic",
+        "Two main types"
+      ],
+      "neetTips": [
+        "Identify structural components in diagram‑based questions."
+      ]
+    },
+    {
+      "topic": "Presynaptic membrane",
+      "heading": "Presynaptic Membrane",
+      "content": "Contains voltage‑gated Ca²⁺ channels; an arriving AP opens these channels, Ca²⁺ influx triggers vesicle fusion and neurotransmitter release.",
+      "keyPoints": [
+        "Voltage‑gated Ca²⁺ channels",
+        "Vesicle docking"
+      ],
+      "neetTips": [
+        "Ca²⁺ entry is the key trigger for neurotransmitter release."
+      ]
+    },
+    {
+      "topic": "Synaptic cleft",
+      "heading": "Synaptic Cleft",
+      "content": "The extracellular space (≈20‑40 nm) where released neurotransmitters diffuse to bind receptors on the postsynaptic membrane. Enzymes or reuptake mechanisms terminate the signal.",
+      "keyPoints": [
+        "Diffusion distance",
+        "Signal termination mechanisms"
+      ],
+      "neetTips": [
+        "Remember reuptake vs. enzymatic degradation for acetylcholine."
+      ]
+    },
+    {
+      "topic": "Postsynaptic membrane",
+      "heading": "Postsynaptic Membrane",
+      "content": "Embedded with ligand‑gated ion channels (chemical synapse) or gap‑junction channels (electrical synapse) that respond to neurotransmitter binding or direct ionic flow, respectively.",
+      "keyPoints": [
+        "Ligand‑gated channels",
+        "Gap junctions"
+      ],
+      "neetTips": [
+        "Link receptor type to excitatory or inhibitory response."
+      ]
+    },
+    {
+      "topic": "Electrical synapse",
+      "heading": "Electrical Synapse",
+      "content": "Direct cytoplasmic continuity via connexons (gap junctions) permits ions to flow instantly between cells, producing rapid, bidirectional transmission with minimal delay.",
+      "keyPoints": [
+        "Connexons form gap junctions",
+        "Fast, bidirectional"
+      ],
+      "neetTips": [
+        "Rare in CNS; used for synchronised firing."
+      ]
+    },
+    {
+      "topic": "Chemical synapse",
+      "heading": "Chemical Synapse",
+      "content": "Neurotransmitter released from presynaptic vesicles diffuses across the cleft and binds to specific receptors, causing opening/closing of ion channels and generating graded potentials.",
+      "keyPoints": [
+        "Neurotransmitter mediated",
+        "Unidirectional"
+      ],
+      "neetTips": [
+        "Focus on sequence: Ca²⁺ influx → vesicle fusion → neurotransmitter release → receptor activation."
+      ]
+    },
+    {
+      "topic": "Neurotransmitters",
+      "heading": "Neurotransmitters",
+      "content": "Chemical messengers (e.g., acetylcholine, dopamine, GABA) stored in synaptic vesicles; their action depends on receptor type (ionotropic vs. metabotropic) and clearance mechanisms.",
+      "keyPoints": [
+        "Stored in vesicles",
+        "Receptor specificity"
+      ],
+      "neetTips": [
+        "Acetylcholine is the primary excitatory transmitter at neuromuscular junctions."
+      ]
+    },
+    {
+      "topic": "Acetylcholine",
+      "heading": "Acetylcholine (ACh)",
+      "content": "ACh is synthesized from choline and acetyl‑CoA, stored in vesicles, and released at cholinergic synapses. It is rapidly hydrolysed by acetylcholinesterase in the cleft.",
+      "keyPoints": [
+        "Synthesised by choline acetyltransferase",
+        "Hydrolysed by acetylcholinesterase"
+      ],
+      "neetTips": [
+        "AChE inhibitors increase synaptic ACh – relevant for pharmacology questions."
+      ]
+    },
+    {
+      "topic": "Transmission across synapse",
+      "heading": "Transmission Across Synapse",
+      "content": "The arriving AP opens presynaptic Ca²⁺ channels, Ca²⁺ influx triggers vesicle fusion, ACh (or other transmitter) diffuses, binds postsynaptic receptors, causing ion flux and a postsynaptic potential; termination occurs via degradation or reuptake.",
+      "keyPoints": [
+        "Ca²⁺‑dependent vesicle release",
+        "Receptor‑mediated ion flux",
+        "Signal termination"
+      ],
+      "neetTips": [
+        "Sequence is essential for NEET‑style flow‑chart questions."
+      ]
+    }
+  ],
+  "learningOutcome": [
+    "Explain the ionic basis of resting membrane potential and the role of Na⁺/K⁺ gradients",
+    "Describe each phase of the action potential and the threshold concept",
+    "Compare continuous and saltatory conduction, citing structural reasons for speed differences",
+    "Identify the structural components of a synapse and differentiate electrical from chemical synapses",
+    "Outline the steps of neurotransmitter release, action, and termination, with emphasis on acetylcholine"
+  ],
+  "mcqs": [
+    {
+      "question": "What is the typical resting membrane potential of a mature neuron?",
+      "options": [
+        "-70 mV",
+        "-55 mV",
+        "+30 mV",
+        "0 mV"
+      ],
+      "answer": 0,
+      "explanation": "Neurons at rest maintain an interior that is about 70 mV negative relative to the extracellular fluid, primarily due to K+ leak channels and the Na+/K+ pump.",
+      "topic": "Resting membrane potential"
+    },
+    {
+      "question": "Which ion’s concentration gradient contributes most to the resting membrane potential?",
+      "options": [
+        "Sodium (Na+)",
+        "Potassium (K+)",
+        "Calcium (Ca2+)",
+        "Chloride (Cl-)"
+      ],
+      "answer": 1,
+      "explanation": "The large outward K+ gradient and high membrane permeability to K+ make its gradient the dominant factor in setting the resting potential.",
+      "topic": "Resting membrane potential"
+    },
+    {
+      "question": "The Na⁺/K⁺ ATPase moves ions across the membrane in which stoichiometry per cycle?",
+      "options": [
+        "3 Na⁺ out, 2 K⁺ in",
+        "2 Na⁺ out, 3 K⁺ in",
+        "3 Na⁺ in, 2 K⁺ out",
+        "2 Na⁺ in, 3 K⁺ out"
+      ],
+      "answer": 0,
+      "explanation": "Each cycle of the pump expels three Na⁺ ions and brings in two K⁺ ions, consuming one ATP molecule.",
+      "topic": "Resting membrane potential"
+    },
+    {
+      "question": "According to the Goldman‑Hodgkin‑Katz equation, increasing the extracellular K⁺ concentration will:",
+      "options": [
+        "Hyperpolarize the membrane",
+        "Depolarize the membrane",
+        "Leave the membrane potential unchanged",
+        "Immediately trigger an action potential"
+      ],
+      "answer": 1,
+      "explanation": "Raising extracellular K⁺ reduces the K⁺ gradient, making the membrane potential less negative (depolarization).",
+      "topic": "Resting membrane potential"
+    },
+    {
+      "question": "Why is the neuronal membrane more permeable to K⁺ than Na⁺ at rest?",
+      "options": [
+        "There are many K⁺ leak channels open continuously",
+        "Voltage‑gated Na⁺ channels are closed at rest",
+        "K⁺ ions are smaller than Na⁺ ions",
+        "Na⁺ is continuously pumped out by the Na⁺/K⁺ pump"
+      ],
+      "answer": 0,
+      "explanation": "Resting membranes contain numerous open K⁺ leak channels, whereas Na⁺ channels are largely closed, giving higher K⁺ permeability.",
+      "topic": "Resting membrane potential"
+    },
+    {
+      "question": "If the Na⁺/K⁺ pump is inhibited, the immediate effect on the resting membrane potential is:",
+      "options": [
+        "A slight depolarization",
+        "A slight hyperpolarization",
+        "No change initially",
+        "An immediate reversal of polarity"
+      ],
+      "answer": 0,
+      "explanation": "Inhibition stops the active extrusion of Na⁺ and import of K⁺, causing intracellular Na⁺ to rise and K⁺ to fall, leading to depolarization.",
+      "topic": "Resting membrane potential"
+    },
+    {
+      "question": "The equilibrium potential for K⁺ (E_K) is about –90 mV, while the resting membrane potential is –70 mV. This indicates that:",
+      "options": [
+        "The membrane is equally permeable to Na⁺ and K⁺",
+        "The membrane is more permeable to Na⁺ than K⁺",
+        "The membrane is more permeable to K⁺ but also slightly permeable to Na⁺",
+        "The membrane is impermeable to both ions"
+      ],
+      "answer": 2,
+      "explanation": "Since the resting potential is less negative than E_K, K⁺ dominates but a small Na⁺ permeability shifts the voltage toward the Na⁺ equilibrium potential.",
+      "topic": "Resting membrane potential"
+    },
+    {
+      "question": "Which of the following statements correctly describes the resting membrane potential of a typical neuron?",
+      "options": [
+        "Inside is about +70 mV relative to outside",
+        "Inside is about -70 mV relative to outside",
+        "Inside is 0 mV relative to outside",
+        "Inside is +30 mV relative to outside"
+      ],
+      "answer": 1,
+      "explanation": "The resting membrane potential of most neurons is approximately -70 mV, meaning the interior is negative relative to the exterior, primarily due to K+ leak and Na+/K+ pump activity.",
+      "topic": "Polarisation"
+    },
+    {
+      "question": "The primary contributor to the negative resting membrane potential is:",
+      "options": [
+        "Na+/K+ ATPase activity",
+        "High permeability of the membrane to K+ ions",
+        "High permeability to Na+ ions",
+        "Cl- active transport"
+      ],
+      "answer": 1,
+      "explanation": "At rest, the membrane is much more permeable to K+ than to Na+, so K+ efflux through leak channels makes the interior negative.",
+      "topic": "Polarisation"
+    },
+    {
+      "question": "During the initial phase of depolarisation, which ion movement is responsible for the rapid rise in membrane potential?",
+      "options": [
+        "Outward movement of K+ ions",
+        "Inward movement of Na+ ions",
+        "Inward movement of Ca2+ ions",
+        "Outward movement of Cl- ions"
+      ],
+      "answer": 1,
+      "explanation": "Voltage‑gated Na+ channels open first, allowing Na+ to rush into the cell, causing the membrane potential to become less negative.",
+      "topic": "Polarisation"
+    },
+    {
+      "question": "Which condition will make the neuronal membrane more hyperpolarised than its resting potential?",
+      "options": [
+        "Opening of voltage‑gated Na+ channels",
+        "Opening of voltage‑gated K+ channels",
+        "Inhibition of Na+/K+ pump",
+        "Increase in extracellular Na+ concentration"
+      ],
+      "answer": 1,
+      "explanation": "Opening of voltage‑gated K+ channels increases K+ efflux, driving the membrane potential more negative (hyperpolarisation).",
+      "topic": "Polarisation"
+    },
+    {
+      "question": "The equilibrium potential for K+ (E_K) is approximately -90 mV. If the membrane potential is held at -70 mV, the net movement of K+ ions will be:",
+      "options": [
+        "No net movement",
+        "Net influx of K+",
+        "Net efflux of K+",
+        "Both influx and efflux equally"
+      ],
+      "answer": 2,
+      "explanation": "Since the membrane potential (-70 mV) is less negative than E_K (-90 mV), K+ will tend to leave the cell to move the potential toward its equilibrium.",
+      "topic": "Polarisation"
+    },
+    {
+      "question": "Which of the following best explains why the action potential is an \"all‑or‑none\" event?",
+      "options": [
+        "The Na+/K+ pump can only operate at a fixed rate",
+        "Voltage‑gated Na+ channels open only when threshold is reached",
+        "Membrane capacitance limits the amplitude",
+        "The extracellular ion concentrations are constant"
+      ],
+      "answer": 1,
+      "explanation": "An action potential is triggered only when the membrane potential reaches threshold, causing a regenerative opening of voltage‑gated Na+ channels; sub‑threshold stimuli produce no full response.",
+      "topic": "Polarisation"
+    },
+    {
+      "question": "In a neuron where the Na+/K+ ATPase is inhibited, which of the following changes in the resting membrane potential is most likely?",
+      "options": [
+        "It becomes more negative",
+        "It becomes less negative (depolarises)",
+        "It remains unchanged",
+        "It fluctuates rapidly"
+      ],
+      "answer": 1,
+      "explanation": "The pump maintains high intracellular K+ and low Na+; inhibition reduces these gradients, leading to a depolarisation (less negative resting potential).",
+      "topic": "Polarisation"
+    },
+    {
+      "question": "Which ion movement is primarily responsible for the rising phase of an action potential in a typical neuronal axon?",
+      "options": [
+        "Influx of Na⁺ through voltage‑gated channels",
+        "Efflux of K⁺ through voltage‑gated channels",
+        "Influx of Cl⁻ through ligand‑gated channels",
+        "Influx of Ca²⁺ through voltage‑gated channels"
+      ],
+      "answer": 0,
+      "explanation": "During the rising phase, voltage‑gated Na⁺ channels open, allowing Na⁺ to flow into the cell and depolarize the membrane.",
+      "topic": "Role of sodium and potassium ions"
+    },
+    {
+      "question": "At the peak of an action potential, the membrane potential is closest to the equilibrium potential of which ion?",
+      "options": [
+        "K⁺",
+        "Na⁺",
+        "Cl⁻",
+        "Ca²⁺"
+      ],
+      "answer": 1,
+      "explanation": "When the membrane potential reaches its peak, Na⁺ channels are maximally open, driving the voltage toward the Na⁺ equilibrium potential (~+60 mV).",
+      "topic": "Role of sodium and potassium ions"
+    },
+    {
+      "question": "The Na⁺/K⁺ ATPase contributes to the resting membrane potential by:",
+      "options": [
+        "Pumping 3 Na⁺ out and 2 K⁺ in using ATP",
+        "Pumping 2 Na⁺ out and 3 K⁺ in using ATP",
+        "Allowing passive diffusion of Na⁺ and K⁺",
+        "Generating action potentials directly"
+      ],
+      "answer": 0,
+      "explanation": "The pump uses one ATP to move three Na⁺ ions out of the cell and two K⁺ ions into the cell, creating a net negative charge inside.",
+      "topic": "Role of sodium and potassium ions"
+    },
+    {
+      "question": "If extracellular K⁺ concentration is increased, what happens to the resting membrane potential of a typical neuron?",
+      "options": [
+        "The membrane becomes more negative (hyperpolarises)",
+        "The membrane becomes less negative (depolarises)",
+        "There is no change in membrane potential",
+        "The membrane first hyperpolarises then returns to the original value"
+      ],
+      "answer": 1,
+      "explanation": "Raising [K⁺]ₒ reduces the K⁺ gradient, making the K⁺ equilibrium potential less negative; since the membrane is most permeable to K⁺ at rest, the RMP depolarises.",
+      "topic": "Role of sodium and potassium ions"
+    },
+    {
+      "question": "Which statement correctly describes the role of K⁺ channels during the repolarization phase of an action potential?",
+      "options": [
+        "Voltage‑gated K⁺ channels open, allowing K⁺ efflux",
+        "Voltage‑gated K⁺ channels close, preventing K⁺ efflux",
+        "K⁺ channels permit Na⁺ influx",
+        "K⁺ channels are blocked by tetrodotoxin"
+      ],
+      "answer": 0,
+      "explanation": "Repolarization is caused by the opening of voltage‑gated K⁺ channels, through which K⁺ leaves the cell, restoring the negative interior.",
+      "topic": "Role of sodium and potassium ions"
+    },
+    {
+      "question": "A neuron is treated with ouabain, an inhibitor of Na⁺/K⁺ ATPase. Which immediate effect is most likely?",
+      "options": [
+        "Resting membrane potential becomes more negative",
+        "Resting membrane potential becomes less negative",
+        "Action potential amplitude increases",
+        "No effect on membrane potential"
+      ],
+      "answer": 1,
+      "explanation": "Inhibition of the pump stops the extrusion of Na⁺ and uptake of K⁺, causing intracellular Na⁺ to rise and K⁺ to fall, which depolarises the resting membrane potential.",
+      "topic": "Role of sodium and potassium ions"
+    },
+    {
+      "question": "The resting membrane potential (~‑70 mV) is closer to the equilibrium potential of which ion, and why?",
+      "options": [
+        "Na⁺, because Na⁺ permeability dominates at rest",
+        "K⁺, because K⁺ permeability dominates at rest",
+        "Both ions equally, because their permeabilities are equal",
+        "Neither; it is determined mainly by Cl⁻"
+      ],
+      "answer": 1,
+      "explanation": "At rest the neuronal membrane is far more permeable to K⁺ than to Na⁺, so the resting potential lies nearer to the K⁺ equilibrium potential (~‑90 mV).",
+      "topic": "Role of sodium and potassium ions"
+    },
+    {
+      "question": "What is the stoichiometric ratio of ions moved by the Na⁺/K⁺-ATPase for each molecule of ATP hydrolyzed?",
+      "options": [
+        "3 Na⁺ out, 2 K⁺ in",
+        "2 Na⁺ out, 3 K⁺ in",
+        "3 Na⁺ in, 2 K⁺ out",
+        "2 Na⁺ in, 3 K⁺ out"
+      ],
+      "answer": 0,
+      "explanation": "The Na⁺/K⁺-ATPase transports three sodium ions out of the cell and two potassium ions into the cell per ATP molecule hydrolyzed.",
+      "topic": "Sodium-potassium pump"
+    },
+    {
+      "question": "How does the electrogenic property of the Na⁺/K⁺ pump influence the resting membrane potential?",
+      "options": [
+        "It makes the interior of the cell relatively negative",
+        "It makes the interior of the cell relatively positive",
+        "It causes no net charge movement across the membrane",
+        "It hyperpolarizes the cell beyond the K⁺ equilibrium potential"
+      ],
+      "answer": 0,
+      "explanation": "Because three positive charges leave and only two enter, each pump cycle results in a net loss of one positive charge, contributing to a negative resting membrane potential.",
+      "topic": "Sodium-potassium pump"
+    },
+    {
+      "question": "Inhibition of the Na⁺/K⁺-ATPase by ouabain would most likely cause which immediate change in intracellular ion concentrations?",
+      "options": [
+        "Increase in intracellular Na⁺ concentration",
+        "Decrease in intracellular Na⁺ concentration",
+        "Increase in intracellular K⁺ concentration",
+        "Decrease in intracellular K⁺ concentration"
+      ],
+      "answer": 0,
+      "explanation": "Blocking the pump prevents Na⁺ extrusion, leading to accumulation of Na⁺ inside the cell while K⁺ uptake is also reduced.",
+      "topic": "Sodium-potassium pump"
+    },
+    {
+      "question": "Why is the Na⁺/K⁺-ATPase activity essential during repetitive high‑frequency neuronal firing?",
+      "options": [
+        "It restores ion gradients after repeated depolarizations",
+        "It generates the action potential itself",
+        "It blocks Ca²⁺ influx during the refractory period",
+        "It phosphorylates released neurotransmitters"
+      ],
+      "answer": 0,
+      "explanation": "Repeated firing causes Na⁺ influx and K⁺ efflux; the pump restores the original Na⁺ and K⁺ gradients, allowing subsequent action potentials.",
+      "topic": "Sodium-potassium pump"
+    },
+    {
+      "question": "Which statement correctly describes the energy source for the Na⁺/K⁺ pump?",
+      "options": [
+        "It uses the free energy released from ATP hydrolysis",
+        "It uses the electrochemical gradient of Na⁺ as its energy source",
+        "It is driven by GTP hydrolysis",
+        "It is powered directly by the membrane potential"
+      ],
+      "answer": 0,
+      "explanation": "The Na⁺/K⁺-ATPase is an active transporter that hydrolyzes ATP to obtain the energy required for ion transport.",
+      "topic": "Sodium-potassium pump"
+    },
+    {
+      "question": "How does the Na⁺/K⁺ pump help prevent cellular swelling?",
+      "options": [
+        "By extruding Na⁺, it reduces intracellular osmotic pressure",
+        "By importing K⁺, it raises intracellular osmolarity",
+        "By generating action potentials that draw water out",
+        "By activating Na⁺ channels that allow water efflux"
+      ],
+      "answer": 0,
+      "explanation": "Removal of Na⁺ lowers intracellular osmolarity, decreasing the osmotic drive for water to enter the cell, thus preventing swelling.",
+      "topic": "Sodium-potassium pump"
+    },
+    {
+      "question": "Which condition would most directly increase the activity of the Na⁺/K⁺-ATPase in a neuron?",
+      "options": [
+        "Elevated intracellular Na⁺ concentration",
+        "Elevated extracellular K⁺ concentration",
+        "Low intracellular Ca²⁺ concentration",
+        "High extracellular Cl⁻ concentration"
+      ],
+      "answer": 0,
+      "explanation": "The pump is stimulated by higher intracellular Na⁺ levels, which increase its turnover rate to restore the gradient.",
+      "topic": "Sodium-potassium pump"
+    },
+    {
+      "question": "At rest, which ion is present in higher concentration outside the neuronal membrane compared to inside?",
+      "options": [
+        "Na⁺",
+        "K⁺",
+        "Cl⁻",
+        "Ca²⁺"
+      ],
+      "answer": 0,
+      "explanation": "Resting neurons have extracellular Na⁺ (~145 mM) and intracellular Na⁺ (~15 mM), making Na⁺ the ion with the highest external concentration.",
+      "topic": "Ion distribution across membrane"
+    },
+    {
+      "question": "The equilibrium potential (E_K) for potassium is primarily determined by which factor?",
+      "options": [
+        "The concentration gradient of K⁺ across the membrane",
+        "The membrane's permeability to K⁺",
+        "The activity of the Na⁺/K⁺‑ATPase",
+        "The electrical gradient across the membrane"
+      ],
+      "answer": 0,
+      "explanation": "E_K is calculated using the Nernst equation, which depends on the ratio of external to internal K⁺ concentrations; permeability influences the actual membrane potential but not the equilibrium potential.",
+      "topic": "Ion distribution across membrane"
+    },
+    {
+      "question": "If the extracellular K⁺ concentration doubles while intracellular K⁺ remains unchanged, the equilibrium potential for K⁺ will:",
+      "options": [
+        "Become more negative",
+        "Become less negative",
+        "Remain unchanged",
+        "Become positive"
+      ],
+      "answer": 1,
+      "explanation": "Doubling the external K⁺ reduces the concentration ratio (inside/outside), making the Nernst‑derived E_K less negative (i.e., it shifts toward zero).",
+      "topic": "Ion distribution across membrane"
+    },
+    {
+      "question": "Which of the following statements about ion distribution in a typical neuron is correct?",
+      "options": [
+        "Intracellular Na⁺ concentration is higher than extracellular Na⁺",
+        "Intracellular K⁺ concentration is higher than extracellular K⁺",
+        "Extracellular Cl⁻ concentration is higher than intracellular Cl⁻",
+        "Intracellular Ca²⁺ concentration is higher than extracellular Ca²⁺"
+      ],
+      "answer": 1,
+      "explanation": "Neurons maintain high intracellular K⁺ (~140 mM) and low intracellular Na⁺ (~15 mM); thus K⁺ is higher inside, opposite to Na⁺.",
+      "topic": "Ion distribution across membrane"
+    },
+    {
+      "question": "During each cycle, the Na⁺/K⁺‑ATPase transports ions in which stoichiometry?",
+      "options": [
+        "3 Na⁺ out, 2 K⁺ in",
+        "2 Na⁺ out, 3 K⁺ in",
+        "3 Na⁺ in, 2 K⁺ out",
+        "2 Na⁺ in, 3 K⁺ out"
+      ],
+      "answer": 0,
+      "explanation": "The classic Na⁺/K⁺ pump expels three Na⁺ ions and brings in two K⁺ ions per ATP hydrolysed, contributing to the negative resting membrane potential.",
+      "topic": "Ion distribution across membrane"
+    },
+    {
+      "question": "Which manipulation would most directly make the resting membrane potential of a neuron more negative?",
+      "options": [
+        "Increase extracellular K⁺ concentration",
+        "Decrease extracellular Na⁺ concentration",
+        "Increase membrane permeability to K⁺",
+        "Inhibit the Na⁺/K⁺‑ATPase"
+      ],
+      "answer": 2,
+      "explanation": "Greater K⁺ permeability allows K⁺ to leave the cell more readily, driving the membrane potential closer to the negative K⁺ equilibrium potential.",
+      "topic": "Ion distribution across membrane"
+    },
+    {
+      "question": "The Donnan equilibrium effect on neuronal ion distribution is primarily due to which of the following?",
+      "options": [
+        "Na⁺ ions",
+        "K⁺ ions",
+        "Cl⁻ ions",
+        "Large intracellular anionic proteins"
+      ],
+      "answer": 3,
+      "explanation": "Negatively charged macromolecules (proteins) cannot cross the membrane, creating an unequal distribution of permeant ions (especially Cl⁻) to maintain electroneutrality, known as the Donnan effect.",
+      "topic": "Ion distribution across membrane"
+    },
+    {
+      "question": "Which ion movement is primarily responsible for the rapid depolarising (rising) phase of an action potential in a typical neuronal axon?",
+      "options": [
+        "Inward influx of Na⁺ through voltage‑gated Na⁺ channels",
+        "Outward efflux of K⁺ through voltage‑gated K⁺ channels",
+        "Inward influx of Ca²⁺ through voltage‑gated Ca²⁺ channels",
+        "Inward influx of Cl⁻ through ligand‑gated channels"
+      ],
+      "answer": 0,
+      "explanation": "The rapid rise of membrane potential is caused by opening of voltage‑gated Na⁺ channels, allowing Na⁺ to flow into the cell down its electrochemical gradient.",
+      "topic": "Action potential"
+    },
+    {
+      "question": "The threshold potential at which an action potential is triggered in most neurons is closest to:",
+      "options": [
+        "-55 mV",
+        "-70 mV",
+        "-30 mV",
+        "0 mV"
+      ],
+      "answer": 0,
+      "explanation": "In neuronal membranes the threshold is usually about -55 mV, a few millivolts above the resting potential (~-70 mV).",
+      "topic": "Action potential"
+    },
+    {
+      "question": "During the absolute refractory period, which channel state prevents a second action potential from being generated?",
+      "options": [
+        "Voltage‑gated Na⁺ channels are inactivated",
+        "Voltage‑gated K⁺ channels are closed",
+        "Leak channels are open",
+        "Na⁺/K⁺‑ATPase activity is maximal"
+      ],
+      "answer": 0,
+      "explanation": "In the absolute refractory period the voltage‑gated Na⁺ channels enter an inactivated state and cannot reopen until the membrane repolarises.",
+      "topic": "Action potential"
+    },
+    {
+      "question": "Which event characterises the repolarisation phase of an action potential?",
+      "options": [
+        "Opening of voltage‑gated K⁺ channels causing K⁺ efflux",
+        "Opening of voltage‑gated Na⁺ channels causing Na⁺ influx",
+        "Closure of all voltage‑gated channels",
+        "Opening of ligand‑gated Cl⁻ channels"
+      ],
+      "answer": 0,
+      "explanation": "Repolarisation occurs when voltage‑gated K⁺ channels open, allowing K⁺ to leave the cell and bring the membrane potential back toward the resting level.",
+      "topic": "Action potential"
+    },
+    {
+      "question": "The brief hyperpolarisation (after‑hyperpolarisation) that follows an action potential is mainly due to:",
+      "options": [
+        "Delayed closing of voltage‑gated K⁺ channels",
+        "Continued Na⁺ influx through persistent Na⁺ channels",
+        "Activity of the Na⁺/K⁺‑ATPase",
+        "Opening of Cl⁻ channels"
+      ],
+      "answer": 0,
+      "explanation": "K⁺ channels close slowly, so K⁺ continues to exit the cell for a short time after the membrane has returned to resting potential, making the interior slightly more negative.",
+      "topic": "Action potential"
+    },
+    {
+      "question": "In a myelinated axon, the action potential propagates by:",
+      "options": [
+        "Saltatory conduction, jumping from one node of Ranvier to the next",
+        "Continuous conduction along the entire length of the membrane",
+        "Diffusion of ions through the myelin sheath",
+        "Electrical coupling through gap junctions"
+      ],
+      "answer": 0,
+      "explanation": "Myelin insulates the axon, leaving gaps (nodes of Ranvier) where voltage‑gated Na⁺ channels are concentrated; the impulse jumps between these nodes (saltatory conduction).",
+      "topic": "Action potential"
+    },
+    {
+      "question": "Which structural feature most significantly increases the speed of nerve impulse conduction?",
+      "options": [
+        "Larger axonal diameter",
+        "Higher extracellular K⁺ concentration",
+        "Increased thickness of the myelin sheath",
+        "Lower ambient temperature"
+      ],
+      "answer": 0,
+      "explanation": "A larger diameter reduces internal resistance to current flow, markedly increasing conduction velocity; myelination also speeds conduction but the primary factor is diameter.",
+      "topic": "Action potential"
+    },
+    {
+      "question": "The all‑or‑none principle of an action potential means that:",
+      "options": [
+        "Once threshold is reached, a full‑amplitude action potential is always generated",
+        "The amplitude of the action potential varies with stimulus strength",
+        "The frequency of action potentials varies with stimulus intensity",
+        "The duration of the action potential changes with stimulus duration"
+      ],
+      "answer": 0,
+      "explanation": "If the membrane potential reaches threshold, an action potential of a fixed amplitude is produced; sub‑threshold stimuli produce no response.",
+      "topic": "Action potential"
+    },
+    {
+      "question": "Depolarisation of a neuronal membrane is best described as:",
+      "options": [
+        "The membrane potential becomes less negative than the resting potential",
+        "The membrane potential becomes more negative than the resting potential",
+        "The membrane potential remains unchanged",
+        "The membrane potential becomes positive beyond +30 mV"
+      ],
+      "answer": 0,
+      "explanation": "During depolarisation the interior of the cell becomes less negative (or more positive) relative to the resting potential, moving the membrane potential towards zero.",
+      "topic": "Depolarisation"
+    },
+    {
+      "question": "Which ion movement is primarily responsible for the rapid depolarisation phase of an action potential in a typical neuron?",
+      "options": [
+        "Influx of Na+ through voltage‑gated channels",
+        "Efflux of K+ through voltage‑gated channels",
+        "Influx of Ca2+ through ligand‑gated channels",
+        "Efflux of Cl- through passive channels"
+      ],
+      "answer": 0,
+      "explanation": "The rapid rise in membrane potential is caused by a massive influx of Na+ ions when voltage‑gated Na+ channels open.",
+      "topic": "Depolarisation"
+    },
+    {
+      "question": "The threshold stimulus that initiates depolarisation in most neurons corresponds to a membrane potential of approximately:",
+      "options": [
+        "-55 mV",
+        "-70 mV",
+        "-90 mV",
+        "0 mV"
+      ],
+      "answer": 0,
+      "explanation": "In many neurons the threshold for opening voltage‑gated Na+ channels is around –55 mV, a few millivolts above the resting potential (~ –70 mV).",
+      "topic": "Depolarisation"
+    },
+    {
+      "question": "During the depolarisation phase, voltage‑gated Na+ channels exhibit which characteristic behavior?",
+      "options": [
+        "They open rapidly and then inactivate quickly",
+        "They open slowly and remain open for the entire depolarisation",
+        "They do not inactivate and stay open indefinitely",
+        "They open only during hyperpolarisation"
+      ],
+      "answer": 0,
+      "explanation": "Voltage‑gated Na+ channels open within milliseconds and then undergo fast inactivation, limiting the duration of Na+ influx.",
+      "topic": "Depolarisation"
+    },
+    {
+      "question": "What is the correct role of the Na⁺/K⁺‑ATPase during the depolarisation phase of an action potential?",
+      "options": [
+        "It continues to pump Na⁺ out and K⁺ in, helping restore the resting potential after depolarisation",
+        "It directly generates the rapid rise in membrane potential",
+        "It is temporarily inhibited, allowing Na⁺ influx to dominate",
+        "It exchanges 2 Na⁺ for 3 K⁺ in the opposite direction of its normal operation"
+      ],
+      "answer": 0,
+      "explanation": "The Na⁺/K⁺‑ATPase does not cause the depolarisation; it works continuously to maintain ion gradients and later restores the resting potential after the depolarisation phase.",
+      "topic": "Depolarisation"
+    },
+    {
+      "question": "In a myelinated axon, depolarisation occurs mainly at the nodes of Ranvier. How does this arrangement affect impulse conduction?",
+      "options": [
+        "It enables saltatory conduction, markedly increasing conduction speed",
+        "It creates resistance that slows down the impulse",
+        "It has no effect on the speed of conduction",
+        "It converts the chemical synapse into an electrical synapse"
+      ],
+      "answer": 0,
+      "explanation": "Depolarisation at the nodes allows the action potential to ‘jump’ from node to node (saltatory conduction), which is much faster than continuous conduction.",
+      "topic": "Depolarisation"
+    },
+    {
+      "question": "An intracellular recording from a neuron shows a rapid positive‑going deflection. This observation indicates that the neuron is:",
+      "options": [
+        "Undergoing depolarisation",
+        "Undergoing hyperpolarisation",
+        "At resting membrane potential",
+        "Experiencing no change in membrane potential"
+      ],
+      "answer": 0,
+      "explanation": "A positive‑going deflection in an intracellular trace reflects the interior becoming less negative, i.e., depolarisation.",
+      "topic": "Depolarisation"
+    },
+    {
+      "question": "During the repolarisation phase of an action potential, which ion's conductance increases most markedly?",
+      "options": [
+        "Sodium (Na+)",
+        "Potassium (K+)",
+        "Calcium (Ca2+)",
+        "Chloride (Cl-)"
+      ],
+      "answer": 1,
+      "explanation": "Voltage‑gated potassium channels open rapidly after the peak, allowing K⁺ to leave the cell and bring the membrane potential back toward the resting level.",
+      "topic": "Repolarisation"
+    },
+    {
+      "question": "Voltage‑gated potassium channels that mediate repolarisation open at membrane potentials that are:",
+      "options": [
+        "Exactly at the threshold potential",
+        "Slightly above the threshold potential",
+        "Slightly below the threshold potential",
+        "They remain closed during repolarisation"
+      ],
+      "answer": 1,
+      "explanation": "These channels activate a few millivolts above the threshold, after the Na⁺ channels have opened, ensuring the outward K⁺ current follows the depolarising Na⁺ influx.",
+      "topic": "Repolarisation"
+    },
+    {
+      "question": "What is the primary role of the Na⁺/K⁺‑ATPase during a single action potential’s repolarisation phase?",
+      "options": [
+        "It actively pumps Na⁺ out and K⁺ in during repolarisation",
+        "It is responsible for the rapid rise of membrane potential",
+        "It restores ion gradients after the entire action potential",
+        "It has no role during repolarisation"
+      ],
+      "answer": 2,
+      "explanation": "The pump works continuously but its crucial contribution is to re‑establish the original Na⁺ and K⁺ concentration gradients after the whole action potential cycle, not to drive the rapid repolarising current.",
+      "topic": "Repolarisation"
+    },
+    {
+      "question": "In a myelinated axon, repolarisation of the internodal (myelinated) region primarily occurs because:",
+      "options": [
+        "Opening of voltage‑gated Na⁺ channels",
+        "Opening of voltage‑gated K⁺ channels",
+        "Leak of Cl⁻ ions through passive channels",
+        "Activity of the Na⁺/K⁺‑ATPase"
+      ],
+      "answer": 1,
+      "explanation": "Even under the myelin sheath, voltage‑gated K⁺ channels are present and open during the falling phase, allowing K⁺ efflux that repolarises the membrane between nodes of Ranvier.",
+      "topic": "Repolarisation"
+    },
+    {
+      "question": "After repolarisation, the membrane potential often becomes more negative than the resting potential (hyperpolarisation). Which ion movement is chiefly responsible?",
+      "options": [
+        "Continued efflux of K⁺ through delayed rectifier channels",
+        "Inward influx of Na⁺ through persistent Na⁺ channels",
+        "Inward influx of Ca²⁺ through voltage‑gated Ca²⁺ channels",
+        "Influx of Cl⁻ through GABA‑activated channels"
+      ],
+      "answer": 0,
+      "explanation": "Delayed‑rectifier K⁺ channels stay open briefly after the membrane reaches resting potential, causing extra K⁺ loss and a transient hyperpolarised state.",
+      "topic": "Repolarisation"
+    },
+    {
+      "question": "A toxin that blocks voltage‑gated K⁺ channels would most likely:",
+      "options": [
+        "Shorten the repolarisation phase",
+        "Prolong the repolarisation phase",
+        "Have no effect on repolarisation",
+        "Convert repolarisation into a depolarising after‑potential"
+      ],
+      "answer": 1,
+      "explanation": "Blocking K⁺ channels prevents the main outward current that brings the membrane back down, so the falling phase is delayed and the action potential duration is prolonged.",
+      "topic": "Repolarisation"
+    },
+    {
+      "question": "The time constant (τ) that governs the speed of repolarisation is primarily determined by which two membrane properties?",
+      "options": [
+        "Membrane resistance and capacitance",
+        "Membrane thickness and ion concentration",
+        "Axon diameter and degree of myelination",
+        "Sodium channel density and extracellular Na⁺ concentration"
+      ],
+      "answer": 0,
+      "explanation": "τ = Rm × Cm; higher membrane resistance (due to fewer open channels) and capacitance (membrane area) dictate how quickly voltage changes during repolarisation.",
+      "topic": "Repolarisation"
+    },
+    {
+      "question": "Hyperpolarisation of a neuronal membrane is defined as:",
+      "options": [
+        "Membrane potential becomes more positive than the resting potential",
+        "Membrane potential becomes more negative than the resting potential",
+        "Membrane potential equals the threshold potential",
+        "No change in membrane potential"
+      ],
+      "answer": 1,
+      "explanation": "Hyperpolarisation refers to a shift of the membrane potential to a value more negative than the resting membrane potential.",
+      "topic": "Hyperpolarisation"
+    },
+    {
+      "question": "Which ion movement is primarily responsible for the hyperpolarising phase following an action potential in a typical neuron?",
+      "options": [
+        "Inward influx of Na+ ions",
+        "Outward efflux of K+ ions",
+        "Inward influx of Ca2+ ions",
+        "Efflux of Cl- ions"
+      ],
+      "answer": 1,
+      "explanation": "After the peak of the action potential, voltage‑gated K+ channels remain open longer, allowing K+ to leave the cell and make the interior more negative.",
+      "topic": "Hyperpolarisation"
+    },
+    {
+      "question": "The afterhyperpolarisation that follows an action potential is mainly due to the delayed closing of which type of voltage‑gated channel?",
+      "options": [
+        "Voltage‑gated Na+ channels",
+        "Voltage‑gated K+ channels",
+        "Voltage‑gated Ca2+ channels",
+        "Voltage‑gated Cl- channels"
+      ],
+      "answer": 1,
+      "explanation": "Delayed rectifier K+ channels close slowly, prolonging K+ efflux and producing the afterhyperpolarising tail.",
+      "topic": "Hyperpolarisation"
+    },
+    {
+      "question": "During the relative refractory period, the membrane is hyperpolarised. Which statement best explains why a stronger stimulus is required to generate another action potential?",
+      "options": [
+        "All Na+ channels are permanently inactivated",
+        "The membrane potential is farther from the threshold",
+        "K+ channels are completely closed",
+        "The Na+/K+ pump has stopped functioning"
+      ],
+      "answer": 1,
+      "explanation": "Because the membrane potential is more negative than the resting level, a larger depolarising stimulus is needed to bring it back to the threshold.",
+      "topic": "Hyperpolarisation"
+    },
+    {
+      "question": "Which of the following experimental observations would indicate that a neuron is in a hyperpolarised state?",
+      "options": [
+        "Increased amplitude of the next action potential",
+        "Decreased firing frequency for a given depolarising current",
+        "Lower threshold voltage for action potential initiation",
+        "No change in excitability"
+      ],
+      "answer": 1,
+      "explanation": "A hyperpolarised membrane requires a larger depolarising input, so the neuron fires less frequently under the same stimulus.",
+      "topic": "Hyperpolarisation"
+    },
+    {
+      "question": "In synaptic transmission, activation of GABA_A receptors typically causes hyperpolarisation because the channel is permeable to which ion?",
+      "options": [
+        "Na+",
+        "K+",
+        "Cl-",
+        "Ca2+"
+      ],
+      "answer": 2,
+      "explanation": "GABA_A receptors are ligand‑gated Cl- channels; opening them allows Cl- influx, making the postsynaptic membrane more negative.",
+      "topic": "Hyperpolarisation"
+    },
+    {
+      "question": "What is the typical membrane potential value that must be reached for a neuron to fire an action potential (threshold stimulus)?",
+      "options": [
+        "-55 mV",
+        "-70 mV",
+        "-40 mV",
+        "0 mV"
+      ],
+      "answer": 0,
+      "explanation": "The threshold for most neurons is around -55 mV; depolarisation to this level opens enough voltage‑gated Na⁺ channels to initiate the regenerative rise of an action potential.",
+      "topic": "Threshold stimulus"
+    },
+    {
+      "question": "Which statement best describes a threshold stimulus in a nerve cell?",
+      "options": [
+        "Minimum depolarization needed to open enough voltage‑gated Na⁺ channels to initiate an action potential",
+        "Maximum hyperpolarization that a neuron can tolerate",
+        "The exact amount of Na⁺ influx required to generate an action potential",
+        "The time required for repolarization after an action potential"
+      ],
+      "answer": 0,
+      "explanation": "A threshold stimulus is the smallest depolarising stimulus that can open a sufficient number of voltage‑gated Na⁺ channels to start the all‑or‑none action potential.",
+      "topic": "Threshold stimulus"
+    },
+    {
+      "question": "If a stimulus is just above the threshold, how does the amplitude of the resulting action potential compare with that produced by a much stronger stimulus?",
+      "options": [
+        "It will have the same amplitude as the larger stimulus",
+        "It will have a larger amplitude",
+        "It will have a smaller amplitude",
+        "No action potential will be generated"
+      ],
+      "answer": 0,
+      "explanation": "Action potentials follow the all‑or‑none principle; once threshold is reached, the amplitude is constant regardless of how much the stimulus exceeds threshold.",
+      "topic": "Threshold stimulus"
+    },
+    {
+      "question": "Which of the following changes would most likely lower the threshold stimulus required to generate an action potential?",
+      "options": [
+        "Increase extracellular K⁺ concentration",
+        "Decrease the density of voltage‑gated Na⁺ channels",
+        "Hyperpolarize the resting membrane potential",
+        "Increase the membrane resistance"
+      ],
+      "answer": 3,
+      "explanation": "Higher membrane resistance means a given depolarising current produces a larger voltage change, so less current is needed to reach threshold, effectively lowering the threshold stimulus.",
+      "topic": "Threshold stimulus"
+    },
+    {
+      "question": "When several sub‑threshold depolarising inputs arrive at a neuron in rapid succession, they can collectively reach threshold. This phenomenon is called:",
+      "options": [
+        "Spatial summation",
+        "Temporal summation",
+        "Refractory period",
+        "Hyperpolarization"
+      ],
+      "answer": 1,
+      "explanation": "Temporal summation refers to the additive effect of successive sub‑threshold stimuli arriving closely in time, allowing the membrane potential to reach threshold.",
+      "topic": "Threshold stimulus"
+    },
+    {
+      "question": "In a myelinated axon, the action potential is regenerated at specific sites. Where must the threshold stimulus be achieved for propagation?",
+      "options": [
+        "Nodes of Ranvier",
+        "Internodal (myelinated) region",
+        "Axon hillock only",
+        "Dendritic spine"
+      ],
+      "answer": 0,
+      "explanation": "Voltage‑gated Na⁺ channels are concentrated at the Nodes of Ranvier; the membrane must reach threshold at each node for the saltatory conduction of the impulse.",
+      "topic": "Threshold stimulus"
+    },
+    {
+      "question": "A toxin that raises the threshold stimulus for voltage‑gated Na⁺ channels would most likely produce which physiological effect?",
+      "options": [
+        "Decreased nerve excitability",
+        "Increased muscle contraction",
+        "Faster conduction velocity",
+        "Lowered resting membrane potential"
+      ],
+      "answer": 0,
+      "explanation": "Raising the threshold means a larger depolarising stimulus is needed to fire an action potential, leading to reduced excitability of the affected neurons.",
+      "topic": "Threshold stimulus"
+    },
+    {
+      "question": "Which statement best describes the all-or-none principle for a neuronal action potential?",
+      "options": [
+        "The magnitude of the action potential varies proportionally with the strength of the stimulus.",
+        "Once the threshold is reached, the neuron generates a full‑size action potential irrespective of further increase in stimulus strength.",
+        "The duration of the action potential increases with stronger stimuli.",
+        "Only a portion of the axonal membrane depolarises if the stimulus is weak."
+      ],
+      "answer": 1,
+      "explanation": "When the membrane potential reaches threshold, voltage‑gated Na⁺ channels open fully, producing an action potential of fixed amplitude regardless of additional stimulus strength.",
+      "topic": "All-or-none principle"
+    },
+    {
+      "question": "A peripheral nerve fiber is stimulated with a current just below threshold. What will be observed?",
+      "options": [
+        "A full action potential is generated.",
+        "No change in membrane potential.",
+        "A graded, subthreshold depolarisation that returns to resting potential.",
+        "Hyperpolarisation of the membrane."
+      ],
+      "answer": 2,
+      "explanation": "Stimuli below threshold cause only a small, graded depolarisation (a generator potential) that decays without triggering an all‑or‑none action potential.",
+      "topic": "All-or-none principle"
+    },
+    {
+      "question": "In a muscle fiber, the all-or-none principle implies that:",
+      "options": [
+        "A stronger stimulus causes a larger contraction of the same fiber.",
+        "All muscle fibers in a motor unit contract fully or not at all.",
+        "The amplitude of the muscle action potential varies with stimulus intensity.",
+        "Only the sarcolemma depolarises while the T‑tubules remain at rest."
+      ],
+      "answer": 1,
+      "explanation": "Each muscle fiber, once its threshold is reached, contracts maximally; the overall force varies by the number of fibers recruited, not by the size of the individual fiber response.",
+      "topic": "All-or-none principle"
+    },
+    {
+      "question": "Which of the following experimental observations supports the all-or-none law in neurons?",
+      "options": [
+        "Increasing the stimulus voltage increases the peak voltage of the recorded action potential.",
+        "The latency period before the action potential shortens with stronger stimuli.",
+        "The peak amplitude of the action potential remains constant regardless of stimulus strength, provided threshold is reached.",
+        "The refractory period lengthens with higher stimulus intensity."
+      ],
+      "answer": 2,
+      "explanation": "Recordings show that once threshold is crossed, the peak of the action potential is invariant; only the likelihood of firing changes with stimulus strength.",
+      "topic": "All-or-none principle"
+    },
+    {
+      "question": "The all-or-none principle does NOT apply to which of the following?",
+      "options": [
+        "Action potential propagation along a myelinated axon.",
+        "Graded potentials in dendrites.",
+        "Generation of an action potential at the axon hillock.",
+        "Muscle fiber contraction after a motor neuron fires."
+      ],
+      "answer": 1,
+      "explanation": "Graded (or generator) potentials vary in amplitude with stimulus intensity and do not follow the all‑or‑none rule, unlike action potentials.",
+      "topic": "All-or-none principle"
+    },
+    {
+      "question": "If a neuron is stimulated repeatedly at a frequency higher than its refractory period, what will be the pattern of action potentials according to the all-or-none principle?",
+      "options": [
+        "Each stimulus will produce a smaller action potential.",
+        "Action potentials will be of equal amplitude but may fuse into a higher frequency train.",
+        "The amplitude of successive action potentials will gradually increase.",
+        "No action potential will be generated after the first one."
+      ],
+      "answer": 1,
+      "explanation": "Each qualifying stimulus generates a full‑amplitude action potential; at high frequencies the individual spikes can appear as a continuous high‑frequency train.",
+      "topic": "All-or-none principle"
+    },
+    {
+      "question": "Which factor determines whether an action potential will be initiated in a neuron?",
+      "options": [
+        "The absolute number of Na⁺ ions entering the cell.",
+        "The membrane potential reaching the threshold value.",
+        "The duration of the depolarising stimulus alone.",
+        "The concentration of Ca²⁺ in the extracellular fluid."
+      ],
+      "answer": 1,
+      "explanation": "An action potential is triggered only when the membrane potential reaches the threshold, causing voltage‑gated Na⁺ channels to open en masse.",
+      "topic": "All-or-none principle"
+    },
+    {
+      "question": "Why is saltatory conduction faster than continuous conduction in myelinated axons?",
+      "options": [
+        "Myelin increases membrane resistance and decreases capacitance, allowing depolarization to jump between nodes",
+        "Myelin provides additional ion channels along the axon",
+        "Nodes of Ranvier release neurotransmitters that speed up impulse",
+        "Axonal diameter is larger in myelinated fibers"
+      ],
+      "answer": 0,
+      "explanation": "Myelin sheath reduces membrane capacitance and increases resistance, so the depolarizing current spreads rapidly to the next node where voltage‑gated Na⁺ channels regenerate the action potential, making conduction faster.",
+      "topic": "Propagation of nerve impulse"
+    },
+    {
+      "question": "A 1 µm diameter non‑myelinated axon conducts at ~1 m/s. If it becomes myelinated, its velocity rises to ~10 m/s. Which change most directly accounts for this increase?",
+      "options": [
+        "Decrease in axial resistance",
+        "Increase in membrane capacitance",
+        "Increase in membrane resistance and decrease in capacitance",
+        "Presence of voltage‑gated Na⁺ channels at every point"
+      ],
+      "answer": 2,
+      "explanation": "Myelination markedly raises membrane resistance and lowers capacitance, allowing the depolarizing current to travel farther without loss, which speeds up impulse propagation.",
+      "topic": "Propagation of nerve impulse"
+    },
+    {
+      "question": "During saltatory conduction, the action potential is regenerated at which structure?",
+      "options": [
+        "Internodal region",
+        "Node of Ranvier",
+        "Axon hillock",
+        "Synaptic terminal"
+      ],
+      "answer": 1,
+      "explanation": "Nodes of Ranvier contain a high density of voltage‑gated Na⁺ channels where the depolarizing current triggers a new action potential, enabling the impulse to ‘jump’ between nodes.",
+      "topic": "Propagation of nerve impulse"
+    },
+    {
+      "question": "For myelinated fibers, how does conduction velocity relate to fiber diameter?",
+      "options": [
+        "Velocity ∝ (diameter)²",
+        "Velocity is independent of diameter",
+        "Velocity ∝ diameter",
+        "Velocity ∝ 1/diameter"
+      ],
+      "answer": 2,
+      "explanation": "In myelinated axons, conduction velocity is roughly proportional to the fiber diameter because larger diameter reduces internal resistance, allowing faster current flow.",
+      "topic": "Propagation of nerve impulse"
+    },
+    {
+      "question": "Between two successive nodes of Ranvier, the membrane potential of a myelinated axon is:",
+      "options": [
+        "Constantly depolarized",
+        "Hyperpolarized",
+        "At resting potential",
+        "Oscillating"
+      ],
+      "answer": 2,
+      "explanation": "The internodal (myelinated) segment is electrically insulated, so its membrane potential remains at the resting level while the depolarizing current passes passively to the next node.",
+      "topic": "Propagation of nerve impulse"
+    },
+    {
+      "question": "Which experimental finding supports the mechanism of saltatory conduction?",
+      "options": [
+        "Conduction velocity is identical in myelinated and unmyelinated fibers of equal diameter",
+        "Blocking Na⁺ channels at nodes stops impulse propagation",
+        "Applying tetrodotoxin to internodal regions abolishes conduction",
+        "Removal of myelin does not affect speed"
+      ],
+      "answer": 1,
+      "explanation": "If Na⁺ channels at the nodes are blocked, the action potential cannot be regenerated, halting propagation, confirming that nodes are essential for saltatory conduction.",
+      "topic": "Propagation of nerve impulse"
+    },
+    {
+      "question": "In demyelinating diseases such as multiple sclerosis, the primary effect on nerve impulse propagation is:",
+      "options": [
+        "Increased amplitude of action potentials",
+        "Decrease in threshold stimulus",
+        "Slowing of conduction velocity and possible conduction block",
+        "Generation of spontaneous impulses"
+      ],
+      "answer": 2,
+      "explanation": "Loss of myelin reduces membrane resistance and increases capacitance, causing the impulse to leak and slow down, often leading to conduction block.",
+      "topic": "Propagation of nerve impulse"
+    },
+    {
+      "question": "Why is saltatory conduction faster than continuous conduction in myelinated axons?",
+      "options": [
+        "Because myelinated axons have a larger diameter",
+        "Because the myelin sheath reduces membrane capacitance and increases membrane resistance",
+        "Because they contain more mitochondria for ATP production",
+        "Because they have a higher number of neurotransmitter vesicles at the terminals"
+      ],
+      "answer": 1,
+      "explanation": "Myelin insulates the axon, decreasing capacitance and increasing transverse resistance, so the depolarizing current spreads rapidly to the next node, speeding up conduction.",
+      "topic": "Saltatory conduction"
+    },
+    {
+      "question": "In a myelinated nerve fiber, the action potential is regenerated at which specialized structures?",
+      "options": [
+        "Axon hillock",
+        "Nodes of Ranvier",
+        "Schwann cell cytoplasm",
+        "Internodal segments"
+      ],
+      "answer": 1,
+      "explanation": "Voltage‑gated Na⁺ channels are densely packed at the nodes of Ranvier, where each arriving depolarization triggers a new action potential.",
+      "topic": "Saltatory conduction"
+    },
+    {
+      "question": "Which statement about the nodes of Ranvier is FALSE?",
+      "options": [
+        "They contain a high density of voltage‑gated Na⁺ channels",
+        "They are gaps in the myelin sheath",
+        "They increase the membrane capacitance of the axon",
+        "They allow Na⁺ influx during an action potential"
+      ],
+      "answer": 2,
+      "explanation": "Myelination lowers overall membrane capacitance; the nodes themselves do not increase the axon's capacitance in a way that speeds conduction.",
+      "topic": "Saltatory conduction"
+    },
+    {
+      "question": "In demyelinating diseases such as multiple sclerosis, the most directly affected aspect of nerve impulse conduction is:",
+      "options": [
+        "Generation of the action potential at the axon hillock",
+        "Speed of impulse propagation along the axon",
+        "Release of neurotransmitter at the synapse",
+        "Synthesis of myelin proteins"
+      ],
+      "answer": 1,
+      "explanation": "Loss of myelin reduces membrane resistance and increases capacitance, markedly slowing the velocity of impulse transmission.",
+      "topic": "Saltatory conduction"
+    },
+    {
+      "question": "Which sequence best describes saltatory conduction along a myelinated axon?",
+      "options": [
+        "Continuous depolarization of the entire membrane",
+        "Depolarization at one node triggers depolarization at the next node without affecting the internodal membrane",
+        "The action potential travels through the cytoplasm of Schwann cells",
+        "Sodium ions flow across the myelin sheath"
+      ],
+      "answer": 1,
+      "explanation": "The depolarizing current jumps from one node to the next, while the insulated internodes remain electrically passive.",
+      "topic": "Saltatory conduction"
+    },
+    {
+      "question": "A myelinated fiber conducts impulses approximately how many times faster than an unmyelinated fiber of the same diameter?",
+      "options": [
+        "2 times faster",
+        "5 times faster",
+        "10 times faster",
+        "20 times faster"
+      ],
+      "answer": 2,
+      "explanation": "Myelination can increase conduction velocity by about tenfold compared with an unmyelinated fiber of equal diameter.",
+      "topic": "Saltatory conduction"
+    },
+    {
+      "question": "The primary electrical changes responsible for the increased conduction velocity in myelinated fibers are:",
+      "options": [
+        "Decrease in axial resistance",
+        "Increase in membrane resistance and decrease in membrane capacitance",
+        "Increase in extracellular potassium concentration",
+        "Decrease in intracellular sodium concentration"
+      ],
+      "answer": 1,
+      "explanation": "Myelin raises transverse (membrane) resistance and lowers capacitance, allowing the depolarizing current to travel farther with less loss, thus speeding conduction.",
+      "topic": "Saltatory conduction"
+    },
+    {
+      "question": "Continuous conduction in a nerve fiber is best described as:",
+      "options": [
+        "Propagation of the action potential by successive depolarization of adjacent membrane segments without interruption",
+        "Jumping of the impulse from one node of Ranvier to the next",
+        "Transmission of signal through electrical synapses only",
+        "Propagation that occurs only in dendrites"
+      ],
+      "answer": 0,
+      "explanation": "In continuous conduction the impulse moves along the entire length of a non‑myelinated axon by local currents that depolarize the next segment, without any jumps.",
+      "topic": "Continuous conduction"
+    },
+    {
+      "question": "Compared with saltatory conduction, the velocity of continuous conduction in non‑myelinated fibers is:",
+      "options": [
+        "Approximately 10‑20 times slower",
+        "Approximately the same",
+        "Faster due to lack of nodes",
+        "Independent of axon diameter"
+      ],
+      "answer": 0,
+      "explanation": "Myelin insulates the axon and allows the impulse to jump between nodes, making saltatory conduction much faster than the slower, continuous propagation in non‑myelinated fibers.",
+      "topic": "Continuous conduction"
+    },
+    {
+      "question": "The local current that depolarizes the next segment of a non‑myelinated axon during continuous conduction is mainly carried by:",
+      "options": [
+        "Na⁺ ions flowing inward through voltage‑gated Na⁺ channels",
+        "K⁺ ions flowing outward through voltage‑gated K⁺ channels",
+        "Cl⁻ ions moving inward",
+        "Ca²⁺ ions entering through voltage‑gated channels"
+      ],
+      "answer": 0,
+      "explanation": "Depolarization is produced primarily by the rapid influx of Na⁺ through voltage‑gated sodium channels, generating the local current that spreads to the adjacent region.",
+      "topic": "Continuous conduction"
+    },
+    {
+      "question": "During continuous conduction, the refractory period of a segment ensures that the impulse:",
+      "options": [
+        "Cannot travel backward toward the soma",
+        "Can travel in both directions equally",
+        "Stops at the first node of Ranvier",
+        "Accelerates as it moves"
+      ],
+      "answer": 0,
+      "explanation": "The absolute refractory period makes the previously excited segment temporarily inexcitable, preventing the impulse from moving backward and ensuring unidirectional propagation.",
+      "topic": "Continuous conduction"
+    },
+    {
+      "question": "Increasing the diameter of a non‑myelinated axon will:",
+      "options": [
+        "Increase the speed of continuous conduction",
+        "Decrease the speed",
+        "Have no effect on speed",
+        "Convert it to saltatory conduction"
+      ],
+      "answer": 0,
+      "explanation": "A larger diameter reduces internal (axial) resistance, allowing the local current to spread more rapidly and thus increasing conduction velocity.",
+      "topic": "Continuous conduction"
+    },
+    {
+      "question": "Which statement is FALSE about continuous conduction in non‑myelinated fibers?",
+      "options": [
+        "The impulse travels by successive depolarization of adjacent membrane segments",
+        "Myelin sheath is absent, so there are no nodes of Ranvier",
+        "Conduction velocity is independent of axon diameter",
+        "Local currents flow through the extracellular fluid to depolarize the next segment"
+      ],
+      "answer": 2,
+      "explanation": "Conduction velocity in continuous conduction does depend on axon diameter; larger diameters conduct faster, making the statement that it is independent false.",
+      "topic": "Continuous conduction"
+    },
+    {
+      "question": "Which statement correctly describes the role of the nodes of Ranvier in myelinated axons?",
+      "options": [
+        "They are gaps where voltage‑gated Na⁺ channels are concentrated, allowing regeneration of the action potential",
+        "They are sites where myelin is thickest, preventing ion flow",
+        "They contain a high density of mitochondria for ATP production",
+        "They are regions where neurotransmitter release occurs"
+      ],
+      "answer": 0,
+      "explanation": "Nodes of Ranvier are the short, unmyelinated gaps between adjacent myelin segments where voltage‑gated Na⁺ channels are densely packed, enabling the action potential to be regenerated and to ‘jump’ to the next node.",
+      "topic": "Myelinated nerve fibres"
+    },
+    {
+      "question": "Compared with an unmyelinated axon of the same diameter, the conduction velocity of a myelinated axon is approximately:",
+      "options": [
+        "2 times faster",
+        "5 times faster",
+        "10 times faster",
+        "the same"
+      ],
+      "answer": 1,
+      "explanation": "Myelination reduces membrane capacitance and increases resistance, allowing saltatory conduction; this typically makes the impulse travel about five times faster than in an unmyelinated fiber of equal diameter.",
+      "topic": "Myelinated nerve fibres"
+    },
+    {
+      "question": "In the peripheral and central nervous systems, the myelin sheath of a myelinated fiber is formed by:",
+      "options": [
+        "Schwann cells in the PNS and oligodendrocytes in the CNS",
+        "Only Schwann cells",
+        "Only oligodendrocytes",
+        "Astrocytes"
+      ],
+      "answer": 0,
+      "explanation": "In the peripheral nervous system, each Schwann cell wraps around a single axon segment, whereas in the central nervous system, a single oligodendrocyte can myelinate multiple axon segments.",
+      "topic": "Myelinated nerve fibres"
+    },
+    {
+      "question": "Which distribution of voltage‑gated Na⁺ channels is characteristic of a myelinated axon?",
+      "options": [
+        "Dense at the nodes of Ranvier and sparse under the myelin sheath",
+        "Uniformly distributed along the entire axolemma",
+        "Present only in the internodal (myelinated) region",
+        "Absent at the nodes of Ranvier"
+      ],
+      "answer": 0,
+      "explanation": "Myelinated axons concentrate voltage‑gated Na⁺ channels at the nodes of Ranvier, while the internodal regions have very few such channels due to the insulating myelin.",
+      "topic": "Myelinated nerve fibres"
+    },
+    {
+      "question": "The term “saltatory conduction” refers to:",
+      "options": [
+        "The jumping of the action potential from one node of Ranvier to the next",
+        "Continuous propagation along the entire axolemma",
+        "Diffusion of ions across the myelin sheath",
+        "Release of neurotransmitter at the synaptic terminal"
+      ],
+      "answer": 0,
+      "explanation": "Saltatory conduction describes the rapid propagation of an action potential by ‘jumping’ between successive nodes of Ranvier, bypassing the insulated internodal segments.",
+      "topic": "Myelinated nerve fibres"
+    },
+    {
+      "question": "A disease causing demyelination of peripheral nerves would most likely produce which change in nerve impulse transmission?",
+      "options": [
+        "Decrease in conduction velocity without change in amplitude",
+        "Increase in conduction velocity",
+        "No change in conduction velocity",
+        "Immediate cessation of action‑potential generation"
+      ],
+      "answer": 0,
+      "explanation": "Loss of myelin reduces insulation, increasing capacitance and decreasing resistance, which slows the conduction velocity while the amplitude of the regenerated action potential remains largely unchanged.",
+      "topic": "Myelinated nerve fibres"
+    },
+    {
+      "question": "Compared with an unmyelinated axon of the same diameter, the length constant (λ) of a myelinated axon is:",
+      "options": [
+        "Larger, because myelin reduces membrane capacitance",
+        "Smaller, because myelin increases membrane resistance",
+        "Unchanged",
+        "Zero"
+      ],
+      "answer": 0,
+      "explanation": "Myelin lowers membrane capacitance and raises transverse resistance, resulting in a larger length constant, meaning the depolarizing current spreads farther along the axon.",
+      "topic": "Myelinated nerve fibres"
+    },
+    {
+      "question": "Which structural characteristic correctly describes non‑myelinated nerve fibres?",
+      "options": [
+        "Axons are wrapped by multiple layers of myelin produced by Schwann cells",
+        "Axons are surrounded by a single layer of Schwann cell cytoplasm without compact myelin",
+        "Axons possess nodes of Ranvier at regular intervals",
+        "Axons are covered by oligodendrocyte processes forming myelin sheaths"
+      ],
+      "answer": 1,
+      "explanation": "Non‑myelinated fibres have axons enveloped by the cytoplasm of Schwann cells without the formation of compact myelin layers.",
+      "topic": "Non-myelinated nerve fibres"
+    },
+    {
+      "question": "In non‑myelinated fibres, the primary factor determining conduction velocity is:",
+      "options": [
+        "Length of nodes of Ranvier",
+        "Diameter of the axon",
+        "Number of Schwann cells per unit length",
+        "Presence of voltage‑gated Na+ channels at the nodes"
+      ],
+      "answer": 1,
+      "explanation": "Larger axonal diameter reduces internal resistance, allowing faster propagation in non‑myelinated fibres.",
+      "topic": "Non-myelinated nerve fibres"
+    },
+    {
+      "question": "Which type of sensory information is most commonly transmitted by non‑myelinated C fibres?",
+      "options": [
+        "Fine touch",
+        "Proprioception",
+        "Slow, dull pain",
+        "Rapid vibration"
+      ],
+      "answer": 2,
+      "explanation": "C fibres, which are non‑myelinated, convey slow, poorly localized (dull) pain sensations.",
+      "topic": "Non-myelinated nerve fibres"
+    },
+    {
+      "question": "Compared with myelinated A‑δ fibres, non‑myelinated C fibres:",
+      "options": [
+        "Conduct impulses faster than A‑δ fibres",
+        "Have larger axonal diameters than A‑δ fibres",
+        "Possess nodes of Ranvier",
+        "Have a higher threshold for activation"
+      ],
+      "answer": 3,
+      "explanation": "C fibres require a stronger stimulus (higher threshold) and conduct more slowly than A‑δ fibres.",
+      "topic": "Non-myelinated nerve fibres"
+    },
+    {
+      "question": "The propagation of an action potential along a non‑myelinated axon is best described as:",
+      "options": [
+        "Saltatory conduction",
+        "Continuous conduction",
+        "Jumping conduction",
+        "Retrograde conduction"
+      ],
+      "answer": 1,
+      "explanation": "In non‑myelinated axons the impulse moves continuously along the membrane without jumping between nodes.",
+      "topic": "Non-myelinated nerve fibres"
+    },
+    {
+      "question": "Why do non‑myelinated fibres conduct impulses more slowly than myelinated fibres of the same diameter?",
+      "options": [
+        "They have fewer voltage‑gated Na+ channels per unit length",
+        "The absence of myelin increases membrane capacitance and decreases resistance",
+        "Their axoplasm contains more cytoskeletal proteins",
+        "They lack mitochondria for ATP production"
+      ],
+      "answer": 1,
+      "explanation": "Myelin reduces membrane capacitance and increases resistance, allowing faster depolarisation; its absence slows conduction.",
+      "topic": "Non-myelinated nerve fibres"
+    },
+    {
+      "question": "In the autonomic nervous system, post‑ganglionic fibers are non‑myelinated. What functional advantage does this provide?",
+      "options": [
+        "Ensures rapid reflexes",
+        "Allows slower, sustained signaling appropriate for autonomic control",
+        "Increases resistance to electrical interference",
+        "Provides structural support for long axons"
+      ],
+      "answer": 1,
+      "explanation": "Slower conduction of non‑myelinated post‑ganglionic fibers matches the need for prolonged, graded autonomic responses rather than rapid signaling.",
+      "topic": "Non-myelinated nerve fibres"
+    },
+    {
+      "question": "Which factor most significantly increases the speed of nerve impulse conduction?",
+      "options": [
+        "Larger axon diameter",
+        "Higher extracellular potassium concentration",
+        "Presence of a myelin sheath",
+        "Lower temperature"
+      ],
+      "answer": 2,
+      "explanation": "Myelination allows saltatory conduction, greatly reducing the time needed for depolarisation to travel along the axon compared with unmyelinated fibres.",
+      "topic": "Speed of impulse conduction"
+    },
+    {
+      "question": "In myelinated nerve fibres, the impulse propagates by:",
+      "options": [
+        "Continuous depolarisation along the entire membrane",
+        "Saltatory conduction jumping between nodes of Ranvier",
+        "Diffusion of ions through the cytoplasm",
+        "Propagation via gap junctions"
+      ],
+      "answer": 1,
+      "explanation": "Myelin insulates the axon, so the action potential is regenerated only at the nodes of Ranvier, causing the impulse to ‘jump’ from node to node.",
+      "topic": "Speed of impulse conduction"
+    },
+    {
+      "question": "Conduction velocity in a myelinated fibre is approximately proportional to:",
+      "options": [
+        "The square of the fibre diameter",
+        "The square root of the fibre diameter",
+        "The fibre diameter (linear relationship)",
+        "The inverse of the fibre diameter"
+      ],
+      "answer": 2,
+      "explanation": "For myelinated axons, velocity increases roughly linearly with diameter, whereas for unmyelinated axons it varies with the square root of diameter.",
+      "topic": "Speed of impulse conduction"
+    },
+    {
+      "question": "Which statement is FALSE regarding factors affecting impulse conduction speed?",
+      "options": [
+        "Myelinated fibres have higher membrane resistance",
+        "Nodes of Ranvier are sites of ion exchange",
+        "Increasing temperature decreases conduction velocity",
+        "Larger diameter fibres conduct faster"
+      ],
+      "answer": 2,
+      "explanation": "Higher temperature actually speeds up ion channel kinetics, thereby increasing conduction velocity; the statement that it decreases speed is false.",
+      "topic": "Speed of impulse conduction"
+    },
+    {
+      "question": "A nerve impulse travels 1 m in 5 ms in a myelinated fibre of 20 µm diameter. What is its conduction velocity?",
+      "options": [
+        "0.2 m/s",
+        "2 m/s",
+        "20 m/s",
+        "200 m/s"
+      ],
+      "answer": 3,
+      "explanation": "Velocity = distance/time = 1 m / 0.005 s = 200 m/s.",
+      "topic": "Speed of impulse conduction"
+    },
+    {
+      "question": "The main reason saltatory conduction is faster than continuous conduction is that:",
+      "options": [
+        "Myelin reduces membrane capacitance and increases resistance",
+        "Myelin increases the density of ion channels along the axon",
+        "Nodes of Ranvier have a larger diameter than the internodal region",
+        "Myelin allows direct cytoplasmic flow of ions"
+      ],
+      "answer": 0,
+      "explanation": "Myelin lowers the capacitance and raises the transverse resistance, so less charge is needed to change the membrane potential, allowing rapid depolarisation at the nodes.",
+      "topic": "Speed of impulse conduction"
+    },
+    {
+      "question": "An unmyelinated fibre of 10 µm diameter conducts at ~1 m/s. What conduction velocity would you expect for a myelinated fibre of the same diameter?",
+      "options": [
+        "~1 m/s",
+        "~2 m/s",
+        "~5 m/s",
+        "~10 m/s"
+      ],
+      "answer": 2,
+      "explanation": "Myelination typically increases conduction speed by 5–10 times compared with an unmyelinated fibre of equal diameter; ~5 m/s is a reasonable estimate.",
+      "topic": "Speed of impulse conduction"
+    },
+    {
+      "question": "Which sequence correctly describes the events at a chemical synapse after an action potential reaches the presynaptic terminal?",
+      "options": [
+        "Voltage-gated Na⁺ channels open → Ca²⁺ influx → neurotransmitter release → postsynaptic receptor activation",
+        "Voltage-gated Ca²⁺ channels open → Ca²⁺ influx → vesicle fusion → neurotransmitter release → postsynaptic receptor activation",
+        "Voltage-gated K⁺ channels open → K⁺ efflux → neurotransmitter release → postsynaptic receptor activation",
+        "Voltage-gated Na⁺ channels open → Na⁺ influx → neurotransmitter release → postsynaptic receptor activation"
+      ],
+      "answer": 1,
+      "explanation": "An arriving action potential depolarizes the presynaptic membrane, opening voltage‑gated Ca²⁺ channels. Ca²⁺ influx triggers vesicle fusion and neurotransmitter release, which then binds to receptors on the postsynaptic membrane.",
+      "topic": "Synapse"
+    },
+    {
+      "question": "The principal structural difference between electrical and chemical synapses is that electrical synapses:",
+      "options": [
+        "Contain synaptic vesicles that release neurotransmitter",
+        "Use gap junctions composed of connexons to provide direct cytoplasmic continuity",
+        "Release acetylcholine into the synaptic cleft",
+        "Have a larger synaptic cleft than chemical synapses"
+      ],
+      "answer": 1,
+      "explanation": "Electrical synapses are characterized by gap junction channels (connexons) that directly connect the cytoplasm of two neurons, allowing ions to pass instantly.",
+      "topic": "Synapse"
+    },
+    {
+      "question": "At the neuromuscular junction, acetylcholine binds to receptors that are:",
+      "options": [
+        "Ligand‑gated Na⁺ channels",
+        "G‑protein‑coupled receptors",
+        "Voltage‑gated K⁺ channels",
+        "Ionotropic glutamate receptors"
+      ],
+      "answer": 0,
+      "explanation": "Nicotinic acetylcholine receptors at the motor end‑plate are ligand‑gated ion channels permeable mainly to Na⁺ (and K⁺), leading to depolarisation of the muscle fibre.",
+      "topic": "Synapse"
+    },
+    {
+      "question": "Which ion’s entry into the presynaptic terminal is most critical for initiating neurotransmitter release?",
+      "options": [
+        "Na⁺",
+        "K⁺",
+        "Ca²⁺",
+        "Cl⁻"
+      ],
+      "answer": 2,
+      "explanation": "The rapid rise in intracellular Ca²⁺ concentration after voltage‑gated Ca²⁺ channels open triggers the exocytosis of synaptic vesicles.",
+      "topic": "Synapse"
+    },
+    {
+      "question": "The synaptic delay (time between an action potential arriving at the presynaptic terminal and the onset of the postsynaptic response) is mainly due to:",
+      "options": [
+        "Diffusion of neurotransmitter across the cleft",
+        "Opening of voltage‑gated Na⁺ channels in the postsynaptic membrane",
+        "Vesicle docking, Ca²⁺‑dependent exocytosis, and receptor activation",
+        "Propagation of the action potential along the axon"
+      ],
+      "answer": 2,
+      "explanation": "Synaptic delay (~0.5–2 ms) arises from the time required for Ca²⁺ influx, vesicle fusion, neurotransmitter release, diffusion, and receptor activation.",
+      "topic": "Synapse"
+    },
+    {
+      "question": "Which statement about the synaptic cleft is FALSE?",
+      "options": [
+        "It is approximately 20–40 nm wide",
+        "It contains enzymes that degrade neurotransmitters",
+        "It is filled with extracellular fluid that allows free diffusion of neurotransmitters",
+        "It contains gap junctions that permit direct ionic flow between neurons"
+      ],
+      "answer": 3,
+      "explanation": "Gap junctions are a feature of electrical synapses, not of the chemical synaptic cleft, which lacks direct cytoplasmic connections.",
+      "topic": "Synapse"
+    },
+    {
+      "question": "During high‑frequency stimulation, synaptic fatigue most commonly results from:",
+      "options": [
+        "Accumulation of Na⁺ in the synaptic cleft",
+        "Depletion of the readily releasable pool of synaptic vesicles",
+        "Increased activity of acetylcholinesterase",
+        "Hyperpolarisation of the postsynaptic membrane"
+      ],
+      "answer": 1,
+      "explanation": "Repeated firing can exhaust the pool of vesicles ready for release, reducing the amount of neurotransmitter released per impulse and causing fatigue.",
+      "topic": "Synapse"
+    },
+    {
+      "question": "Which ion's influx into the presynaptic terminal is the immediate trigger for neurotransmitter release?",
+      "options": [
+        "Na⁺",
+        "Ca²⁺",
+        "K⁺",
+        "Cl⁻"
+      ],
+      "answer": 1,
+      "explanation": "Depolarisation opens voltage‑gated Ca²⁺ channels; the rapid rise in intracellular Ca²⁺ concentration initiates vesicle fusion and neurotransmitter release.",
+      "topic": "Presynaptic membrane"
+    },
+    {
+      "question": "Which protein complex directly mediates the fusion of synaptic vesicles with the presynaptic membrane?",
+      "options": [
+        "SNARE protein complex",
+        "G‑protein coupled receptor",
+        "Na⁺/K⁺‑ATPase",
+        "Microtubule"
+      ],
+      "answer": 0,
+      "explanation": "SNARE proteins (synaptobrevin, SNAP‑25, syntaxin) form a tight complex that pulls the vesicle and plasma membranes together, allowing exocytosis.",
+      "topic": "Presynaptic membrane"
+    },
+    {
+      "question": "Which of the following is NOT a characteristic feature of the presynaptic membrane?",
+      "options": [
+        "Contains voltage‑gated Ca²⁺ channels",
+        "Has high density of acetylcholine receptors",
+        "Stores synaptic vesicles",
+        "Possesses active zones"
+      ],
+      "answer": 1,
+      "explanation": "Acetylcholine receptors are abundant on the postsynaptic membrane; the presynaptic terminal mainly houses voltage‑gated Ca²⁺ channels, vesicles, and active zones.",
+      "topic": "Presynaptic membrane"
+    },
+    {
+      "question": "Botulinum toxin blocks neurotransmitter release by cleaving which presynaptic protein?",
+      "options": [
+        "Synaptobrevin",
+        "SNAP‑25",
+        "Syntaxin",
+        "All of the above"
+      ],
+      "answer": 1,
+      "explanation": "Most clinically relevant botulinum serotypes cleave SNAP‑25, a core component of the SNARE complex, preventing vesicle fusion.",
+      "topic": "Presynaptic membrane"
+    },
+    {
+      "question": "During an action potential arriving at a nerve terminal, the depolarisation opens which type of channels that are crucial for synaptic transmission?",
+      "options": [
+        "Voltage‑gated Na⁺ channels",
+        "Voltage‑gated K⁺ channels",
+        "Voltage‑gated Ca²⁺ channels",
+        "Ligand‑gated Cl⁻ channels"
+      ],
+      "answer": 2,
+      "explanation": "The depolarisation specifically activates voltage‑gated Ca²⁺ channels; the resulting Ca²⁺ influx triggers exocytosis of neurotransmitter‑filled vesicles.",
+      "topic": "Presynaptic membrane"
+    },
+    {
+      "question": "The brief latency between an arriving action potential and the onset of neurotransmitter release is mainly due to:",
+      "options": [
+        "Diffusion of Na⁺ across membrane",
+        "Opening of voltage‑gated Ca²⁺ channels",
+        "Vesicle docking and priming",
+        "Reuptake of neurotransmitter"
+      ],
+      "answer": 2,
+      "explanation": "Before release, synaptic vesicles must be docked and primed at active zones; this preparatory step accounts for the measurable synaptic delay.",
+      "topic": "Presynaptic membrane"
+    },
+    {
+      "question": "Which statement about the presynaptic membrane is correct?",
+      "options": [
+        "It contains enzymes that degrade neurotransmitters",
+        "It has voltage‑gated Ca²⁺ channels that are inactivated by high extracellular Ca²⁺",
+        "It releases neurotransmitter by exocytosis",
+        "It is impermeable to ions during an action potential"
+      ],
+      "answer": 2,
+      "explanation": "Neurotransmitter release from the presynaptic terminal occurs by Ca²⁺‑dependent exocytosis of synaptic vesicles.",
+      "topic": "Presynaptic membrane"
+    },
+    {
+      "question": "What is the typical width of the synaptic cleft in a chemical synapse?",
+      "options": [
+        "20‑40 nm",
+        "100‑200 nm",
+        "1‑2 µm",
+        "5‑10 nm"
+      ],
+      "answer": 0,
+      "explanation": "Electron‑microscopic studies show that the gap between the pre‑ and postsynaptic membranes is about 20 to 40 nanometres, allowing rapid diffusion of neurotransmitters.",
+      "topic": "Synaptic cleft"
+    },
+    {
+      "question": "Which enzyme present in the synaptic cleft terminates the action of acetylcholine?",
+      "options": [
+        "Acetylcholinesterase",
+        "Monoamine oxidase",
+        "Tyrosine hydroxylase",
+        "Catechol‑O‑methyltransferase"
+      ],
+      "answer": 0,
+      "explanation": "Acetylcholinesterase, anchored to the basal lamina of the cleft, hydrolyses acetylcholine into acetate and choline, ending its effect.",
+      "topic": "Synaptic cleft"
+    },
+    {
+      "question": "The primary mechanism by which neurotransmitters cross the synaptic cleft is:",
+      "options": [
+        "Simple diffusion",
+        "Active transport",
+        "Endocytosis",
+        "Facilitated diffusion via carrier proteins"
+      ],
+      "answer": 0,
+      "explanation": "Neurotransmitters move down their concentration gradient across the ~20‑nm cleft by simple diffusion; no carriers are required.",
+      "topic": "Synaptic cleft"
+    },
+    {
+      "question": "Which statement about the synaptic cleft is FALSE?",
+      "options": [
+        "It contains extracellular matrix proteins that help maintain its width",
+        "It is a site where electrical currents directly pass between neurons",
+        "It houses enzymes that degrade neurotransmitters",
+        "It separates presynaptic and postsynaptic membranes"
+      ],
+      "answer": 1,
+      "explanation": "Direct electrical coupling occurs through gap junctions, not across the chemical synaptic cleft; the cleft is a fluid‑filled gap.",
+      "topic": "Synaptic cleft"
+    },
+    {
+      "question": "In a neuromuscular junction, rapid breakdown of acetylcholine in the synaptic cleft is essential because:",
+      "options": [
+        "It prevents continuous stimulation of the muscle fiber",
+        "It enhances the speed of neurotransmitter release",
+        "It allows reuptake of acetylcholine into the presynaptic terminal",
+        "It increases the amplitude of the end‑plate potential"
+      ],
+      "answer": 0,
+      "explanation": "Quick hydrolysis stops the end‑plate potential, preventing tetanic contraction and allowing muscle relaxation between stimuli.",
+      "topic": "Synaptic cleft"
+    },
+    {
+      "question": "Which change in the synaptic cleft would most likely increase the duration of a postsynaptic response?",
+      "options": [
+        "Decrease in acetylcholinesterase activity",
+        "Increase in extracellular calcium concentration",
+        "Decrease in vesicle release probability",
+        "Increase in myelin thickness"
+      ],
+      "answer": 0,
+      "explanation": "Reduced acetylcholinesterase slows acetylcholine degradation, prolonging its presence and extending the postsynaptic depolarisation.",
+      "topic": "Synaptic cleft"
+    },
+    {
+      "question": "The presence of which component in the synaptic cleft helps restrict diffusion of neurotransmitters to the immediate postsynaptic membrane?",
+      "options": [
+        "Proteoglycans",
+        "Voltage‑gated sodium channels",
+        "Myelin basic protein",
+        "Neurofilaments"
+      ],
+      "answer": 0,
+      "explanation": "Proteoglycans and other extracellular matrix molecules create a viscous environment that limits lateral spread of neurotransmitters, focusing their action.",
+      "topic": "Synaptic cleft"
+    },
+    {
+      "question": "Which type of postsynaptic receptor mediates the fastest excitatory postsynaptic potentials in the central nervous system?",
+      "options": [
+        "G‑protein coupled receptor",
+        "Ligand‑gated ion channel",
+        "Tyrosine kinase receptor",
+        "Intracellular nuclear receptor"
+      ],
+      "answer": 1,
+      "explanation": "Fast EPSPs are generated when neurotransmitter binds to ligand‑gated ion channels, causing immediate opening of Na⁺ channels and rapid depolarisation.",
+      "topic": "Postsynaptic membrane"
+    },
+    {
+      "question": "At the neuromuscular junction, activation of the postsynaptic acetylcholine receptor results in opening of channels permeable to which ions?",
+      "options": [
+        "Na⁺ only",
+        "K⁺ only",
+        "Na⁺ and K⁺",
+        "Cl⁻"
+      ],
+      "answer": 2,
+      "explanation": "Nicotinic ACh receptors are non‑selective cation channels that allow Na⁺ influx and K⁺ efflux; the net Na⁺ entry depolarises the muscle fibre.",
+      "topic": "Postsynaptic membrane"
+    },
+    {
+      "question": "An inhibitory postsynaptic potential (IPSP) on the postsynaptic membrane is primarily produced by:",
+      "options": [
+        "Opening of Na⁺ channels causing depolarisation",
+        "Opening of Cl⁻ channels causing hyperpolarisation",
+        "Opening of Ca²⁺ channels causing depolarisation",
+        "Closing of K⁺ channels causing depolarisation"
+      ],
+      "answer": 1,
+      "explanation": "GABA_A or glycine receptors open Cl⁻ channels; influx of Cl⁻ makes the membrane potential more negative, producing an IPSP.",
+      "topic": "Postsynaptic membrane"
+    },
+    {
+      "question": "Temporal summation of postsynaptic potentials occurs because:",
+      "options": [
+        "Postsynaptic potentials persist longer than the interval between successive presynaptic spikes",
+        "Postsynaptic receptors remain permanently open",
+        "Action potentials are generated directly at the postsynaptic membrane",
+        "Neurotransmitter is released continuously from the presynaptic terminal"
+      ],
+      "answer": 0,
+      "explanation": "If a second PSP arrives before the first has decayed, the two potentials overlap and add together, producing a larger net depolarisation.",
+      "topic": "Postsynaptic membrane"
+    },
+    {
+      "question": "The term \"postsynaptic density\" (PSD) refers to:",
+      "options": [
+        "A high concentration of mitochondria in the presynaptic terminal",
+        "A thickened region of the postsynaptic membrane rich in receptors and scaffolding proteins",
+        "The extracellular space between pre‑ and postsynaptic membranes",
+        "The myelin sheath surrounding an axon"
+      ],
+      "answer": 1,
+      "explanation": "PSD is a protein‑dense specialization beneath the postsynaptic membrane that anchors neurotransmitter receptors and signalling molecules.",
+      "topic": "Postsynaptic membrane"
+    },
+    {
+      "question": "The reversal potential of an excitatory postsynaptic potential mediated by AMPA‑type glutamate receptors is mainly determined by the movement of which ion?",
+      "options": [
+        "K⁺",
+        "Cl⁻",
+        "Na⁺",
+        "Ca²⁺"
+      ],
+      "answer": 2,
+      "explanation": "AMPA receptors are permeable to Na⁺ (and K⁺); the depolarising drive is dominated by Na⁺ influx, setting the reversal potential close to the Na⁺ equilibrium potential.",
+      "topic": "Postsynaptic membrane"
+    },
+    {
+      "question": "Prolonged exposure of a postsynaptic receptor to its neurotransmitter leads to desensitisation, which manifests as:",
+      "options": [
+        "Increased amplitude of postsynaptic potentials",
+        "Reduced response despite continued presence of neurotransmitter",
+        "Permanent opening of ion channels",
+        "Immediate generation of action potentials"
+      ],
+      "answer": 1,
+      "explanation": "Desensitisation causes the receptor to become less responsive, so the postsynaptic cell shows a diminished or absent response even though the ligand remains bound.",
+      "topic": "Postsynaptic membrane"
+    },
+    {
+      "question": "Which structural component directly forms the channel that allows ionic current flow in an electrical synapse?",
+      "options": [
+        "Synaptic vesicles releasing neurotransmitter",
+        "Gap junction channels formed by connexons",
+        "Dense core vesicles containing neuropeptides",
+        "A wide synaptic cleft filled with extracellular matrix"
+      ],
+      "answer": 1,
+      "explanation": "Electrical synapses are mediated by gap junctions; each gap junction is composed of two connexons (hemichannels) that align to create a continuous aqueous pore for ions.",
+      "topic": "Electrical synapse"
+    },
+    {
+      "question": "In an electrical synapse, the directionality of signal transmission is usually:",
+      "options": [
+        "Bidirectional",
+        "Unidirectional",
+        "Retrograde only",
+        "No transmission"
+      ],
+      "answer": 0,
+      "explanation": "Gap junction channels generally permit current to flow in both directions, allowing reciprocal communication between coupled cells.",
+      "topic": "Electrical synapse"
+    },
+    {
+      "question": "Which of the following statements about the functional properties of electrical synapses is FALSE?",
+      "options": [
+        "They allow rapid transmission of ionic currents",
+        "They have a synaptic delay of ~0.5 ms",
+        "They can synchronize activity of coupled neurons",
+        "They permit passage of molecules up to ~1 kDa"
+      ],
+      "answer": 1,
+      "explanation": "Electrical synapses have an almost negligible delay (≈0.1 ms); a delay of ~0.5 ms is characteristic of chemical synapses, making this statement false.",
+      "topic": "Electrical synapse"
+    },
+    {
+      "question": "Electrical synapses are most commonly found in which neuronal circuit?",
+      "options": [
+        "Motor end-plate",
+        "Retina (photoreceptor to bipolar cells)",
+        "Hippocampal pyramidal cells",
+        "Autonomic ganglia"
+      ],
+      "answer": 1,
+      "explanation": "The retina contains many electrical synapses, especially between certain interneurons and between photoreceptor and bipolar cells, facilitating fast signal spread.",
+      "topic": "Electrical synapse"
+    },
+    {
+      "question": "The permeability of gap‑junction channels in electrical synapses is primarily determined by:",
+      "options": [
+        "Connexin protein composition",
+        "Voltage‑gated calcium channels",
+        "Number of synaptic vesicles",
+        "Density of postsynaptic receptors"
+      ],
+      "answer": 0,
+      "explanation": "Different connexin isoforms confer distinct conductance and selectivity properties to gap junction channels, governing what ions or small molecules can pass.",
+      "topic": "Electrical synapse"
+    },
+    {
+      "question": "Compared with chemical synapses, electrical synapses have which advantage?",
+      "options": [
+        "Ability to amplify signals",
+        "High temporal precision due to minimal delay",
+        "Greater synaptic plasticity",
+        "Ability to release multiple neurotransmitters"
+      ],
+      "answer": 1,
+      "explanation": "Because the current passes directly through gap junctions, electrical synapses exhibit virtually no synaptic delay, giving them superior temporal precision.",
+      "topic": "Electrical synapse"
+    },
+    {
+      "question": "A mutation that reduces the conductance of gap‑junction channels would most likely lead to:",
+      "options": [
+        "Increased speed of impulse propagation in myelinated axons",
+        "Decreased synchronization of neuronal networks",
+        "Enhanced release of neurotransmitters at chemical synapses",
+        "Greater excitatory postsynaptic potentials"
+      ],
+      "answer": 1,
+      "explanation": "Lower conductance diminishes the efficiency of direct ionic coupling, weakening the ability of electrically coupled neurons to fire synchronously.",
+      "topic": "Electrical synapse"
+    },
+    {
+      "question": "Which event is the immediate trigger for neurotransmitter release at a chemical synapse?",
+      "options": [
+        "Influx of Na+ through voltage‑gated Na+ channels",
+        "Influx of Ca2+ through voltage‑gated calcium channels",
+        "Efflux of K+ through voltage‑gated K+ channels",
+        "Opening of ligand‑gated Cl‑ channels"
+      ],
+      "answer": 1,
+      "explanation": "An arriving action potential opens voltage‑gated Ca2+ channels; the resulting Ca2+ influx initiates vesicle fusion and neurotransmitter release.",
+      "topic": "Chemical synapse"
+    },
+    {
+      "question": "In the neuromuscular junction, which enzyme terminates the action of acetylcholine?",
+      "options": [
+        "Monoamine oxidase",
+        "Acetylcholinesterase",
+        "Catechol‑O‑methyltransferase",
+        "Tyrosine hydroxylase"
+      ],
+      "answer": 1,
+      "explanation": "Acetylcholinesterase present in the synaptic cleft rapidly hydrolyses acetylcholine into acetate and choline, ending the signal.",
+      "topic": "Chemical synapse"
+    },
+    {
+      "question": "Which receptor type mediates the fast excitatory postsynaptic potentials in most central synapses?",
+      "options": [
+        "G‑protein coupled metabotropic receptors",
+        "Tyrosine kinase receptors",
+        "Ionotropic ligand‑gated ion channels",
+        "Nuclear hormone receptors"
+      ],
+      "answer": 2,
+      "explanation": "Ionotropic receptors are ligand‑gated ion channels that open within milliseconds, allowing rapid depolarisation.",
+      "topic": "Chemical synapse"
+    },
+    {
+      "question": "The synaptic delay between an action potential reaching the presynaptic terminal and the onset of the postsynaptic potential is mainly due to:",
+      "options": [
+        "Diffusion of neurotransmitter across the cleft",
+        "Time required for Na+ channel opening in the postsynaptic membrane",
+        "Time for vesicle docking and Ca2+‑mediated exocytosis",
+        "Refractory period of the presynaptic neuron"
+      ],
+      "answer": 2,
+      "explanation": "The delay (~0.5–1 ms) is caused by the steps of Ca2+ entry, vesicle docking, and fusion before neurotransmitter release.",
+      "topic": "Chemical synapse"
+    },
+    {
+      "question": "What is the primary role of the synaptic vesicle protein synaptotagmin?",
+      "options": [
+        "It pumps Ca2+ out of the presynaptic terminal",
+        "It acts as a Ca2+ sensor triggering vesicle fusion",
+        "It degrades neurotransmitter in the cleft",
+        "It forms the ion channel pore for neurotransmitter release"
+      ],
+      "answer": 1,
+      "explanation": "Synaptotagmin binds Ca2+ and initiates the rapid fusion of neurotransmitter‑filled vesicles with the presynaptic membrane.",
+      "topic": "Chemical synapse"
+    },
+    {
+      "question": "At a typical excitatory CNS synapse using glutamate, activation of its receptors primarily causes influx of which ion?",
+      "options": [
+        "Cl‑",
+        "K+",
+        "Na+",
+        "Ca2+"
+      ],
+      "answer": 2,
+      "explanation": "Ionotropic glutamate receptors (e.g., AMPA) open Na+ channels, allowing Na+ influx that depolarises the postsynaptic membrane.",
+      "topic": "Chemical synapse"
+    },
+    {
+      "question": "Which mechanism does NOT contribute to termination of neurotransmitter action at a chemical synapse?",
+      "options": [
+        "Reuptake into the presynaptic terminal",
+        "Diffusion away from the cleft",
+        "Enzymatic degradation in the cleft",
+        "Opening of voltage‑gated Na+ channels on the postsynaptic membrane"
+      ],
+      "answer": 3,
+      "explanation": "Opening of voltage‑gated Na+ channels generates the postsynaptic response but does not terminate neurotransmitter activity; termination involves reuptake, diffusion, and enzymatic breakdown.",
+      "topic": "Chemical synapse"
+    },
+    {
+      "question": "Which neurotransmitter is primarily responsible for transmitting signals at the neuromuscular junction?",
+      "options": [
+        "Acetylcholine",
+        "Dopamine",
+        "GABA",
+        "Serotonin"
+      ],
+      "answer": 0,
+      "explanation": "Acetylcholine is released from motor neuron terminals and binds to nicotinic receptors on skeletal muscle fibers, causing contraction.",
+      "topic": "Neurotransmitters"
+    },
+    {
+      "question": "In a typical chemical synapse, the entry of which ion into the presynaptic terminal is essential for neurotransmitter release?",
+      "options": [
+        "Na+",
+        "Ca2+",
+        "K+",
+        "Cl-"
+      ],
+      "answer": 1,
+      "explanation": "An influx of Ca2+ through voltage‑gated calcium channels triggers vesicle fusion with the presynaptic membrane, leading to neurotransmitter exocytosis.",
+      "topic": "Neurotransmitters"
+    },
+    {
+      "question": "What is the primary function of acetylcholinesterase in the synaptic cleft?",
+      "options": [
+        "Synthesize acetylcholine",
+        "Hydrolyze acetylcholine",
+        "Block Na+ channels",
+        "Reuptake acetylcholine into the presynaptic terminal"
+      ],
+      "answer": 1,
+      "explanation": "Acetylcholinesterase rapidly hydrolyses acetylcholine into acetate and choline, terminating the signal at cholinergic synapses.",
+      "topic": "Neurotransmitters"
+    },
+    {
+      "question": "Which neurotransmitter acts mainly as an inhibitory messenger in the central nervous system?",
+      "options": [
+        "Glutamate",
+        "GABA",
+        "Norepinephrine",
+        "Histamine"
+      ],
+      "answer": 1,
+      "explanation": "Gamma‑aminobutyric acid (GABA) binds to GABA_A and GABA_B receptors, causing hyperpolarisation and inhibition of neuronal firing.",
+      "topic": "Neurotransmitters"
+    },
+    {
+      "question": "At the neuromuscular junction, acetylcholine binds to which type of receptor?",
+      "options": [
+        "Nicotinic ionotropic receptor",
+        "Muscarinic metabotropic receptor",
+        "GABA_A receptor",
+        "NMDA receptor"
+      ],
+      "answer": 0,
+      "explanation": "Nicotinic receptors are ligand‑gated ion channels that open upon acetylcholine binding, allowing Na+ influx and depolarisation of the muscle membrane.",
+      "topic": "Neurotransmitters"
+    },
+    {
+      "question": "The term \"quantal release\" in synaptic transmission refers to:",
+      "options": [
+        "Release of a single neurotransmitter molecule",
+        "Release of neurotransmitter in fixed packets corresponding to vesicles",
+        "Release of neurotransmitter only after threshold is reached",
+        "Release of neurotransmitter via gap junctions"
+      ],
+      "answer": 1,
+      "explanation": "Neurotransmitters are released in discrete packets (quanta), each representing the contents of a single synaptic vesicle.",
+      "topic": "Neurotransmitters"
+    },
+    {
+      "question": "Which statement best distinguishes electrical synapses from chemical synapses?",
+      "options": [
+        "Electrical synapses use neurotransmitters",
+        "Chemical synapses allow direct ionic current flow",
+        "Electrical synapses involve gap junctions permitting bidirectional flow",
+        "Chemical synapses are faster than electrical synapses"
+      ],
+      "answer": 2,
+      "explanation": "Electrical synapses are formed by gap junction channels that permit direct, bidirectional ionic currents between cells, whereas chemical synapses rely on neurotransmitter release.",
+      "topic": "Neurotransmitters"
+    },
+    {
+      "question": "Which enzyme hydrolyzes acetylcholine in the synaptic cleft?",
+      "options": [
+        "Acetylcholinesterase",
+        "Monoamine oxidase",
+        "Catechol-O-methyltransferase",
+        "Tyrosine hydroxylase"
+      ],
+      "answer": 0,
+      "explanation": "Acetylcholinesterase rapidly breaks down acetylcholine into choline and acetate, terminating its action at cholinergic synapses.",
+      "topic": "Acetylcholine"
+    },
+    {
+      "question": "Binding of acetylcholine to its receptor at the neuromuscular junction primarily causes:",
+      "options": [
+        "Opening of Na⁺ channels leading to depolarization",
+        "Closing of K⁺ channels",
+        "Activation of G‑protein coupled pathways",
+        "Inhibition of voltage‑gated Ca²⁺ channels"
+      ],
+      "answer": 0,
+      "explanation": "Nicotinic receptors are ligand‑gated ion channels; acetylcholine binding opens Na⁺ (and some Ca²⁺) channels, producing an end‑plate potential that depolarizes the muscle fiber.",
+      "topic": "Acetylcholine"
+    },
+    {
+      "question": "Which statement about muscarinic acetylcholine receptors is FALSE?",
+      "options": [
+        "They are ligand‑gated ion channels",
+        "They are G‑protein coupled receptors",
+        "They are present in cardiac tissue",
+        "They mediate parasympathetic effects"
+      ],
+      "answer": 0,
+      "explanation": "Muscarinic receptors are metabotropic (G‑protein coupled); the ligand‑gated ion channel type is the nicotinic receptor.",
+      "topic": "Acetylcholine"
+    },
+    {
+      "question": "Organophosphate poisoning leads to which physiological change?",
+      "options": [
+        "Prolonged action of acetylcholine at synapses",
+        "Decreased synthesis of acetylcholine",
+        "Blockade of nicotinic receptors",
+        "Increased breakdown of acetylcholine"
+      ],
+      "answer": 0,
+      "explanation": "Organophosphates inhibit acetylcholinesterase, preventing acetylcholine degradation and causing its accumulation and prolonged stimulation of cholinergic receptors.",
+      "topic": "Acetylcholine"
+    },
+    {
+      "question": "Which drug acts as a competitive antagonist at nicotinic acetylcholine receptors at the neuromuscular junction?",
+      "options": [
+        "Curare",
+        "Atropine",
+        "Neostigmine",
+        "Pilocarpine"
+      ],
+      "answer": 0,
+      "explanation": "Curare binds to nicotinic receptors without activating them, preventing acetylcholine from opening the ion channel and producing muscle relaxation.",
+      "topic": "Acetylcholine"
+    },
+    {
+      "question": "Acetylcholine serves as the neurotransmitter in the autonomic nervous system at all of the following sites EXCEPT:",
+      "options": [
+        "Postganglionic parasympathetic fibers",
+        "Postganglionic sympathetic fibers",
+        "Preganglionic sympathetic fibers",
+        "Preganglionic parasympathetic fibers"
+      ],
+      "answer": 1,
+      "explanation": "Most postganglionic sympathetic fibers release norepinephrine; only the fibers to sweat glands use acetylcholine, making option 1 the exception.",
+      "topic": "Acetylcholine"
+    },
+    {
+      "question": "The enzyme that synthesizes acetylcholine, choline acetyltransferase, is located in:",
+      "options": [
+        "Presynaptic terminal cytoplasm",
+        "Postsynaptic membrane",
+        "Synaptic cleft",
+        "Myelin sheath"
+      ],
+      "answer": 0,
+      "explanation": "Choline acetyltransferase catalyzes the formation of acetylcholine from choline and acetyl‑CoA within the cytoplasm of the presynaptic nerve terminal.",
+      "topic": "Acetylcholine"
+    },
+    {
+      "question": "Which ion's influx into the presynaptic terminal triggers neurotransmitter release?",
+      "options": [
+        "Na⁺",
+        "Ca²⁺",
+        "K⁺",
+        "Cl⁻"
+      ],
+      "answer": 1,
+      "explanation": "The arrival of an action potential opens voltage‑gated Ca²⁺ channels; the resulting Ca²⁺ influx initiates vesicle fusion and neurotransmitter release.",
+      "topic": "Transmission across synapse"
+    },
+    {
+      "question": "At the neuromuscular junction, acetylcholine is removed from the synaptic cleft primarily by:",
+      "options": [
+        "Acetylcholinesterase activity",
+        "Reuptake into the presynaptic terminal",
+        "Diffusion away from the cleft",
+        "Uptake by surrounding glial cells"
+      ],
+      "answer": 0,
+      "explanation": "Acetylcholinesterase rapidly hydrolyses acetylcholine in the cleft, terminating the signal and preventing continuous stimulation of the muscle fiber.",
+      "topic": "Transmission across synapse"
+    },
+    {
+      "question": "Binding of acetylcholine to nicotinic receptors on skeletal muscle leads to:",
+      "options": [
+        "Opening of voltage‑gated Na⁺ channels causing depolarization",
+        "Activation of G‑protein coupled receptors and second messenger cascade",
+        "Opening of Cl⁻ channels causing hyperpolarization",
+        "Inhibition of adenylate cyclase activity"
+      ],
+      "answer": 0,
+      "explanation": "Nicotinic receptors are ligand‑gated ion channels; acetylcholine binding opens Na⁺ (and some Ca²⁺) channels, producing an end‑plate depolarization that triggers an action potential.",
+      "topic": "Transmission across synapse"
+    },
+    {
+      "question": "The principal cause of the synaptic delay between an arriving action potential and the postsynaptic response is:",
+      "options": [
+        "Diffusion of neurotransmitter across the cleft",
+        "Opening of postsynaptic Na⁺ channels",
+        "Vesicle docking, priming and fusion (exocytosis)",
+        "Reuptake of neurotransmitter into the presynaptic terminal"
+      ],
+      "answer": 2,
+      "explanation": "Synaptic delay (~0.5–1 ms) is mainly due to the time required for Ca²⁺‑dependent vesicle docking, priming, and fusion with the presynaptic membrane.",
+      "topic": "Transmission across synapse"
+    },
+    {
+      "question": "Which type of synapse provides direct electrical coupling between neurons?",
+      "options": [
+        "Chemical synapse",
+        "Electrical synapse",
+        "Neuromuscular junction",
+        "Autonomic ganglion synapse"
+      ],
+      "answer": 1,
+      "explanation": "Electrical synapses contain gap junctions that allow ions to pass directly between cells, enabling rapid, bidirectional transmission without neurotransmitter release.",
+      "topic": "Transmission across synapse"
+    },
+    {
+      "question": "In chemical synaptic transmission, \"quantal release\" refers to:",
+      "options": [
+        "Release of a single neurotransmitter molecule",
+        "Release of neurotransmitter in fixed packets corresponding to vesicles",
+        "Release proportional to the amount of Ca²⁺ entering the terminal",
+        "Release only during high‑frequency stimulation"
+      ],
+      "answer": 1,
+      "explanation": "Each synaptic vesicle contains a roughly constant amount of neurotransmitter; release occurs in discrete packets or quanta, producing miniature postsynaptic potentials.",
+      "topic": "Transmission across synapse"
+    },
+    {
+      "question": "Which statement about inhibitory neurotransmission at a central synapse is correct?",
+      "options": [
+        "GABA opens Na⁺ channels causing depolarization",
+        "Glycine receptors are ligand‑gated Cl⁻ channels leading to hyperpolarization",
+        "Inhibition is achieved by increasing intracellular cAMP",
+        "Inhibitory postsynaptic potentials are generated by opening voltage‑gated K⁺ channels"
+      ],
+      "answer": 1,
+      "explanation": "Glycine receptors (and many GABA_A receptors) are ligand‑gated Cl⁻ channels; Cl⁻ influx hyperpolarizes the membrane, producing an inhibitory postsynaptic potential.",
+      "topic": "Transmission across synapse"
+    }
+  ],
+  "generation": {
+    "model": "openai/gpt-oss-120b",
+    "strategy": "5-10 MCQs per exact syllabus topic",
+    "topicCount": 26,
+    "mcqCount": 181
+  }
+}
