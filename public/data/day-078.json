@@ -1,0 +1,3207 @@
+{
+  "day": 78,
+  "courseDate": "2026-12-01",
+  "publishAt": "2026-12-01T06:00:00+05:30",
+  "title": "Day 78: Human Brain and Spinal Cord",
+  "introduction": "This lesson provides an NCERT‑aligned overview of the human brain and spinal cord, covering the major divisions, structures, and their functional significance essential for NEET‑UG.",
+  "sections": [
+    {
+      "topic": "Human brain",
+      "heading": "Human Brain Overview",
+      "content": "The human brain, weighing ~1.4 kg, is the central organ of the nervous system. It is protected by the skull and meninges, divided into forebrain, midbrain and hindbrain, and consists of grey matter (neuronal cell bodies) and white matter (myelinated axons).",
+      "keyPoints": [
+        "Weight ~1.4 kg; protected by meninges",
+        "Divided into forebrain, midbrain, hindbrain",
+        "Grey matter contains cell bodies; white matter contains axons"
+      ],
+      "neetTips": [
+        "Remember the three primary brain divisions and their constituent structures"
+      ]
+    },
+    {
+      "topic": "Forebrain",
+      "heading": "Forebrain (Prosencephalon)",
+      "content": "The forebrain includes the telencephalon (cerebrum, basal ganglia) and diencephalon (thalamus, hypothalamus). It governs higher cognitive functions, sensory integration and endocrine regulation.",
+      "keyPoints": [
+        "Contains telencephalon and diencephalon",
+        "Controls cognition, voluntary movement, endocrine homeostasis"
+      ],
+      "neetTips": [
+        "Link forebrain to higher mental functions and hormonal control"
+      ]
+    },
+    {
+      "topic": "Midbrain",
+      "heading": "Midbrain (Mesencephalon)",
+      "content": "The midbrain connects the forebrain to the hindbrain and houses the tectum (corpora quadrigemina) and tegmentum, important for visual and auditory reflexes and motor coordination.",
+      "keyPoints": [
+        "Tectum contains corpora quadrigemina",
+        "Tegmentum involved in motor pathways"
+      ],
+      "neetTips": [
+        "Midbrain is a relay for visual‑auditory reflexes"
+      ]
+    },
+    {
+      "topic": "Hindbrain",
+      "heading": "Hindbrain (Rhombencephalon)",
+      "content": "The hindbrain comprises the metencephalon (pons, cerebellum) and myelencephalon (medulla oblongata). It regulates vital autonomic functions, balance and coordination.",
+      "keyPoints": [
+        "Metencephalon: pons & cerebellum",
+        "Myelencephalon: medulla oblongata"
+      ],
+      "neetTips": [
+        "Hindbrain controls life‑sustaining functions"
+      ]
+    },
+    {
+      "topic": "Cerebrum",
+      "heading": "Cerebrum",
+      "content": "The cerebrum is the largest brain part, consisting of two cerebral hemispheres linked by the corpus callosum. It contains the cerebral cortex responsible for perception, cognition and voluntary movement.",
+      "keyPoints": [
+        "Largest brain region",
+        "Two hemispheres + corpus callosum",
+        "Cerebral cortex = higher functions"
+      ],
+      "neetTips": [
+        "Cerebrum = seat of consciousness"
+      ]
+    },
+    {
+      "topic": "Cerebral hemispheres",
+      "heading": "Cerebral Hemispheres",
+      "content": "Each hemisphere is divided into four lobes—frontal, parietal, temporal and occipital—each with distinct functional areas.",
+      "keyPoints": [
+        "Four lobes per hemisphere",
+        "Lateralization of functions"
+      ],
+      "neetTips": [
+        "Recall lobe‑function mapping for NEET"
+      ]
+    },
+    {
+      "topic": "Corpus callosum",
+      "heading": "Corpus Callosum",
+      "content": "A thick band of white matter fibers connecting the left and right cerebral hemispheres, enabling inter‑hemispheric communication.",
+      "keyPoints": [
+        "Largest white‑matter commissure",
+        "Facilitates transfer of sensory, motor, cognitive info"
+      ],
+      "neetTips": [
+        "Damage leads to split‑brain syndrome"
+      ]
+    },
+    {
+      "topic": "Cerebral cortex",
+      "heading": "Cerebral Cortex",
+      "content": "The outer layer of grey matter, 2–4 mm thick, organized into six layers of neurons. It houses sensory, motor and association areas.",
+      "keyPoints": [
+        "Six‑layered grey matter",
+        "Contains sensory, motor, association zones"
+      ],
+      "neetTips": [
+        "Cortex = site of conscious processing"
+      ]
+    },
+    {
+      "topic": "Frontal lobe",
+      "heading": "Frontal Lobe",
+      "content": "Located anteriorly; contains the primary motor cortex, premotor area, Broca’s area (speech), and prefrontal cortex (executive functions, personality).",
+      "keyPoints": [
+        "Primary motor cortex (Brodmann 4)",
+        "Broca’s area (speech production)",
+        "Prefrontal cortex – planning, decision‑making"
+      ],
+      "neetTips": [
+        "Motor and speech functions are frontal"
+      ]
+    },
+    {
+      "topic": "Parietal lobe",
+      "heading": "Parietal Lobe",
+      "content": "Situated posterior to the frontal lobe; houses the primary somatosensory cortex (postcentral gyrus) and integrates tactile, proprioceptive information.",
+      "keyPoints": [
+        "Primary somatosensory cortex (Brodmann 1‑3)",
+        "Spatial orientation and perception"
+      ],
+      "neetTips": [
+        "Parietal = touch & body map"
+      ]
+    },
+    {
+      "topic": "Temporal lobe",
+      "heading": "Temporal Lobe",
+      "content": "Lies inferior to the lateral fissure; contains the primary auditory cortex, Wernicke’s area (language comprehension) and hippocampus (memory).",
+      "keyPoints": [
+        "Primary auditory cortex (Brodmann 41‑42)",
+        "Wernicke’s area – language comprehension",
+        "Hippocampus – long‑term memory"
+      ],
+      "neetTips": [
+        "Auditory and memory centers reside here"
+      ]
+    },
+    {
+      "topic": "Occipital lobe",
+      "heading": "Occipital Lobe",
+      "content": "Posterior-most lobe; houses the primary visual cortex (V1) and visual association areas for processing visual stimuli.",
+      "keyPoints": [
+        "Primary visual cortex (Brodmann 17)",
+        "Visual perception and interpretation"
+      ],
+      "neetTips": [
+        "All visual processing begins in occipital"
+      ]
+    },
+    {
+      "topic": "Sensory areas",
+      "heading": "Sensory Areas of Cerebral Cortex",
+      "content": "Include the primary somatosensory, auditory, visual, and gustatory cortices, each receiving specific thalamic inputs and mapping the body surface or sensory modality.",
+      "keyPoints": [
+        "Somatosensory (postcentral gyrus)",
+        "Auditory (temporal lobe)",
+        "Visual (occipital lobe)"
+      ],
+      "neetTips": [
+        "Thalamus relays to respective sensory cortex"
+      ]
+    },
+    {
+      "topic": "Motor areas",
+      "heading": "Motor Areas of Cerebral Cortex",
+      "content": "Comprise the primary motor cortex (precentral gyrus), premotor cortex, supplementary motor area and corticospinal tracts, governing voluntary movement.",
+      "keyPoints": [
+        "Primary motor cortex (Brodmann 4)",
+        "Corticospinal tract originates here"
+      ],
+      "neetTips": [
+        "Lesion → contralateral paralysis"
+      ]
+    },
+    {
+      "topic": "Association areas",
+      "heading": "Association Areas",
+      "content": "Regions surrounding primary sensory and motor cortices that integrate information, involved in higher cognition, language, and memory.",
+      "keyPoints": [
+        "Integrate multimodal inputs",
+        "Located in frontal, parietal, temporal lobes"
+      ],
+      "neetTips": [
+        "Damage impairs complex tasks"
+      ]
+    },
+    {
+      "topic": "Thalamus",
+      "heading": "Thalamus",
+      "content": "A paired grey‑matter mass on the dorsal diencephalon; acts as the relay station for all sensory (except olfactory) and motor signals to the cerebral cortex.",
+      "keyPoints": [
+        "Sensory relay (except smell)",
+        "Motor relay via internal capsule"
+      ],
+      "neetTips": [
+        "Thalamic lesions cause sensory loss"
+      ]
+    },
+    {
+      "topic": "Hypothalamus",
+      "heading": "Hypothalamus",
+      "content": "Located inferior to thalamus; regulates autonomic nervous system, endocrine functions via pituitary, thermoregulation, hunger, thirst and circadian rhythms.",
+      "keyPoints": [
+        "Controls pituitary hormone release",
+        "Homeostatic centre"
+      ],
+      "neetTips": [
+        "Hypothalamus links nervous & endocrine systems"
+      ]
+    },
+    {
+      "topic": "Limbic system",
+      "heading": "Limbic System",
+      "content": "A set of interconnected structures (hippocampus, amygdala, cingulate gyrus) involved in emotion, memory and behavioural responses.",
+      "keyPoints": [
+        "Emotion (amygdala)",
+        "Memory consolidation (hippocampus)"
+      ],
+      "neetTips": [
+        "Limbic = emotion‑memory hub"
+      ]
+    },
+    {
+      "topic": "Amygdala",
+      "heading": "Amygdala",
+      "content": " almond‑shaped nuclei in the medial temporal lobe; processes fear, aggression and emotional memory.",
+      "keyPoints": [
+        "Fear conditioning",
+        "Emotional memory"
+      ],
+      "neetTips": [
+        "Amygdala hyperactivity linked to anxiety"
+      ]
+    },
+    {
+      "topic": "Hippocampus",
+      "heading": "Hippocampus",
+      "content": "Seahorse‑shaped structure in the medial temporal lobe; essential for formation of declarative (explicit) memory and spatial navigation.",
+      "keyPoints": [
+        "Long‑term memory formation",
+        "Spatial mapping"
+      ],
+      "neetTips": [
+        "Damage → anterograde amnesia"
+      ]
+    },
+    {
+      "topic": "Midbrain structures",
+      "heading": "Midbrain Structures",
+      "content": "Include the tectum (corpora quadrigemina) and tegmentum; the former processes visual and auditory reflexes, the latter contains red nucleus and substantia nigra.",
+      "keyPoints": [
+        "Corpora quadrigemina – reflexes",
+        "Substantia nigra – dopamine production"
+      ],
+      "neetTips": [
+        "Substantia nigra degeneration → Parkinson’s"
+      ]
+    },
+    {
+      "topic": "Corpora quadrigemina",
+      "heading": "Corpora Quadrigemina",
+      "content": "Four rounded protrusions on the dorsal midbrain; superior colliculi (visual reflex) and inferior colliculi (auditory reflex).",
+      "keyPoints": [
+        "Superior colliculus – visual orienting",
+        "Inferior colliculus – auditory orienting"
+      ],
+      "neetTips": [
+        "Midbrain reflex centre"
+      ]
+    },
+    {
+      "topic": "Pons",
+      "heading": "Pons",
+      "content": "Bulbous part of the metencephalon; contains nuclei for facial, vestibulocochlear, and trigeminal nerves, and relays corticospinal fibers to the medulla.",
+      "keyPoints": [
+        "Cranial nerve V, VI, VII, VIII nuclei",
+        "Bridge between cerebrum and cerebellum"
+      ],
+      "neetTips": [
+        "Pons involvement → facial paralysis"
+      ]
+    },
+    {
+      "topic": "Cerebellum",
+      "heading": "Cerebellum",
+      "content": "Located posterior to the pons; coordinates balance, posture, fine motor control and motor learning. Contains vermis, hemispheres, and deep nuclei.",
+      "keyPoints": [
+        "Maintains equilibrium",
+        "Fine‑tunes voluntary movements"
+      ],
+      "neetTips": [
+        "Cerebellar lesion → ataxia"
+      ]
+    },
+    {
+      "topic": "Medulla oblongata",
+      "heading": "Medulla Oblongata",
+      "content": "Inferior part of the brainstem; houses cardiac, respiratory and vasomotor centers and the decussation of pyramids (corticospinal tract).",
+      "keyPoints": [
+        "Cardiac & respiratory centers",
+        "Pyramidal decussation → contralateral control"
+      ],
+      "neetTips": [
+        "Medullary damage is life‑threatening"
+      ]
+    },
+    {
+      "topic": "Brain stem",
+      "heading": "Brain Stem Overview",
+      "content": "Comprises midbrain, pons and medulla; integrates sensory and motor pathways, maintains vital functions and connects brain with spinal cord.",
+      "keyPoints": [
+        "Continuity between brain and spinal cord",
+        "Controls consciousness, respiration"
+      ],
+      "neetTips": [
+        "Brain‑stem lesions affect basic life support"
+      ]
+    },
+    {
+      "topic": "Reticular formation",
+      "heading": "Reticular Formation",
+      "content": "Diffuse network of neurons throughout the brainstem; regulates arousal, sleep‑wake cycles and filters incoming sensory information.",
+      "keyPoints": [
+        "Maintains alertness",
+        "Modulates pain perception"
+      ],
+      "neetTips": [
+        "Damage → coma"
+      ]
+    },
+    {
+      "topic": "Spinal cord",
+      "heading": "Spinal Cord",
+      "content": "A cylindrical extension of the CNS from the medulla to L1/L2. Contains grey matter (horns) centrally and white matter (ascending/descending tracts) peripherally.",
+      "keyPoints": [
+        "Cervical, thoracic, lumbar, sacral segments",
+        "Grey matter: dorsal, ventral, lateral horns"
+      ],
+      "neetTips": [
+        "Segmental level determines dermatome loss"
+      ]
+    },
+    {
+      "topic": "Meninges",
+      "heading": "Meninges",
+      "content": "Three protective membranes: dura mater (tough outer), arachnoid mater (web-like) and pia mater (delicate inner) surrounding brain and spinal cord.",
+      "keyPoints": [
+        "Dura mater – epidural space",
+        "Subarachnoid space contains CSF"
+      ],
+      "neetTips": [
+        "Meningeal irritation → meningitis signs"
+      ]
+    },
+    {
+      "topic": "Grey matter",
+      "heading": "Grey Matter",
+      "content": "Composed of neuronal cell bodies, dendrites, unmyelinated axons and glial cells. Forms cerebral cortex, basal nuclei, spinal cord horns.",
+      "keyPoints": [
+        "Site of synaptic integration",
+        "Appears grey in fresh brain"
+      ],
+      "neetTips": [
+        "Grey matter loss → functional deficits"
+      ]
+    },
+    {
+      "topic": "White matter",
+      "heading": "White Matter",
+      "content": "Consists of myelinated axons forming tracts that connect different brain regions and the spinal cord. Appears white due to myelin lipid content.",
+      "keyPoints": [
+        "Conducts nerve impulses rapidly",
+        "Forms corpus callosum, internal capsule"
+      ],
+      "neetTips": [
+        "Demyelination → multiple sclerosis"
+      ]
+    },
+    {
+      "topic": "Ventricles",
+      "heading": "Ventricles",
+      "content": "Four interconnected cavities (lateral, third, fourth) filled with cerebrospinal fluid, providing buoyancy and nutrient transport.",
+      "keyPoints": [
+        "Lateral ventricles → choroid plexus produces CSF",
+        "Fourth ventricle communicates with central canal"
+      ],
+      "neetTips": [
+        "Ventricular enlargement → hydrocephalus"
+      ]
+    },
+    {
+      "topic": "Cerebrospinal fluid",
+      "heading": "Cerebrospinal Fluid (CSF)",
+      "content": "Clear, colorless fluid produced by choroid plexus; circulates through ventricles, subarachnoid space, cushions CNS and removes waste.",
+      "keyPoints": [
+        "Rate ≈ 500 ml/day",
+        "Diagnostic window for infections, hemorrhage"
+      ],
+      "neetTips": [
+        "Lumbar puncture analyzes CSF"
+      ]
+    }
+  ],
+  "learningOutcome": [
+    "Identify the major divisions and structures of the human brain and spinal cord",
+    "Explain the functional roles of each brain region and its relevance to NEET‑UG questions",
+    "Differentiate grey matter from white matter and describe the significance of ventricles and CSF"
+  ],
+  "mcqs": [
+    {
+      "question": "Which lobe of the cerebral cortex contains the primary motor cortex?",
+      "options": [
+        "Frontal lobe",
+        "Parietal lobe",
+        "Temporal lobe",
+        "Occipital lobe"
+      ],
+      "answer": 0,
+      "explanation": "The primary motor cortex (Brodmann area 4) is situated in the precentral gyrus of the frontal lobe, responsible for execution of voluntary movements.",
+      "topic": "Human brain"
+    },
+    {
+      "question": "The thick band of nerve fibers that connects the two cerebral hemispheres is called:",
+      "options": [
+        "Corpus callosum",
+        "Internal capsule",
+        "Fornix",
+        "Anterior commissure"
+      ],
+      "answer": 0,
+      "explanation": "The corpus callosum is the largest commissural fiber tract linking homologous cortical areas of the left and right hemispheres.",
+      "topic": "Human brain"
+    },
+    {
+      "question": "Which of the following is NOT a function of the hypothalamus?",
+      "options": [
+        "Regulation of body temperature",
+        "Control of circadian rhythms",
+        "Initiation of voluntary movement",
+        "Secretion of antidiuretic hormone (ADH)"
+      ],
+      "answer": 2,
+      "explanation": "The hypothalamus regulates temperature, circadian rhythms, and ADH release, but voluntary movement initiation is a function of the motor cortex and basal ganglia, not the hypothalamus.",
+      "topic": "Human brain"
+    },
+    {
+      "question": "The cerebellum contributes mainly to:",
+      "options": [
+        "Coordination of voluntary movements",
+        "Language comprehension",
+        "Visual processing",
+        "Hormone secretion"
+      ],
+      "answer": 0,
+      "explanation": "The cerebellum fine‑tunes motor activity, maintaining balance, posture, and coordination of skilled movements.",
+      "topic": "Human brain"
+    },
+    {
+      "question": "The reticular formation, which modulates arousal and sleep–wake cycles, is situated in the:",
+      "options": [
+        "Brainstem",
+        "Cerebellum",
+        "Cerebral cortex",
+        "Hippocampus"
+      ],
+      "answer": 0,
+      "explanation": "The reticular formation is a diffuse network of neurons extending through the midbrain, pons, and medulla—collectively the brainstem.",
+      "topic": "Human brain"
+    },
+    {
+      "question": "Which ventricle is the largest and lies within the cerebral hemispheres?",
+      "options": [
+        "Lateral ventricle",
+        "Third ventricle",
+        "Fourth ventricle",
+        "Cerebral aqueduct"
+      ],
+      "answer": 0,
+      "explanation": "Each cerebral hemisphere contains a paired lateral ventricle, the largest cavity of the ventricular system, filled with cerebrospinal fluid.",
+      "topic": "Human brain"
+    },
+    {
+      "question": "Grey matter of the central nervous system is primarily composed of:",
+      "options": [
+        "Neuronal cell bodies",
+        "Myelinated axons",
+        "Oligodendrocytes",
+        "Ependymal cells"
+      ],
+      "answer": 0,
+      "explanation": "Grey matter consists mainly of neuronal soma, dendrites, and unmyelinated portions of axons, whereas white matter is rich in myelinated axons.",
+      "topic": "Human brain"
+    },
+    {
+      "question": "Which structure of the forebrain serves as the principal relay station for sensory information to the cerebral cortex?",
+      "options": [
+        "Hypothalamus",
+        "Thalamus",
+        "Corpus callosum",
+        "Basal ganglia"
+      ],
+      "answer": 1,
+      "explanation": "The thalamus receives sensory inputs (except olfaction) and forwards them to appropriate cortical areas, acting as the main sensory relay.",
+      "topic": "Forebrain"
+    },
+    {
+      "question": "The hypothalamus primarily participates in which physiological function?",
+      "options": [
+        "Hormone secretion",
+        "Regulation of body temperature",
+        "Balance and posture",
+        "Language comprehension"
+      ],
+      "answer": 1,
+      "explanation": "The hypothalamus contains thermoregulatory centers that detect temperature changes and initiate responses to maintain core body temperature.",
+      "topic": "Forebrain"
+    },
+    {
+      "question": "The corpus callosum connects which of the following structures?",
+      "options": [
+        "Cerebellum and pons",
+        "Left and right cerebral hemispheres",
+        "Thalamus and hypothalamus",
+        "Medulla and spinal cord"
+      ],
+      "answer": 1,
+      "explanation": "The corpus callosum is a thick band of white matter that interconnects the left and right cerebral hemispheres, allowing inter‑hemispheric communication.",
+      "topic": "Forebrain"
+    },
+    {
+      "question": "The primary auditory cortex is located in which cerebral lobe?",
+      "options": [
+        "Frontal lobe",
+        "Parietal lobe",
+        "Temporal lobe",
+        "Occipital lobe"
+      ],
+      "answer": 2,
+      "explanation": "The temporal lobe houses the primary auditory cortex (Brodmann area 41), which processes auditory information received from the ears.",
+      "topic": "Forebrain"
+    },
+    {
+      "question": "The hippocampus is essential for which type of memory?",
+      "options": [
+        "Olfactory discrimination",
+        "Formation of long‑term declarative memory",
+        "Regulation of hunger",
+        "Visual acuity"
+      ],
+      "answer": 1,
+      "explanation": "The hippocampus consolidates short‑term declarative memories into long‑term storage and is crucial for spatial learning.",
+      "topic": "Forebrain"
+    },
+    {
+      "question": "A lesion of the amygdala would most likely impair which behavioural response?",
+      "options": [
+        "Fine motor coordination",
+        "Balance",
+        "Language comprehension",
+        "Fear conditioning"
+      ],
+      "answer": 3,
+      "explanation": "The amygdala is central to processing emotions, especially fear; damage disrupts fear conditioning and emotional learning.",
+      "topic": "Forebrain"
+    },
+    {
+      "question": "Which function is primarily associated with the basal ganglia, a component of the forebrain?",
+      "options": [
+        "Hormone secretion",
+        "Initiation and regulation of voluntary movements",
+        "Visual processing",
+        "Autonomic control"
+      ],
+      "answer": 1,
+      "explanation": "The basal ganglia modulate motor commands, facilitating the initiation and smooth execution of voluntary movements.",
+      "topic": "Forebrain"
+    },
+    {
+      "question": "Which of the following structures is NOT part of the midbrain?",
+      "options": [
+        "Superior colliculus",
+        "Inferior colliculus",
+        "Pons",
+        "Red nucleus"
+      ],
+      "answer": 2,
+      "explanation": "The pons belongs to the hindbrain (pons and medulla), whereas the superior and inferior colliculi and red nucleus are components of the midbrain.",
+      "topic": "Midbrain"
+    },
+    {
+      "question": "The midbrain region primarily responsible for auditory reflexes is:",
+      "options": [
+        "Superior colliculus",
+        "Inferior colliculus",
+        "Substantia nigra",
+        "Cerebral peduncle"
+      ],
+      "answer": 1,
+      "explanation": "The inferior colliculus processes auditory information and mediates reflexive responses to sound.",
+      "topic": "Midbrain"
+    },
+    {
+      "question": "Degeneration of the substantia nigra pars compacta most commonly leads to which clinical condition?",
+      "options": [
+        "Parkinson's disease",
+        "Alzheimer's disease",
+        "Multiple sclerosis",
+        "Myasthenia gravis"
+      ],
+      "answer": 0,
+      "explanation": "Loss of dopaminergic neurons in the substantia nigra pars compacta causes the motor symptoms characteristic of Parkinson's disease.",
+      "topic": "Midbrain"
+    },
+    {
+      "question": "The decussation of the superior cerebellar peduncle occurs at which level?",
+      "options": [
+        "Midbrain",
+        "Pons",
+        "Medulla",
+        "Spinal cord"
+      ],
+      "answer": 0,
+      "explanation": "The superior cerebellar peduncle crosses (decussates) in the dorsal midbrain, near the inferior colliculus.",
+      "topic": "Midbrain"
+    },
+    {
+      "question": "Which tract passes through the cerebral peduncles of the midbrain?",
+      "options": [
+        "Corticospinal tract",
+        "Dorsal column‑medial lemniscus",
+        "Spinothalamic tract",
+        "Cerebellothalamic tract"
+      ],
+      "answer": 0,
+      "explanation": "The corticospinal fibers travel in the crus cerebri, the ventral portion of the cerebral peduncles, en route to the spinal cord.",
+      "topic": "Midbrain"
+    },
+    {
+      "question": "The red nucleus receives its major afferent input from which structure?",
+      "options": [
+        "Cerebellum",
+        "Substantia nigra",
+        "Motor cortex",
+        "Spinal cord"
+      ],
+      "answer": 2,
+      "explanation": "Corticorubral fibers from the primary motor cortex provide the principal excitatory input to the red nucleus.",
+      "topic": "Midbrain"
+    },
+    {
+      "question": "The periaqueductal gray matter surrounding the cerebral aqueduct is primarily involved in:",
+      "options": [
+        "Pain modulation",
+        "Visual processing",
+        "Auditory localization",
+        "Motor coordination"
+      ],
+      "answer": 0,
+      "explanation": "The periaqueductal gray is a key center for descending pain control pathways, modulating nociceptive signals.",
+      "topic": "Midbrain"
+    },
+    {
+      "question": "Which of the following best describes the primary function of the cerebellar vermis?",
+      "options": [
+        "Coordination of axial muscles and maintenance of posture",
+        "Initiation of voluntary limb movements",
+        "Regulation of heart rate",
+        "Processing of visual information"
+      ],
+      "answer": 0,
+      "explanation": "The vermis controls axial (trunk) musculature and helps maintain posture and balance, whereas limb coordination is handled by the cerebellar hemispheres.",
+      "topic": "Hindbrain"
+    },
+    {
+      "question": "The pons contains nuclei that are primarily involved in which of the following?",
+      "options": [
+        "Integration of olfactory signals",
+        "Relaying information between the cerebrum and cerebellum",
+        "Generation of rhythmic breathing",
+        "Hormone secretion from hypothalamus"
+      ],
+      "answer": 1,
+      "explanation": "Pontine nuclei receive corticospinal input and project to the cerebellum via the middle cerebellar peduncle, acting as a major relay between the cerebrum and cerebellum.",
+      "topic": "Hindbrain"
+    },
+    {
+      "question": "The respiratory center that primarily controls the rhythm of breathing is located in:",
+      "options": [
+        "Medulla oblongata",
+        "Pons",
+        "Cerebellum",
+        "Midbrain"
+      ],
+      "answer": 0,
+      "explanation": "The dorsal and ventral respiratory groups in the medulla generate the basic inspiratory and expiratory rhythm; pontine centers modulate but do not generate the rhythm.",
+      "topic": "Hindbrain"
+    },
+    {
+      "question": "The pyramidal decussation, where the majority of corticospinal fibers cross to the opposite side, is found in the:",
+      "options": [
+        "Medulla oblongata",
+        "Pons",
+        "Cerebellar cortex",
+        "Thalamus"
+      ],
+      "answer": 0,
+      "explanation": "Most corticospinal fibers cross at the pyramidal decussation in the caudal medulla, forming the lateral corticospinal tract.",
+      "topic": "Hindbrain"
+    },
+    {
+      "question": "Which structure of the hindbrain is derived from the metencephalon during embryonic development?",
+      "options": [
+        "Medulla oblongata",
+        "Cerebellum",
+        "Midbrain",
+        "Spinal cord"
+      ],
+      "answer": 1,
+      "explanation": "The metencephalon gives rise to the cerebellum and the pons; the medulla originates from the myelencephalon.",
+      "topic": "Hindbrain"
+    },
+    {
+      "question": "Damage to the lateral vestibular nucleus, located in the pons, would most likely result in:",
+      "options": [
+        "Loss of fine touch sensation from the face",
+        "Impaired balance and nystagmus",
+        "Loss of taste sensation from anterior 2/3 tongue",
+        "Inability to initiate speech"
+      ],
+      "answer": 1,
+      "explanation": "The lateral vestibular nucleus integrates vestibular input for balance; its lesion produces disequilibrium and characteristic nystagmus.",
+      "topic": "Hindbrain"
+    },
+    {
+      "question": "A patient presents with dysphagia, hoarseness, and loss of gag reflex. The lesion is most likely localized to which part of the hindbrain?",
+      "options": [
+        "Cerebellar hemispheres",
+        "Medulla oblongata",
+        "Pons",
+        "Cerebral cortex"
+      ],
+      "answer": 1,
+      "explanation": "The nucleus ambiguus and related cranial nerve nuclei responsible for swallowing and phonation reside in the medulla; their damage causes dysphagia, hoarseness, and gag reflex loss.",
+      "topic": "Hindbrain"
+    },
+    {
+      "question": "The primary motor cortex is located in which cerebral lobe?",
+      "options": [
+        "Frontal lobe",
+        "Parietal lobe",
+        "Temporal lobe",
+        "Occipital lobe"
+      ],
+      "answer": 0,
+      "explanation": "The precentral gyrus, which houses the primary motor cortex, lies in the frontal lobe.",
+      "topic": "Cerebrum"
+    },
+    {
+      "question": "The primary visual cortex (V1) is situated in which lobe of the cerebrum?",
+      "options": [
+        "Occipital lobe",
+        "Parietal lobe",
+        "Temporal lobe",
+        "Frontal lobe"
+      ],
+      "answer": 0,
+      "explanation": "V1 is located on the medial surface of the occipital lobe, specifically around the calcarine sulcus.",
+      "topic": "Cerebrum"
+    },
+    {
+      "question": "The corpus callosum is primarily composed of which type of neural tissue?",
+      "options": [
+        "White matter",
+        "Grey matter",
+        "Both white and grey matter",
+        "Neither, it is fibrous connective tissue"
+      ],
+      "answer": 0,
+      "explanation": "The corpus callosum consists of myelinated axonal fibers, making it a white‑matter structure that connects the two cerebral hemispheres.",
+      "topic": "Cerebrum"
+    },
+    {
+      "question": "Broca's area, essential for speech production, is located in which region?",
+      "options": [
+        "Left inferior frontal gyrus",
+        "Left superior parietal lobule",
+        "Right temporal lobe",
+        "Bilateral occipital cortex"
+      ],
+      "answer": 0,
+      "explanation": "Broca's area is situated in the left inferior frontal gyrus (Brodmann areas 44 and 45) of the frontal lobe.",
+      "topic": "Cerebrum"
+    },
+    {
+      "question": "Which function is NOT primarily associated with the parietal lobe?",
+      "options": [
+        "Spatial orientation",
+        "Somatosensory perception",
+        "Auditory processing",
+        "Integration of sensory information"
+      ],
+      "answer": 2,
+      "explanation": "Auditory processing is mainly a function of the temporal lobe, whereas the parietal lobe handles spatial and somatosensory integration.",
+      "topic": "Cerebrum"
+    },
+    {
+      "question": "The cortical region that integrates sensory and motor information for planning complex movements is called:",
+      "options": [
+        "Association area",
+        "Primary motor cortex",
+        "Primary sensory cortex",
+        "Limbic system"
+      ],
+      "answer": 0,
+      "explanation": "Association areas, especially in the frontal lobe, combine sensory inputs and motor plans to coordinate complex actions.",
+      "topic": "Cerebrum"
+    },
+    {
+      "question": "Which sulcus separates the frontal lobe from the parietal lobe?",
+      "options": [
+        "Central sulcus",
+        "Lateral sulcus",
+        "Calcarine sulcus",
+        "Cingulate sulcus"
+      ],
+      "answer": 0,
+      "explanation": "The central (or Rolandic) sulcus forms the boundary between the frontal and parietal lobes on the lateral surface of the brain.",
+      "topic": "Cerebrum"
+    },
+    {
+      "question": "Which sulcus separates the frontal and parietal lobes of each cerebral hemisphere?",
+      "options": [
+        "Central sulcus",
+        "Lateral sulcus",
+        "Parieto‑occipital sulcus",
+        "Calcarine sulcus"
+      ],
+      "answer": 0,
+      "explanation": "The central sulcus (also called the Rolandic fissure) lies between the frontal and parietal lobes and demarcates the primary motor and primary somatosensory cortices.",
+      "topic": "Cerebral hemispheres"
+    },
+    {
+      "question": "The area responsible for language comprehension (Wernicke's area) is located in which lobe of the cerebral hemisphere?",
+      "options": [
+        "Frontal lobe",
+        "Temporal lobe",
+        "Parietal lobe",
+        "Occipital lobe"
+      ],
+      "answer": 1,
+      "explanation": "Wernicke's area lies in the posterior part of the superior temporal gyrus of the dominant (usually left) hemisphere, thus it is situated in the temporal lobe.",
+      "topic": "Cerebral hemispheres"
+    },
+    {
+      "question": "The corpus callosum is primarily composed of which type of neural tissue?",
+      "options": [
+        "Gray matter",
+        "White matter",
+        "Cerebrospinal fluid",
+        "Blood vessels"
+      ],
+      "answer": 1,
+      "explanation": "The corpus callosum consists of densely packed myelinated axons, making it a major white‑matter tract that connects the two cerebral hemispheres.",
+      "topic": "Cerebral hemispheres"
+    },
+    {
+      "question": "Which artery supplies the lateral convexity of the cerebral hemispheres, including the frontal, parietal, and temporal lobes?",
+      "options": [
+        "Anterior cerebral artery",
+        "Middle cerebral artery",
+        "Posterior cerebral artery",
+        "Basilar artery"
+      ],
+      "answer": 1,
+      "explanation": "The middle cerebral artery (MCA) branches from the internal carotid artery and perfuses the lateral surface of the cerebral hemispheres, covering most of the frontal, parietal, and temporal lobes.",
+      "topic": "Cerebral hemispheres"
+    },
+    {
+      "question": "In most individuals, which cerebral hemisphere is dominant for spatial perception and visual‑motor integration?",
+      "options": [
+        "Right hemisphere",
+        "Left hemisphere",
+        "Both hemispheres equally",
+        "Neither hemisphere"
+      ],
+      "answer": 0,
+      "explanation": "The right cerebral hemisphere is generally dominant for visuospatial abilities, such as recognizing faces, judging distances, and integrating visual information with motor actions.",
+      "topic": "Cerebral hemispheres"
+    },
+    {
+      "question": "The outermost layer of each cerebral hemisphere, rich in neuronal cell bodies, is called:",
+      "options": [
+        "Subcortical white matter",
+        "Cerebral cortex",
+        "Corpus callosum",
+        "Basal ganglia"
+      ],
+      "answer": 1,
+      "explanation": "The cerebral cortex is the gray‑matter layer covering the surface of the hemispheres; it contains neuronal cell bodies, dendrites, and synapses responsible for higher functions.",
+      "topic": "Cerebral hemispheres"
+    },
+    {
+      "question": "Which gyrus is part of the frontal lobe and contains the primary motor cortex?",
+      "options": [
+        "Postcentral gyrus",
+        "Precentral gyrus",
+        "Superior temporal gyrus",
+        "Cuneus"
+      ],
+      "answer": 1,
+      "explanation": "The precentral gyrus, located in the frontal lobe, houses the primary motor cortex (Brodmann area 4) that initiates voluntary movements.",
+      "topic": "Cerebral hemispheres"
+    },
+    {
+      "question": "What type of fibers predominantly constitute the corpus callosum?",
+      "options": [
+        "Myelinated axons",
+        "Unmyelinated axons",
+        "Dendritic processes",
+        "Glial cell processes"
+      ],
+      "answer": 0,
+      "explanation": "The corpus callosum is a thick band of myelinated axons that interconnect the two cerebral hemispheres.",
+      "topic": "Corpus callosum"
+    },
+    {
+      "question": "The corpus callosum primarily connects which structures?",
+      "options": [
+        "Left and right cerebral hemispheres",
+        "Left and right cerebellar hemispheres",
+        "Thalamus and hypothalamus",
+        "Medulla and pons"
+      ],
+      "answer": 0,
+      "explanation": "It is the major commissural tract joining the left and right cerebral hemispheres, allowing inter‑hemispheric communication.",
+      "topic": "Corpus callosum"
+    },
+    {
+      "question": "Lesion of the corpus callosum most characteristically produces which clinical condition?",
+      "options": [
+        "Split‑brain syndrome",
+        "Aphasia",
+        "Ataxia",
+        "Hemiplegia"
+      ],
+      "answer": 0,
+      "explanation": "Disruption of inter‑hemispheric transfer leads to split‑brain syndrome, where each hemisphere acts independently.",
+      "topic": "Corpus callosum"
+    },
+    {
+      "question": "The anterior curved portion of the corpus callosum is called the:",
+      "options": [
+        "Genu",
+        "Splenium",
+        "Body",
+        "Rostrum"
+      ],
+      "answer": 0,
+      "explanation": "The front (anterior) bend of the corpus callosum is termed the genu.",
+      "topic": "Corpus callosum"
+    },
+    {
+      "question": "Which statement about the corpus callosum is FALSE?",
+      "options": [
+        "It contains both commissural and association fibers",
+        "It is the largest commissure in the brain",
+        "It is composed mainly of white matter",
+        "It facilitates interhemispheric transfer of sensory information"
+      ],
+      "answer": 0,
+      "explanation": "The corpus callosum is a pure commissural tract; it does not contain association fibers, making that statement false.",
+      "topic": "Corpus callosum"
+    },
+    {
+      "question": "During embryonic development, the axons of the corpus callosum begin crossing the midline in which gestational period?",
+      "options": [
+        "8‑12 weeks",
+        "12‑16 weeks",
+        "16‑20 weeks",
+        "20‑24 weeks"
+      ],
+      "answer": 1,
+      "explanation": "Corpus callosum formation starts around 12‑16 weeks of gestation when pioneer axons cross the midline.",
+      "topic": "Corpus callosum"
+    },
+    {
+      "question": "Fibers from which cerebral lobe are most densely represented in the splenium of the corpus callosum?",
+      "options": [
+        "Occipital lobe",
+        "Frontal lobe",
+        "Parietal lobe",
+        "Temporal lobe"
+      ],
+      "answer": 0,
+      "explanation": "The splenium, the posterior part of the corpus callosum, contains a high concentration of occipital‑lobe fibers linking visual cortices.",
+      "topic": "Corpus callosum"
+    },
+    {
+      "question": "Which layer of the cerebral cortex contains the cell bodies of pyramidal neurons that give rise to the corticospinal tract?",
+      "options": [
+        "Molecular layer (I)",
+        "External granular layer (II)",
+        "External pyramidal layer (III)",
+        "Internal pyramidal layer (V)"
+      ],
+      "answer": 3,
+      "explanation": "Layer V (internal pyramidal layer) houses large pyramidal neurons whose axons form the corticospinal tract, mediating voluntary motor control.",
+      "topic": "Cerebral cortex"
+    },
+    {
+      "question": "The primary visual cortex is situated in which lobe of the cerebral cortex?",
+      "options": [
+        "Frontal lobe",
+        "Parietal lobe",
+        "Temporal lobe",
+        "Occipital lobe"
+      ],
+      "answer": 3,
+      "explanation": "Brodmann area 17, the primary visual cortex, is located in the occipital lobe, processing visual information received from the retina.",
+      "topic": "Cerebral cortex"
+    },
+    {
+      "question": "Which statement about the precentral gyrus is correct?",
+      "options": [
+        "It is the primary somatosensory area",
+        "It contains the primary motor cortex",
+        "It is part of the parietal lobe",
+        "It is involved in language comprehension"
+      ],
+      "answer": 1,
+      "explanation": "The precentral gyrus, located in the frontal lobe, houses the primary motor cortex (Brodmann area 4) responsible for execution of voluntary movements.",
+      "topic": "Cerebral cortex"
+    },
+    {
+      "question": "Brodmann areas 44 and 45, located in the inferior frontal gyrus, are collectively known as:",
+      "options": [
+        "Primary auditory cortex",
+        "Broca's area",
+        "Wernicke's area",
+        "Primary motor cortex"
+      ],
+      "answer": 1,
+      "explanation": "Areas 44 and 45 constitute Broca's area, essential for speech production and language expression.",
+      "topic": "Cerebral cortex"
+    },
+    {
+      "question": "Which cortical region primarily integrates sensory information from multiple modalities?",
+      "options": [
+        "Primary sensory cortex",
+        "Association cortex",
+        "Motor cortex",
+        "Limbic cortex"
+      ],
+      "answer": 1,
+      "explanation": "Association cortex, especially in parietal and temporal lobes, combines inputs from different sensory modalities to form a unified perception.",
+      "topic": "Cerebral cortex"
+    },
+    {
+      "question": "In the cerebral cortex, \"grey matter\" refers to:",
+      "options": [
+        "Myelinated axons",
+        "Unmyelinated axons",
+        "Cell bodies and dendrites",
+        "Cerebrospinal fluid"
+      ],
+      "answer": 2,
+      "explanation": "Grey matter consists mainly of neuronal cell bodies, dendrites, and unmyelinated portions of axons, giving the cortex its characteristic colour.",
+      "topic": "Cerebral cortex"
+    },
+    {
+      "question": "According to the cortical column concept, a functional column is best described as:",
+      "options": [
+        "A vertical arrangement of neurons responding to the same stimulus feature",
+        "A horizontal layer of glial cells",
+        "A group of blood vessels supplying the cortex",
+        "A region of white matter tracts"
+      ],
+      "answer": 0,
+      "explanation": "A functional column is a vertically oriented group of neurons spanning the six cortical layers that share similar response properties, such as orientation selectivity in visual cortex.",
+      "topic": "Cerebral cortex"
+    },
+    {
+      "question": "Which Brodmann area in the frontal lobe corresponds to the primary motor cortex?",
+      "options": [
+        "Area 4",
+        "Area 17",
+        "Area 22",
+        "Area 44"
+      ],
+      "answer": 0,
+      "explanation": "Brodmann area 4, located in the precentral gyrus of the frontal lobe, is the primary motor cortex responsible for voluntary motor control.",
+      "topic": "Frontal lobe"
+    },
+    {
+      "question": "The prefrontal cortex of the frontal lobe is primarily involved in which function?",
+      "options": [
+        "Visual processing",
+        "Language comprehension",
+        "Decision making and personality",
+        "Balance"
+      ],
+      "answer": 2,
+      "explanation": "The prefrontal cortex integrates information for executive functions such as decision making, planning, and personality traits.",
+      "topic": "Frontal lobe"
+    },
+    {
+      "question": "A lesion in the left frontal lobe affecting Broca's area most likely results in:",
+      "options": [
+        "Aphasia with impaired speech production",
+        "Loss of sensation in the right arm",
+        "Inability to recognize familiar faces",
+        "Paralysis of the lower limbs"
+      ],
+      "answer": 0,
+      "explanation": "Broca's area, located in the inferior frontal gyrus of the dominant (usually left) hemisphere, is essential for speech production; damage causes expressive aphasia.",
+      "topic": "Frontal lobe"
+    },
+    {
+      "question": "Which gyrus is NOT part of the frontal lobe?",
+      "options": [
+        "Precentral gyrus",
+        "Superior frontal gyrus",
+        "Inferior frontal gyrus",
+        "Postcentral gyrus"
+      ],
+      "answer": 3,
+      "explanation": "The postcentral gyrus lies in the parietal lobe and houses the primary somatosensory cortex, whereas the other three gyri are within the frontal lobe.",
+      "topic": "Frontal lobe"
+    },
+    {
+      "question": "The frontal lobe receives major dopaminergic inputs from which structure, influencing reward and motivation?",
+      "options": [
+        "Substantia nigra",
+        "Hippocampus",
+        "Cerebellum",
+        "Medulla oblongata"
+      ],
+      "answer": 0,
+      "explanation": "Dopaminergic neurons of the substantia nigra pars compacta project to the frontal cortex, modulating reward, motivation, and executive functions.",
+      "topic": "Frontal lobe"
+    },
+    {
+      "question": "In the motor homunculus of the primary motor cortex, which body part is represented most laterally?",
+      "options": [
+        "Foot",
+        "Hand",
+        "Tongue",
+        "Trunk"
+      ],
+      "answer": 1,
+      "explanation": "The hand region occupies a lateral position on the precentral gyrus, reflecting its large cortical representation for fine motor control.",
+      "topic": "Frontal lobe"
+    },
+    {
+      "question": "Which statement about the frontal lobe is FALSE?",
+      "options": [
+        "It contains the primary motor cortex",
+        "It is involved in planning complex behaviors",
+        "It houses the primary auditory cortex",
+        "It contributes to working memory"
+      ],
+      "answer": 2,
+      "explanation": "The primary auditory cortex is located in the temporal lobe (Brodmann area 41/42), not in the frontal lobe.",
+      "topic": "Frontal lobe"
+    },
+    {
+      "question": "Which gyrus corresponds to the primary somatosensory cortex in the human brain?",
+      "options": [
+        "Precentral gyrus",
+        "Postcentral gyrus",
+        "Superior temporal gyrus",
+        "Inferior frontal gyrus"
+      ],
+      "answer": 1,
+      "explanation": "The postcentral gyrus, located in the parietal lobe, houses Brodmann areas 1, 2 and 3, which constitute the primary somatosensory cortex.",
+      "topic": "Parietal lobe"
+    },
+    {
+      "question": "The parietal lobe is primarily responsible for which of the following functions?",
+      "options": [
+        "Processing visual images",
+        "Auditory perception",
+        "Taste sensation",
+        "Integration of tactile and proprioceptive information"
+      ],
+      "answer": 3,
+      "explanation": "The parietal lobe integrates tactile (touch) and proprioceptive (position) inputs, allowing perception of body shape, size, and spatial orientation.",
+      "topic": "Parietal lobe"
+    },
+    {
+      "question": "A lesion in the contralateral parietal lobe is most likely to produce which deficit?",
+      "options": [
+        "Loss of pain sensation",
+        "Difficulty recognizing objects by touch (astereognosis)",
+        "Inability to speak",
+        "Loss of balance"
+      ],
+      "answer": 1,
+      "explanation": "Damage to the parietal association cortex impairs the ability to identify objects through touch, a condition known as astergeognosis.",
+      "topic": "Parietal lobe"
+    },
+    {
+      "question": "Brodmann areas 1, 2, and 3 are located in which lobe of the brain?",
+      "options": [
+        "Frontal lobe",
+        "Parietal lobe",
+        "Temporal lobe",
+        "Occipital lobe"
+      ],
+      "answer": 1,
+      "explanation": "These three Brodmann areas constitute the primary somatosensory cortex and are situated in the postcentral gyrus of the parietal lobe.",
+      "topic": "Parietal lobe"
+    },
+    {
+      "question": "The main arterial supply to the lateral aspect of the parietal lobe is provided by which artery?",
+      "options": [
+        "Anterior cerebral artery",
+        "Middle cerebral artery",
+        "Posterior cerebral artery",
+        "Basilar artery"
+      ],
+      "answer": 1,
+      "explanation": "The middle cerebral artery (MCA) supplies the lateral convexity of the cerebral hemispheres, including the lateral parietal lobe.",
+      "topic": "Parietal lobe"
+    },
+    {
+      "question": "Which cortical region within the parietal lobe functions as an association area?",
+      "options": [
+        "Primary somatosensory cortex",
+        "Primary motor cortex",
+        "Posterior parietal cortex",
+        "Primary visual cortex"
+      ],
+      "answer": 2,
+      "explanation": "The posterior parietal cortex integrates sensory information from multiple modalities and is classified as an association area.",
+      "topic": "Parietal lobe"
+    },
+    {
+      "question": "Neglect syndrome following a right parietal lobe lesion most commonly affects perception of which side of space?",
+      "options": [
+        "Left side",
+        "Right side",
+        "Both sides equally",
+        "No spatial effect"
+      ],
+      "answer": 0,
+      "explanation": "Right parietal damage often leads to left‑side neglect, where patients ignore stimuli presented in the left visual or bodily space.",
+      "topic": "Parietal lobe"
+    },
+    {
+      "question": "The primary auditory cortex is located in which part of the temporal lobe?",
+      "options": [
+        "Superior temporal gyrus (Heschl's gyrus)",
+        "Inferior frontal gyrus",
+        "Postcentral gyrus",
+        "Precentral gyrus"
+      ],
+      "answer": 0,
+      "explanation": "The primary auditory cortex corresponds to Heschl's gyrus, situated on the superior temporal gyrus of the temporal lobe.",
+      "topic": "Temporal lobe"
+    },
+    {
+      "question": "A lesion causing receptive (Wernicke's) aphasia would most likely involve which cortical area?",
+      "options": [
+        "Broca's area",
+        "Wernicke's area",
+        "Primary motor cortex",
+        "Primary visual cortex"
+      ],
+      "answer": 1,
+      "explanation": "Wernicke's area, located in the posterior part of the superior temporal gyrus of the dominant hemisphere, is responsible for language comprehension; its damage leads to receptive aphasia.",
+      "topic": "Temporal lobe"
+    },
+    {
+      "question": "Which artery supplies the majority of the lateral temporal lobe?",
+      "options": [
+        "Anterior cerebral artery",
+        "Middle cerebral artery",
+        "Posterior cerebral artery",
+        "Basilar artery"
+      ],
+      "answer": 1,
+      "explanation": "Branches of the middle cerebral artery (MCA) provide the main blood supply to the lateral aspects of the temporal lobe.",
+      "topic": "Temporal lobe"
+    },
+    {
+      "question": "The hippocampus, essential for formation of new declarative memories, is situated in which region of the temporal lobe?",
+      "options": [
+        "Lateral surface",
+        "Medial aspect",
+        "Inferior surface",
+        "Anterior pole"
+      ],
+      "answer": 1,
+      "explanation": "The hippocampus lies on the medial surface of the temporal lobe, forming part of the limbic system.",
+      "topic": "Temporal lobe"
+    },
+    {
+      "question": "Temporal lobe epilepsy most commonly originates from which cortical region?",
+      "options": [
+        "Precentral gyrus",
+        "Superior temporal gyrus",
+        "Occipital lobe",
+        "Cerebellum"
+      ],
+      "answer": 1,
+      "explanation": "Seizure foci in temporal lobe epilepsy are frequently located in the superior temporal gyrus, especially around the auditory cortex.",
+      "topic": "Temporal lobe"
+    },
+    {
+      "question": "Which of the following is NOT a primary function of the temporal lobe?",
+      "options": [
+        "Auditory perception",
+        "Language comprehension",
+        "Visual processing of shape",
+        "Memory encoding"
+      ],
+      "answer": 2,
+      "explanation": "Visual shape processing is primarily a function of the occipital lobe; the temporal lobe handles auditory perception, language comprehension, and memory encoding.",
+      "topic": "Temporal lobe"
+    },
+    {
+      "question": "Meyer's loop, a part of the optic radiation, traverses which part of the temporal lobe before reaching the occipital cortex?",
+      "options": [
+        "Anterior temporal lobe",
+        "Inferior temporal gyrus",
+        "Lateral geniculate body",
+        "Superior temporal sulcus"
+      ],
+      "answer": 1,
+      "explanation": "Meyer's loop passes through the inferior (anterior) portion of the temporal lobe, specifically the inferior temporal gyrus, en route to the primary visual cortex.",
+      "topic": "Temporal lobe"
+    },
+    {
+      "question": "Which Brodmann area corresponds to the primary visual cortex located in the occipital lobe?",
+      "options": [
+        "Area 17",
+        "Area 18",
+        "Area 19",
+        "Area 20"
+      ],
+      "answer": 0,
+      "explanation": "The primary visual cortex (V1) is identified as Brodmann area 17 and is situated in the occipital lobe.",
+      "topic": "Occipital lobe"
+    },
+    {
+      "question": "The blood supply to the occipital lobe is primarily via which artery?",
+      "options": [
+        "Anterior cerebral artery",
+        "Middle cerebral artery",
+        "Posterior cerebral artery",
+        "Superior cerebellar artery"
+      ],
+      "answer": 2,
+      "explanation": "The posterior cerebral artery (PCA) provides the main vascular supply to the occipital cortex.",
+      "topic": "Occipital lobe"
+    },
+    {
+      "question": "A lesion confined to the occipital lobe would most likely produce which deficit?",
+      "options": [
+        "Loss of speech production",
+        "Impaired coordination of gait",
+        "Cortical blindness",
+        "Loss of fine touch sensation"
+      ],
+      "answer": 2,
+      "explanation": "Damage to the visual cortex in the occipital lobe leads to cortical blindness, i.e., loss of visual perception despite intact eyes and optic nerves.",
+      "topic": "Occipital lobe"
+    },
+    {
+      "question": "The optic radiations (geniculocalcarine tract) carry visual information from the lateral geniculate nucleus to which part of the occipital lobe?",
+      "options": [
+        "Primary visual cortex (V1)",
+        "Visual association cortex (V2)",
+        "Dorsal stream (parietal)",
+        "Ventral stream (temporal)"
+      ],
+      "answer": 0,
+      "explanation": "The geniculocalcarine fibers terminate in the primary visual cortex (V1) located on the calcarine sulcus of the occipital lobe.",
+      "topic": "Occipital lobe"
+    },
+    {
+      "question": "In the visual cortex, the central visual field (macula) is represented on which region of the calcarine sulcus?",
+      "options": [
+        "Anterior bank of calcarine sulcus",
+        "Posterior bank of calcarine sulcus",
+        "Lateral surface of occipital lobe",
+        "Medial surface of occipital lobe"
+      ],
+      "answer": 1,
+      "explanation": "The central (macular) visual field is mapped onto the posterior (occipital pole) bank of the calcarine sulcus, while peripheral fields are represented more anteriorly.",
+      "topic": "Occipital lobe"
+    },
+    {
+      "question": "Which function is primarily associated with the occipital lobe?",
+      "options": [
+        "Language comprehension",
+        "Visual perception",
+        "Motor planning",
+        "Auditory processing"
+      ],
+      "answer": 1,
+      "explanation": "The occipital lobe is the principal region for processing visual information, including perception of shape, color, and motion.",
+      "topic": "Occipital lobe"
+    },
+    {
+      "question": "A lesion in the left occipital lobe causing right homonymous hemianopia indicates damage to which visual pathway component?",
+      "options": [
+        "Optic nerve",
+        "Optic chiasm",
+        "Optic tract",
+        "Optic radiation"
+      ],
+      "answer": 3,
+      "explanation": "Right homonymous hemianopia after a left occipital lesion reflects interruption of the left optic radiation, which carries contralateral visual field information to the visual cortex.",
+      "topic": "Occipital lobe"
+    },
+    {
+      "question": "Which lobe of the cerebral cortex contains the primary somatosensory cortex?",
+      "options": [
+        "Frontal lobe",
+        "Parietal lobe",
+        "Temporal lobe",
+        "Occipital lobe"
+      ],
+      "answer": 1,
+      "explanation": "The primary somatosensory cortex is situated in the postcentral gyrus of the parietal lobe, receiving tactile information from the body.",
+      "topic": "Sensory areas"
+    },
+    {
+      "question": "The postcentral gyrus of the brain is primarily responsible for:",
+      "options": [
+        "Motor execution of voluntary movements",
+        "Primary somatosensory perception of touch and proprioception",
+        "Processing of visual stimuli",
+        "Processing of auditory information"
+      ],
+      "answer": 1,
+      "explanation": "The postcentral gyrus corresponds to Brodmann area 3, 1, and 2 and functions as the primary somatosensory cortex, interpreting touch, pressure, pain, and proprioceptive signals.",
+      "topic": "Sensory areas"
+    },
+    {
+      "question": "The primary visual cortex (V1) is located in which cortical region?",
+      "options": [
+        "Calcarine sulcus of the occipital lobe",
+        "Precentral gyrus of the frontal lobe",
+        "Superior temporal gyrus of the temporal lobe",
+        "Inferior parietal lobule of the parietal lobe"
+      ],
+      "answer": 0,
+      "explanation": "V1 lies on the banks of the calcarine sulcus in the occipital lobe and receives input from the lateral geniculate nucleus of the thalamus.",
+      "topic": "Sensory areas"
+    },
+    {
+      "question": "The primary auditory cortex is found in which gyrus?",
+      "options": [
+        "Heschl's gyrus",
+        "Broca's area",
+        "Wernicke's area",
+        "Postcentral gyrus"
+      ],
+      "answer": 0,
+      "explanation": "Heschl's gyrus, located in the superior temporal lobe, houses the primary auditory cortex (Brodmann area 41) that processes basic auditory information.",
+      "topic": "Sensory areas"
+    },
+    {
+      "question": "Which thalamic nucleus relays somatosensory information to the primary somatosensory cortex?",
+      "options": [
+        "Ventral posterolateral nucleus (VPL)",
+        "Lateral geniculate nucleus (LGN)",
+        "Medial geniculate nucleus (MGN)",
+        "Ventral anterior nucleus (VA)"
+      ],
+      "answer": 0,
+      "explanation": "The VPL nucleus receives dorsal column‑medial lemniscal and spinothalamic inputs and projects to the postcentral gyrus, constituting the main somatosensory thalamic relay.",
+      "topic": "Sensory areas"
+    },
+    {
+      "question": "The primary gustatory cortex is located in which cortical area?",
+      "options": [
+        "Insular cortex",
+        "Precentral gyrus",
+        "Cuneus",
+        "Superior parietal lobule"
+      ],
+      "answer": 0,
+      "explanation": "Taste perception is processed in the anterior insular cortex and adjoining opercular regions, which constitute the primary gustatory cortex.",
+      "topic": "Sensory areas"
+    },
+    {
+      "question": "The primary olfactory cortex includes which of the following structures?",
+      "options": [
+        "Piriform cortex",
+        "Calcarine cortex",
+        "Heschl's gyrus",
+        "Brodmann area 4"
+      ],
+      "answer": 0,
+      "explanation": "The piriform cortex, situated in the medial temporal lobe, receives direct projections from the olfactory bulb and forms the primary olfactory cortex.",
+      "topic": "Sensory areas"
+    },
+    {
+      "question": "The primary motor cortex is located in which gyrus of the cerebral cortex?",
+      "options": [
+        "Precentral gyrus",
+        "Postcentral gyrus",
+        "Superior temporal gyrus",
+        "Angular gyrus"
+      ],
+      "answer": 0,
+      "explanation": "The precentral gyrus, situated anterior to the central sulcus, houses the primary motor cortex (Brodmann area 4) responsible for execution of voluntary movements.",
+      "topic": "Motor areas"
+    },
+    {
+      "question": "In the motor homunculus, the representation of the hand is found on which part of the precentral gyrus?",
+      "options": [
+        "Lateral convexity",
+        "Medial surface",
+        "Superior part",
+        "Inferior part"
+      ],
+      "answer": 0,
+      "explanation": "The hand area occupies the lateral convexity of the precentral gyrus, reflecting its large cortical representation for fine motor control.",
+      "topic": "Motor areas"
+    },
+    {
+      "question": "A lesion confined to the supplementary motor area (SMA) would most likely produce which deficit?",
+      "options": [
+        "Loss of fine finger movements",
+        "Difficulty initiating voluntary movements",
+        "Loss of tactile sensation on the contralateral side",
+        "Inability to recognize familiar faces"
+      ],
+      "answer": 1,
+      "explanation": "The SMA is crucial for the initiation and sequencing of voluntary movements; damage leads to akinesia or difficulty starting purposeful actions.",
+      "topic": "Motor areas"
+    },
+    {
+      "question": "Which statement correctly describes the corticospinal (pyramidal) tract?",
+      "options": [
+        "It originates from the primary motor cortex and decussates at the medullary pyramids",
+        "It originates from the somatosensory cortex and remains ipsilateral throughout its course",
+        "It carries only sensory information from the periphery to the brain",
+        "It descends solely to the cervical segments of the spinal cord"
+      ],
+      "answer": 0,
+      "explanation": "The corticospinal tract arises mainly from the primary motor cortex, descends through the internal capsule, and about 85% of its fibers cross (decussate) at the pyramidal decussation in the medulla.",
+      "topic": "Motor areas"
+    },
+    {
+      "question": "The premotor cortex is primarily involved in:",
+      "options": [
+        "Execution of well‑learned motor sequences",
+        "Planning and selection of movements in response to external cues",
+        "Regulation of autonomic functions such as heart rate",
+        "Comprehension of spoken language"
+      ],
+      "answer": 1,
+      "explanation": "Premotor cortex (Brodmann area 6) integrates sensory information to plan and select appropriate movements, especially those guided by external stimuli.",
+      "topic": "Motor areas"
+    },
+    {
+      "question": "Which body part has the largest cortical representation in the motor homunculus?",
+      "options": [
+        "Foot",
+        "Hand",
+        "Lips",
+        "Tongue"
+      ],
+      "answer": 1,
+      "explanation": "The hand occupies a disproportionately large area of the primary motor cortex, reflecting the need for precise, skilled movements.",
+      "topic": "Motor areas"
+    },
+    {
+      "question": "The primary motor cortex corresponds to which Brodmann area?",
+      "options": [
+        "Area 4",
+        "Area 17",
+        "Area 22",
+        "Area 44"
+      ],
+      "answer": 0,
+      "explanation": "Brodmann area 4, located in the precentral gyrus, is identified as the primary motor cortex responsible for generating neural impulses that control execution of movement.",
+      "topic": "Motor areas"
+    },
+    {
+      "question": "Which association area integrates sensory information from multiple modalities such as touch, vision and hearing?",
+      "options": [
+        "Primary somatosensory cortex",
+        "Posterior parietal association cortex",
+        "Primary visual cortex",
+        "Primary auditory cortex"
+      ],
+      "answer": 1,
+      "explanation": "The posterior parietal association cortex receives convergent inputs from primary sensory areas and integrates them for higher‑order perception.",
+      "topic": "Association areas"
+    },
+    {
+      "question": "The language comprehension area (Wernicke's area) is located in the association cortex of which lobe?",
+      "options": [
+        "Frontal lobe",
+        "Parietal lobe",
+        "Temporal lobe",
+        "Occipital lobe"
+      ],
+      "answer": 2,
+      "explanation": "Wernicke's area lies in the posterior part of the superior temporal gyrus, a temporal lobe association region responsible for understanding spoken language.",
+      "topic": "Association areas"
+    },
+    {
+      "question": "The prefrontal association cortex is primarily involved in which function?",
+      "options": [
+        "Regulation of autonomic functions",
+        "Planning and decision making",
+        "Primary motor execution",
+        "Visual processing"
+      ],
+      "answer": 1,
+      "explanation": "The prefrontal association cortex integrates information from various regions to support executive functions such as planning, judgment and decision making.",
+      "topic": "Association areas"
+    },
+    {
+      "question": "Damage to the inferior parietal association area most commonly results in which deficit?",
+      "options": [
+        "Apraxia",
+        "Hemianopia",
+        "Loss of pain sensation",
+        "Facial paralysis"
+      ],
+      "answer": 0,
+      "explanation": "The inferior parietal lobule is essential for coordinating complex motor tasks; lesions produce apraxia, an inability to perform learned movements despite intact motor strength.",
+      "topic": "Association areas"
+    },
+    {
+      "question": "Which statement about cerebral association areas is FALSE?",
+      "options": [
+        "They are located only in the frontal lobe",
+        "They receive input from primary sensory areas",
+        "They are involved in higher‑order processing",
+        "They have extensive intracortical connections"
+      ],
+      "answer": 0,
+      "explanation": "Association areas are distributed across frontal, parietal, temporal and occipital lobes, not confined to the frontal lobe alone.",
+      "topic": "Association areas"
+    },
+    {
+      "question": "Broca's area, a motor speech association region, is situated in which part of the frontal lobe?",
+      "options": [
+        "Superior frontal gyrus",
+        "Precentral gyrus",
+        "Inferior frontal gyrus (pars opercularis)",
+        "Medial frontal gyrus"
+      ],
+      "answer": 2,
+      "explanation": "Broca's area is located in the posterior part of the inferior frontal gyrus (pars opercularis and pars triangularis) and is crucial for speech production.",
+      "topic": "Association areas"
+    },
+    {
+      "question": "Which association area is most directly involved in spatial orientation and perception of body position?",
+      "options": [
+        "Dorsolateral prefrontal cortex",
+        "Posterior parietal cortex",
+        "Superior temporal gyrus",
+        "Cingulate gyrus"
+      ],
+      "answer": 1,
+      "explanation": "The posterior parietal cortex integrates visual, proprioceptive and vestibular inputs to create a spatial map of the body and its environment.",
+      "topic": "Association areas"
+    },
+    {
+      "question": "Which thalamic nucleus relays somatosensory information from the body to the primary somatosensory cortex?",
+      "options": [
+        "Ventral posterolateral nucleus (VPL)",
+        "Ventral posteromedial nucleus (VPM)",
+        "Lateral geniculate nucleus (LGN)",
+        "Medial geniculate nucleus (MGN)"
+      ],
+      "answer": 0,
+      "explanation": "The VPL receives dorsal column‑medial lemniscal and spinothalamic inputs from the body and projects to the postcentral gyrus (primary somatosensory cortex).",
+      "topic": "Thalamus"
+    },
+    {
+      "question": "The thalamic nucleus that primarily processes visual information before it reaches the visual cortex is:",
+      "options": [
+        "Lateral geniculate nucleus (LGN)",
+        "Ventral lateral nucleus",
+        "Medial dorsal nucleus",
+        "Pulvinar nucleus"
+      ],
+      "answer": 0,
+      "explanation": "The LGN receives afferents from the optic tract and sends visual signals to the primary visual cortex (area 17).",
+      "topic": "Thalamus"
+    },
+    {
+      "question": "Which thalamic nucleus has extensive reciprocal connections with the prefrontal cortex and is important for cognition and attention?",
+      "options": [
+        "Medial dorsal nucleus",
+        "Ventral anterior nucleus",
+        "Pulvinar nucleus",
+        "Lateral dorsal nucleus"
+      ],
+      "answer": 0,
+      "explanation": "The medial dorsal (MD) nucleus is linked to the prefrontal cortex and plays a key role in executive functions, working memory, and attention.",
+      "topic": "Thalamus"
+    },
+    {
+      "question": "Loss of pain and temperature sensation from the face is most likely due to a lesion in which thalamic nucleus?",
+      "options": [
+        "Ventral posteromedial nucleus (VPM)",
+        "Ventral posterolateral nucleus (VPL)",
+        "Lateral geniculate nucleus (LGN)",
+        "Medial geniculate nucleus (MGN)"
+      ],
+      "answer": 0,
+      "explanation": "The VPM receives trigeminal (cranial nerve V) sensory inputs, including pain and temperature from the face, and projects to the facial area of the somatosensory cortex.",
+      "topic": "Thalamus"
+    },
+    {
+      "question": "The thalamus acts as a relay station for all of the following sensory modalities except:",
+      "options": [
+        "Auditory information",
+        "Olfactory information",
+        "Somatosensory information",
+        "Visual information"
+      ],
+      "answer": 1,
+      "explanation": "Olfactory fibers project directly to the olfactory cortex and the limbic system without passing through the thalamus, unlike the other modalities.",
+      "topic": "Thalamus"
+    },
+    {
+      "question": "Which statement about the arterial supply of the thalamus is correct?",
+      "options": [
+        "It is mainly supplied by branches of the posterior cerebral artery",
+        "It receives its main supply from the anterior cerebral artery",
+        "It is primarily supplied by the middle cerebral artery",
+        "It is directly supplied by the vertebral artery"
+      ],
+      "answer": 0,
+      "explanation": "The thalamus receives blood chiefly from the thalamogeniculate branches of the posterior cerebral artery and the posterior communicating artery.",
+      "topic": "Thalamus"
+    },
+    {
+      "question": "The thalamic reticular nucleus is composed predominantly of which type of neurons?",
+      "options": [
+        "GABAergic inhibitory neurons",
+        "Glutamatergic excitatory neurons",
+        "Dopaminergic neurons",
+        "Cholinergic neurons"
+      ],
+      "answer": 0,
+      "explanation": "The reticular nucleus consists of GABA‑ergic neurons that provide inhibitory modulation to other thalamic nuclei, regulating thalamocortical rhythms.",
+      "topic": "Thalamus"
+    },
+    {
+      "question": "Which hypothalamic nucleus is primarily responsible for the synthesis of antidiuretic hormone (ADH)?",
+      "options": [
+        "Supraoptic nucleus",
+        "Paraventricular nucleus",
+        "Lateral nucleus",
+        "Ventromedial nucleus"
+      ],
+      "answer": 0,
+      "explanation": "The supraoptic nucleus contains magnocellular neurons that synthesize ADH, which is then transported to the posterior pituitary for release.",
+      "topic": "Hypothalamus"
+    },
+    {
+      "question": "A lesion in which hypothalamic nucleus is most likely to produce hyperphagia and severe obesity?",
+      "options": [
+        "Lateral nucleus",
+        "Ventromedial nucleus",
+        "Arcuate nucleus",
+        "Suprachiasmatic nucleus"
+      ],
+      "answer": 1,
+      "explanation": "The ventromedial nucleus acts as a satiety center; its destruction removes the inhibition of feeding, leading to excessive eating and weight gain.",
+      "topic": "Hypothalamus"
+    },
+    {
+      "question": "The hypothalamic nucleus that serves as the master clock for circadian rhythms is:",
+      "options": [
+        "Suprachiasmatic nucleus",
+        "Mammillary bodies",
+        "Paraventricular nucleus",
+        "Dorsomedial nucleus"
+      ],
+      "answer": 0,
+      "explanation": "The suprachiasmatic nucleus receives light information from the retina and synchronizes the body's circadian rhythms.",
+      "topic": "Hypothalamus"
+    },
+    {
+      "question": "Which hormone, synthesized in the hypothalamus and released from the posterior pituitary, is essential for uterine contraction during labor?",
+      "options": [
+        "Oxytocin",
+        "Antidiuretic hormone (ADH)",
+        "Gonadotropin‑releasing hormone (GnRH)",
+        "Thyrotropin‑releasing hormone (TRH)"
+      ],
+      "answer": 0,
+      "explanation": "Oxytocin is produced by magnocellular neurons of the paraventricular and supraoptic nuclei and stored in the posterior pituitary for release during parturition.",
+      "topic": "Hypothalamus"
+    },
+    {
+      "question": "Detection of changes in plasma osmolality is mediated by specialized hypothalamic structures located in:",
+      "options": [
+        "Organum vasculosum of the lamina terminalis (OVLT)",
+        "Area postrema",
+        "Substantia nigra",
+        "Red nucleus"
+      ],
+      "answer": 0,
+      "explanation": "The OVLT, a circumventricular organ lacking a blood‑brain barrier, contains osmoreceptors that sense plasma osmolality and trigger ADH release.",
+      "topic": "Hypothalamus"
+    },
+    {
+      "question": "Which of the following functions is NOT primarily regulated by the hypothalamus?",
+      "options": [
+        "Regulation of body temperature",
+        "Initiation of voluntary skeletal muscle movement",
+        "Control of thirst",
+        "Release of growth‑hormone‑releasing hormone"
+      ],
+      "answer": 1,
+      "explanation": "Voluntary skeletal muscle movement is controlled by the motor cortex and corticospinal tracts, not by the hypothalamus.",
+      "topic": "Hypothalamus"
+    },
+    {
+      "question": "Which hormone reaches the anterior pituitary via the hypothalamic‑pituitary portal system?",
+      "options": [
+        "Thyrotropin‑releasing hormone (TRH)",
+        "Gonadotropin‑releasing hormone (GnRH)",
+        "Antidiuretic hormone (ADH)",
+        "Corticotropin‑releasing hormone (CRH)"
+      ],
+      "answer": 2,
+      "explanation": "ADH is synthesized in the hypothalamus but is stored and released from the posterior pituitary; it does not travel through the portal circulation to the anterior pituitary.",
+      "topic": "Hypothalamus"
+    },
+    {
+      "question": "Which structure of the limbic system is primarily responsible for the formation of new declarative (explicit) memories?",
+      "options": [
+        "Amygdala",
+        "Hippocampus",
+        "Cingulate gyrus",
+        "Mammillary bodies"
+      ],
+      "answer": 1,
+      "explanation": "The hippocampus consolidates short‑term information into long‑term declarative memory, a key function highlighted in NCERT.",
+      "topic": "Limbic system"
+    },
+    {
+      "question": "Damage to which limbic structure produces Kluver‑Bucy syndrome, characterized by hyperphagia, hypersexuality and placidity?",
+      "options": [
+        "Hippocampus",
+        "Amygdala",
+        "Septal nuclei",
+        "Cingulate gyrus"
+      ],
+      "answer": 1,
+      "explanation": "Lesions of the amygdala disrupt emotional processing and lead to the behavioral abnormalities of Kluver‑Bucy syndrome.",
+      "topic": "Limbic system"
+    },
+    {
+      "question": "The primary olfactory cortex includes which of the following limbic components?",
+      "options": [
+        "Parahippocampal gyrus",
+        "Mammillary bodies",
+        "Olfactory tubercle",
+        "Cingulate gyrus"
+      ],
+      "answer": 2,
+      "explanation": "The olfactory tubercle, together with the piriform cortex and amygdala, forms the primary olfactory cortex, linking smell to limbic functions.",
+      "topic": "Limbic system"
+    },
+    {
+      "question": "Which limbic structure exerts a major influence on autonomic responses through its connections with the hypothalamus?",
+      "options": [
+        "Hippocampus",
+        "Amygdala",
+        "Septal nuclei",
+        "Mammillary bodies"
+      ],
+      "answer": 1,
+      "explanation": "The amygdala projects to the hypothalamus and brainstem, modulating heart rate, blood pressure and other autonomic activities during emotional states.",
+      "topic": "Limbic system"
+    },
+    {
+      "question": "The Papez circuit involved in memory processing includes all of the following structures EXCEPT:",
+      "options": [
+        "Hippocampus",
+        "Anterior thalamic nuclei",
+        "Mammillary bodies",
+        "Basal ganglia"
+      ],
+      "answer": 3,
+      "explanation": "The classic Papez circuit comprises hippocampus → fornix → mammillary bodies → anterior thalamic nuclei → cingulate gyrus → hippocampus; basal ganglia are not part of it.",
+      "topic": "Limbic system"
+    },
+    {
+      "question": "Which limbic region is most closely associated with the emotional (affective) component of pain perception?",
+      "options": [
+        "Cingulate gyrus",
+        "Hippocampus",
+        "Amygdala",
+        "Septal nuclei"
+      ],
+      "answer": 0,
+      "explanation": "The anterior cingulate gyrus processes the unpleasantness of pain, integrating affective aspects with sensory input.",
+      "topic": "Limbic system"
+    },
+    {
+      "question": "The septal nuclei of the limbic system are primarily involved in:",
+      "options": [
+        "Memory consolidation",
+        "Olfactory processing",
+        "Reward and pleasure",
+        "Regulation of circadian rhythm"
+      ],
+      "answer": 2,
+      "explanation": "Septal nuclei receive dopaminergic inputs and are linked to reward, pleasure and reinforcement, influencing motivated behaviours.",
+      "topic": "Limbic system"
+    },
+    {
+      "question": "The amygdala is situated in which part of the brain?",
+      "options": [
+        "Anterior part of the medial temporal lobe",
+        "Posterior part of the frontal lobe",
+        "Medial part of the occipital lobe",
+        "Lateral part of the parietal lobe"
+      ],
+      "answer": 0,
+      "explanation": "The amygdala lies deep within the medial aspect of the anterior temporal lobe, forming a key component of the limbic system.",
+      "topic": "Amygdala"
+    },
+    {
+      "question": "The principal role of the amygdala in human behavior is to:",
+      "options": [
+        "Regulate circadian rhythms",
+        "Process fear and emotional memory",
+        "Coordinate voluntary movements",
+        "Control endocrine secretion directly"
+      ],
+      "answer": 1,
+      "explanation": "The amygdala is essential for fear conditioning and for attaching emotional significance to memories.",
+      "topic": "Amygdala"
+    },
+    {
+      "question": "Which neurotransmitter mediates the excitatory transmission that initiates fear responses in the amygdala?",
+      "options": [
+        "Acetylcholine",
+        "Dopamine",
+        "Glutamate",
+        "Serotonin"
+      ],
+      "answer": 2,
+      "explanation": "Glutamatergic afferents from the thalamus and cortex activate amygdalar neurons, triggering the fear response.",
+      "topic": "Amygdala"
+    },
+    {
+      "question": "A patient with bilateral amygdala lesions would most likely show:",
+      "options": [
+        "Aphasia",
+        "Impaired recognition of fearful facial expressions",
+        "Difficulty learning procedural tasks",
+        "Loss of balance and coordination"
+      ],
+      "answer": 1,
+      "explanation": "Damage to the amygdala disrupts the ability to perceive and interpret fear in others, while language, procedural memory, and balance are mediated by other regions.",
+      "topic": "Amygdala"
+    },
+    {
+      "question": "The amygdala receives rapid, direct sensory input primarily from which structure?",
+      "options": [
+        "Thalamus",
+        "Hypothalamus",
+        "Cerebellum",
+        "Medulla oblongata"
+      ],
+      "answer": 0,
+      "explanation": "The thalamus projects directly to the amygdala via the thalamo‑amygdalar pathway, allowing fast processing of emotionally salient stimuli.",
+      "topic": "Amygdala"
+    },
+    {
+      "question": "The basolateral amygdala (BLA) contributes to memory by:",
+      "options": [
+        "Storing long‑term declarative facts",
+        "Modulating consolidation of emotional memories in the hippocampus",
+        "Generating motor commands for reflexes",
+        "Regulating autonomic functions via the medulla"
+      ],
+      "answer": 1,
+      "explanation": "The BLA interacts with the hippocampus to enhance consolidation of memories that have emotional relevance.",
+      "topic": "Amygdala"
+    },
+    {
+      "question": "During a stress response, the amygdala activates which hypothalamic nucleus to initiate the HPA axis?",
+      "options": [
+        "Supraoptic nucleus",
+        "Paraventricular nucleus",
+        "Lateral hypothalamic area",
+        "Ventromedial nucleus"
+      ],
+      "answer": 1,
+      "explanation": "The amygdala projects to the paraventricular nucleus of the hypothalamus, stimulating CRH release and activating the hypothalamic‑pituitary‑adrenal axis.",
+      "topic": "Amygdala"
+    },
+    {
+      "question": "Which of the following best describes the primary function of the hippocampus?",
+      "options": [
+        "Regulation of body temperature",
+        "Consolidation of short‑term memory into long‑term memory",
+        "Coordination of voluntary movement",
+        "Production of cerebrospinal fluid"
+      ],
+      "answer": 1,
+      "explanation": "The hippocampus is essential for converting newly acquired information into stable long‑term declarative memories.",
+      "topic": "Hippocampus"
+    },
+    {
+      "question": "The hippocampus is a major component of which larger brain system?",
+      "options": [
+        "Limbic system",
+        "Basal ganglia",
+        "Cerebellar system",
+        "Reticular activating system"
+      ],
+      "answer": 0,
+      "explanation": "It belongs to the limbic system, which is involved in emotion, motivation, and memory processing.",
+      "topic": "Hippocampus"
+    },
+    {
+      "question": "The principal afferent pathway that conveys neocortical information to the hippocampus is the:",
+      "options": [
+        "Fornix",
+        "Mammillothalamic tract",
+        "Perforant path from the entorhinal cortex",
+        "Corpus callosum"
+      ],
+      "answer": 2,
+      "explanation": "Neocortical inputs reach the hippocampus mainly via the perforant path originating in the entorhinal cortex.",
+      "topic": "Hippocampus"
+    },
+    {
+      "question": "Selective damage to the hippocampus most commonly produces which type of memory deficit?",
+      "options": [
+        "Loss of procedural memory",
+        "Anterograde amnesia for new declarative information",
+        "Retrograde amnesia limited to early childhood",
+        "Loss of emotional memory"
+      ],
+      "answer": 1,
+      "explanation": "Hippocampal lesions impair the ability to form new declarative (episodic) memories, leading to anterograde amnesia.",
+      "topic": "Hippocampus"
+    },
+    {
+      "question": "CA1 neurons of the hippocampus are especially vulnerable to ischemic injury due to excessive release of which neurotransmitter?",
+      "options": [
+        "GABA",
+        "Glutamate",
+        "Dopamine",
+        "Acetylcholine"
+      ],
+      "answer": 1,
+      "explanation": "Excitotoxicity from excess glutamate during ischemia causes selective damage to CA1 pyramidal cells.",
+      "topic": "Hippocampus"
+    },
+    {
+      "question": "Early Alzheimer’s disease most characteristically shows which change involving the hippocampus on neuroimaging?",
+      "options": [
+        "Enlargement of the lateral ventricles",
+        "Hippocampal atrophy",
+        "Hyperintensity in the basal ganglia",
+        "Increased cerebellar volume"
+      ],
+      "answer": 1,
+      "explanation": "MRI of early Alzheimer’s disease typically reveals volume loss (atrophy) of the hippocampal formation.",
+      "topic": "Hippocampus"
+    },
+    {
+      "question": "The hippocampus receives its principal arterial blood supply from which vessel?",
+      "options": [
+        "Middle cerebral artery",
+        "Posterior cerebral artery",
+        "Anterior cerebral artery",
+        "Basilar artery"
+      ],
+      "answer": 1,
+      "explanation": "Branches of the posterior cerebral artery, especially the hippocampal arteries, supply the hippocampal formation.",
+      "topic": "Hippocampus"
+    },
+    {
+      "question": "Which pair of structures in the midbrain constitute the tectum and are primarily involved in visual and auditory reflexes?",
+      "options": [
+        "Superior colliculus and inferior colliculus",
+        "Red nucleus and substantia nigra",
+        "Cerebral peduncle and crus cerebri",
+        "Periaqueductal gray and reticular formation"
+      ],
+      "answer": 0,
+      "explanation": "The tectum of the midbrain consists of the corpora quadrigemina, i.e., the superior colliculus (visual reflexes) and inferior colliculus (auditory reflexes).",
+      "topic": "Midbrain structures"
+    },
+    {
+      "question": "The dopaminergic neurons that degenerate in Parkinson's disease are located in which midbrain structure?",
+      "options": [
+        "Substantia nigra pars compacta",
+        "Red nucleus",
+        "Superior colliculus",
+        "Periaqueductal gray"
+      ],
+      "answer": 0,
+      "explanation": "Parkinson's disease is characterized by loss of dopaminergic neurons in the substantia nigra pars compacta, leading to motor deficits.",
+      "topic": "Midbrain structures"
+    },
+    {
+      "question": "The large bundle of corticospinal fibers that passes ventrally through the midbrain is called:",
+      "options": [
+        "Cerebral peduncles (crus cerebri)",
+        "Medial lemniscus",
+        "Inferior colliculus",
+        "Red nucleus"
+      ],
+      "answer": 0,
+      "explanation": "The crus cerebri, or cerebral peduncles, contain descending corticospinal and corticobulbar fibers traveling from the cortex toward the spinal cord.",
+      "topic": "Midbrain structures"
+    },
+    {
+      "question": "Which midbrain nucleus is the major source of the rubrospinal tract that facilitates flexor muscle activity?",
+      "options": [
+        "Red nucleus",
+        "Substantia nigra",
+        "Superior colliculus",
+        "Periaqueductal gray"
+      ],
+      "answer": 0,
+      "explanation": "The red nucleus gives rise to the rubrospinal tract, which influences flexor muscles of the upper limbs.",
+      "topic": "Midbrain structures"
+    },
+    {
+      "question": "The periaqueductal gray (PAG) surrounding the cerebral aqueduct is primarily associated with:",
+      "options": [
+        "Modulation of pain and defensive behavior",
+        "Coordination of eye movements",
+        "Auditory startle reflex",
+        "Regulation of circadian rhythms"
+      ],
+      "answer": 0,
+      "explanation": "The PAG plays a key role in pain inhibition and orchestrating defensive responses such as fight-or-flight behaviors.",
+      "topic": "Midbrain structures"
+    },
+    {
+      "question": "Damage to the superior colliculus would most likely impair:",
+      "options": [
+        "Saccadic eye movements",
+        "Voluntary limb movement",
+        "Auditory localization",
+        "Hormonal secretion"
+      ],
+      "answer": 0,
+      "explanation": "The superior colliculus integrates visual information and initiates rapid saccadic eye movements; lesions affect this function.",
+      "topic": "Midbrain structures"
+    },
+    {
+      "question": "The tegmentum of the midbrain contains which of the following tracts that carries auditory information to the thalamus?",
+      "options": [
+        "Lateral lemniscus",
+        "Medial lemniscus",
+        "Spinothalamic tract",
+        "Corticospinal tract"
+      ],
+      "answer": 0,
+      "explanation": "The lateral lemniscus runs through the tegmentum and transmits auditory signals from the cochlear nuclei to the inferior colliculus and then to the thalamus.",
+      "topic": "Midbrain structures"
+    },
+    {
+      "question": "Which of the following structures is NOT a component of the corpora quadrigemina?",
+      "options": [
+        "Superior colliculus",
+        "Inferior colliculus",
+        "Pulvinar",
+        "Both superior and inferior colliculus"
+      ],
+      "answer": 2,
+      "explanation": "The corpora quadrigemina consists of the paired superior and inferior colliculi; the pulvinar is a thalamic nucleus, not part of this structure.",
+      "topic": "Corpora quadrigemina"
+    },
+    {
+      "question": "The superior colliculus primarily mediates which of the following functions?",
+      "options": [
+        "Auditory localization",
+        "Visual reflexes and saccadic eye movements",
+        "Regulation of sleep",
+        "Taste perception"
+      ],
+      "answer": 1,
+      "explanation": "The superior colliculus integrates visual information and coordinates reflexive eye and head movements, especially saccades.",
+      "topic": "Corpora quadrigemina"
+    },
+    {
+      "question": "The inferior colliculus serves as a major relay station in which sensory pathway?",
+      "options": [
+        "Visual",
+        "Auditory",
+        "Olfactory",
+        "Somatosensory"
+      ],
+      "answer": 1,
+      "explanation": "The inferior colliculus is a key auditory nucleus that receives inputs from the cochlear nuclei and projects to the medial geniculate body.",
+      "topic": "Corpora quadrigemina"
+    },
+    {
+      "question": "A lesion confined to the inferior colliculus would most likely produce which deficit?",
+      "options": [
+        "Loss of pupillary light reflex",
+        "Impaired sound localization",
+        "Inability to coordinate gait",
+        "Loss of taste sensation"
+      ],
+      "answer": 1,
+      "explanation": "Damage to the inferior colliculus disrupts auditory processing, particularly the ability to localize sounds, while sparing other modalities.",
+      "topic": "Corpora quadrigemina"
+    },
+    {
+      "question": "Which afferent input reaches the superior colliculus directly?",
+      "options": [
+        "Auditory fibers from the cochlear nucleus",
+        "Visual fibers from the optic tract",
+        "Olfactory fibers from the olfactory bulb",
+        "Somatosensory fibers from the dorsal column"
+      ],
+      "answer": 1,
+      "explanation": "The superior colliculus receives direct visual input via the optic tract, allowing rapid visual reflexes.",
+      "topic": "Corpora quadrigemina"
+    },
+    {
+      "question": "The corpora quadrigemina is situated in which part of the brain?",
+      "options": [
+        "Anterior lobe of the cerebellum",
+        "Dorsal aspect of the midbrain (tectum)",
+        "Ventral part of the pons",
+        "Medial part of the medulla oblongata"
+      ],
+      "answer": 1,
+      "explanation": "The corpora quadrigemina, comprising the superior and inferior colliculi, lies on the dorsal surface of the midbrain, known as the tectum.",
+      "topic": "Corpora quadrigemina"
+    },
+    {
+      "question": "Which statement about the superior colliculus is correct?",
+      "options": [
+        "It receives major auditory input from the medial geniculate body",
+        "It projects to the spinal cord to control limb movements",
+        "It integrates visual information to initiate head and eye movements",
+        "It is part of the limbic system involved in emotion"
+      ],
+      "answer": 2,
+      "explanation": "The superior colliculus integrates visual signals and generates commands for coordinated head and eye movements; it does not primarily process auditory information or belong to the limbic system.",
+      "topic": "Corpora quadrigemina"
+    },
+    {
+      "question": "The pons is situated between which two structures in the brainstem?",
+      "options": [
+        "Medulla oblongata and midbrain",
+        "Cerebellum and medulla oblongata",
+        "Midbrain and thalamus",
+        "Cerebral cortex and cerebellum"
+      ],
+      "answer": 0,
+      "explanation": "The pons lies superior to the medulla oblongata and inferior to the midbrain, forming the bridge of the brainstem.",
+      "topic": "Pons"
+    },
+    {
+      "question": "Which cranial nerves have their primary nuclei located within the pons?",
+      "options": [
+        "V, VI, VII, VIII",
+        "I, II, III, IV",
+        "IX, X, XI, XII",
+        "III, IV, V, VI"
+      ],
+      "answer": 0,
+      "explanation": "The trigeminal (V), abducens (VI), facial (VII) and vestibulocochlear (VIII) nuclei are situated in the pons.",
+      "topic": "Pons"
+    },
+    {
+      "question": "The pontine nuclei send their axons to which structure via the middle cerebellar peduncle?",
+      "options": [
+        "Cerebellar cortex",
+        "Thalamus",
+        "Basal ganglia",
+        "Spinal cord"
+      ],
+      "answer": 0,
+      "explanation": "Pontine nuclei project contralaterally to the cerebellar cortex through the middle cerebellar peduncles, integrating cortical information with cerebellar processing.",
+      "topic": "Pons"
+    },
+    {
+      "question": "What is the primary role of the pons in the control of respiration?",
+      "options": [
+        "It generates the basic respiratory rhythm",
+        "It modulates the transition between inhalation and exhalation",
+        "It controls only voluntary breathing",
+        "It stores oxygen in the blood"
+      ],
+      "answer": 1,
+      "explanation": "The pons contains the pneumotaxic and apneustic centers that fine‑tune the rhythm set by the medulla, especially regulating the switch between inhalation and exhalation.",
+      "topic": "Pons"
+    },
+    {
+      "question": "The transverse (cross‑wise) fibers of the pons are also known as:",
+      "options": [
+        "Middle cerebellar peduncles",
+        "Superior cerebellar peduncles",
+        "Inferior cerebellar peduncles",
+        "Internal capsule"
+      ],
+      "answer": 0,
+      "explanation": "The transverse fibers form the middle cerebellar peduncles, linking the pontine nuclei with the cerebellum.",
+      "topic": "Pons"
+    },
+    {
+      "question": "The reticular formation located within the pons is chiefly involved in:",
+      "options": [
+        "Regulation of sleep‑wake cycles",
+        "Visual processing",
+        "Language comprehension",
+        "Hormone secretion"
+      ],
+      "answer": 0,
+      "explanation": "The pontine reticular formation contributes to arousal and the sleep‑wake cycle, influencing consciousness.",
+      "topic": "Pons"
+    },
+    {
+      "question": "A lesion confined to the ventral part of the pons most characteristically produces which clinical syndrome?",
+      "options": [
+        "Locked‑in syndrome",
+        "Horner's syndrome",
+        "Wernicke's aphasia",
+        "Bell's palsy"
+      ],
+      "answer": 0,
+      "explanation": "Damage to the ventral pons can interrupt corticospinal and corticobulbar tracts, leading to quadriplegia with preserved eye movements—classic locked‑in syndrome.",
+      "topic": "Pons"
+    },
+    {
+      "question": "Which part of the cerebellum is primarily responsible for coordination of axial muscles and maintenance of posture?",
+      "options": [
+        "Vermis",
+        "Dentate nucleus",
+        "Flocculonodular lobe",
+        "Lateral hemispheres"
+      ],
+      "answer": 0,
+      "explanation": "The vermis, the midline structure of the cerebellum, receives input related to axial musculature and projects to vestibular and reticular nuclei to regulate posture and trunk stability.",
+      "topic": "Cerebellum"
+    },
+    {
+      "question": "A lesion of the cerebellar cortex most characteristically produces which type of tremor?",
+      "options": [
+        "Resting tremor",
+        "Intention tremor",
+        "Postural tremor",
+        "Physiological tremor"
+      ],
+      "answer": 1,
+      "explanation": "Cerebellar damage impairs the timing and scaling of voluntary movements, leading to an intention (or dysmetria‑related) tremor that worsens as the target is approached.",
+      "topic": "Cerebellum"
+    },
+    {
+      "question": "Proprioceptive information from muscle spindles reaches the cerebellar cortex via which afferent pathway?",
+      "options": [
+        "Dorsal column",
+        "Spinocerebellar tract",
+        "Corticospinal tract",
+        "Rubrospinal tract"
+      ],
+      "answer": 1,
+      "explanation": "The dorsal (posterior) and ventral spinocerebellar tracts carry muscle spindle and Golgi tendon organ signals directly to the cerebellar cortex, bypassing the thalamus.",
+      "topic": "Cerebellum"
+    },
+    {
+      "question": "The principal output neuron of the cerebellar cortex releases which neurotransmitter?",
+      "options": [
+        "Glutamate",
+        "GABA",
+        "Acetylcholine",
+        "Dopamine"
+      ],
+      "answer": 1,
+      "explanation": "Purkinje cells are the sole output of the cerebellar cortex and are inhibitory; they release GABA onto the deep cerebellar nuclei.",
+      "topic": "Cerebellum"
+    },
+    {
+      "question": "The dentate nucleus projects to which thalamic nucleus before influencing the motor cortex?",
+      "options": [
+        "Ventral lateral nucleus",
+        "Ventral posterior nucleus",
+        "Medial geniculate nucleus",
+        "Lateral geniculate nucleus"
+      ],
+      "answer": 0,
+      "explanation": "The dentate nucleus sends excitatory fibers to the ventral lateral (VL) nucleus of the thalamus, which then relays the signal to the primary motor cortex.",
+      "topic": "Cerebellum"
+    },
+    {
+      "question": "Occlusion of which artery most commonly produces an infarct affecting the lateral cerebellar hemispheres?",
+      "options": [
+        "Anterior inferior cerebellar artery (AICA)",
+        "Posterior inferior cerebellar artery (PICA)",
+        "Superior cerebellar artery (SCA)",
+        "Basilar artery"
+      ],
+      "answer": 2,
+      "explanation": "The superior cerebellar artery supplies the superior vermis and the lateral hemispheres; its blockage leads to lateral cerebellar infarction.",
+      "topic": "Cerebellum"
+    },
+    {
+      "question": "A patient with an isolated lesion of the cerebellar vermis is most likely to exhibit which clinical sign?",
+      "options": [
+        "Dysmetria of the limbs",
+        "Dysarthria",
+        "Truncal ataxia",
+        "Nystagmus"
+      ],
+      "answer": 2,
+      "explanation": "The vermis controls axial musculature; damage results in truncal (midline) ataxia, causing instability of the trunk and gait.",
+      "topic": "Cerebellum"
+    },
+    {
+      "question": "Which cranial nerve has its motor nucleus located in the medulla oblongata?",
+      "options": [
+        "Trigeminal (V)",
+        "Facial (VII)",
+        "Glossopharyngeal (IX)",
+        "Hypoglossal (XII)"
+      ],
+      "answer": 3,
+      "explanation": "The hypoglossal nerve (XII) originates from the hypoglossal nucleus situated in the medulla, providing motor innervation to the tongue.",
+      "topic": "Medulla oblongata"
+    },
+    {
+      "question": "The dorsal respiratory group (DRG) in the medulla primarily functions to:",
+      "options": [
+        "Initiate inspiration",
+        "Control forced expiration",
+        "Regulate heart rate",
+        "Coordinate swallowing"
+      ],
+      "answer": 0,
+      "explanation": "The DRG contains inspiratory neurons that generate the basic rhythm of quiet breathing by stimulating the diaphragm and external intercostal muscles.",
+      "topic": "Medulla oblongata"
+    },
+    {
+      "question": "The area postrema in the medulla is termed a chemoreceptor trigger zone because it lacks which protective feature?",
+      "options": [
+        "Blood‑brain barrier",
+        "Meningeal barrier",
+        "Blood‑CSF barrier",
+        "Neural sheath"
+      ],
+      "answer": 0,
+      "explanation": "The area postrema is one of the few circumventricular organs that is not protected by the blood‑brain barrier, allowing it to detect circulating toxins and trigger vomiting.",
+      "topic": "Medulla oblongata"
+    },
+    {
+      "question": "Decussation of the pyramids in the medulla leads to which clinical manifestation when damaged?",
+      "options": [
+        "Ipsilateral motor weakness",
+        "Contralateral motor weakness",
+        "Bilateral sensory loss",
+        "No neurological deficit"
+      ],
+      "answer": 1,
+      "explanation": "The corticospinal fibers cross (decussate) at the pyramids; a lesion above this level produces motor deficits on the opposite side of the body.",
+      "topic": "Medulla oblongata"
+    },
+    {
+      "question": "Which nucleus in the medulla is the primary integration center for the baroreceptor reflex?",
+      "options": [
+        "Nucleus tractus solitarius",
+        "Dorsal motor nucleus of vagus",
+        "Solitary nucleus",
+        "Nucleus ambiguus"
+      ],
+      "answer": 0,
+      "explanation": "Afferent signals from baroreceptors terminate in the nucleus tractus solitarius, which modulates autonomic output to maintain blood pressure.",
+      "topic": "Medulla oblongata"
+    },
+    {
+      "question": "The reticular formation of the medulla contributes most directly to:",
+      "options": [
+        "Regulation of the sleep‑wake cycle",
+        "Voluntary control of limb movements",
+        "Maintenance of muscle tone and posture",
+        "Fine tactile discrimination"
+      ],
+      "answer": 2,
+      "explanation": "Medullary reticular formation neurons influence extensor tone and postural reflexes, helping maintain muscle tone during standing.",
+      "topic": "Medulla oblongata"
+    },
+    {
+      "question": "A lesion affecting the vestibular nuclei in the medulla would most likely impair:",
+      "options": [
+        "Taste sensation",
+        "Balance and equilibrium",
+        "Visual acuity",
+        "Olfactory perception"
+      ],
+      "answer": 1,
+      "explanation": "The vestibular nuclei process input from the inner ear and are essential for balance; damage leads to vertigo, nystagmus, and loss of equilibrium.",
+      "topic": "Medulla oblongata"
+    },
+    {
+      "question": "Which of the following structures is NOT a component of the brain stem?",
+      "options": [
+        "Midbrain",
+        "Pons",
+        "Cerebellum",
+        "Medulla oblongata"
+      ],
+      "answer": 2,
+      "explanation": "The brain stem consists of the midbrain, pons and medulla oblongata; the cerebellum is a separate posterior brain structure.",
+      "topic": "Brain stem"
+    },
+    {
+      "question": "The primary respiratory rhythm generator, the dorsal respiratory group, is located in which part of the brain stem?",
+      "options": [
+        "Dorsal respiratory group in the medulla",
+        "Ventral respiratory group in the medulla",
+        "Pneumotaxic centre in the pons",
+        "Apneustic centre in the pons"
+      ],
+      "answer": 0,
+      "explanation": "The dorsal respiratory group (DRG) in the medulla sets the basic rhythm of breathing; the other centres modulate this rhythm.",
+      "topic": "Brain stem"
+    },
+    {
+      "question": "A unilateral lesion of the corticospinal tract in the medulla would most likely produce which clinical deficit?",
+      "options": [
+        "Ipsilateral facial paralysis",
+        "Contralateral spastic paralysis below the lesion",
+        "Ipsilateral loss of pain and temperature from the face",
+        "Contralateral loss of fine touch from the upper limb"
+      ],
+      "answer": 1,
+      "explanation": "Corticospinal fibers decussate at the pyramidal decussation in the medulla; a lesion above this crossing causes contralateral spastic paralysis of muscles below the level.",
+      "topic": "Brain stem"
+    },
+    {
+      "question": "The nucleus of the vagus nerve (cranial nerve X) is situated in which part of the brain stem?",
+      "options": [
+        "Midbrain",
+        "Pons",
+        "Medulla oblongata",
+        "Cerebral cortex"
+      ],
+      "answer": 2,
+      "explanation": "The dorsal motor nucleus of the vagus and the nucleus ambiguus, which give rise to CN X fibers, are located in the medulla oblongata.",
+      "topic": "Brain stem"
+    },
+    {
+      "question": "Which cranial nerve nucleus located in the pons innervates the lateral rectus muscle?",
+      "options": [
+        "Abducens nucleus",
+        "Trochlear nucleus",
+        "Oculomotor nucleus",
+        "Facial nucleus"
+      ],
+      "answer": 0,
+      "explanation": "The abducens (VI) nucleus resides in the caudal pons and supplies the lateral rectus muscle, responsible for eye abduction.",
+      "topic": "Brain stem"
+    },
+    {
+      "question": "The reticular formation of the brain stem is chiefly involved in which physiological function?",
+      "options": [
+        "Voluntary motor control",
+        "Regulation of the sleep‑wake cycle",
+        "Coordination of limb movements",
+        "Language comprehension"
+      ],
+      "answer": 1,
+      "explanation": "The reticular activating system, a component of the reticular formation, modulates arousal and the sleep‑wake cycle.",
+      "topic": "Brain stem"
+    },
+    {
+      "question": "Decussation of the superior cerebellar peduncles occurs at which level of the brain stem?",
+      "options": [
+        "Midbrain",
+        "Pons",
+        "Medulla",
+        "Spinal cord"
+      ],
+      "answer": 0,
+      "explanation": "The superior cerebellar peduncles cross (decussate) in the midbrain, near the level of the inferior colliculus.",
+      "topic": "Brain stem"
+    },
+    {
+      "question": "The reticular formation is primarily situated in which part of the brainstem?",
+      "options": [
+        "Dorsal part of the pons and medulla",
+        "Lateral ventricles",
+        "Cerebellar cortex",
+        "Basal ganglia"
+      ],
+      "answer": 0,
+      "explanation": "The reticular formation extends through the dorsal tegmental region of the pons and medulla, forming a diffuse network of neurons.",
+      "topic": "Reticular formation"
+    },
+    {
+      "question": "The reticular activating system (RAS) is essential for which physiological function?",
+      "options": [
+        "Initiate voluntary movement",
+        "Regulate sleep-wake cycle and arousal",
+        "Process visual information",
+        "Control endocrine secretion"
+      ],
+      "answer": 1,
+      "explanation": "The RAS, a component of the reticular formation, maintains cortical arousal and governs the transition between sleep and wakefulness.",
+      "topic": "Reticular formation"
+    },
+    {
+      "question": "The reticulospinal tract, which modulates muscle tone, originates from which structure?",
+      "options": [
+        "Cerebellum",
+        "Reticular formation",
+        "Red nucleus",
+        "Substantia nigra"
+      ],
+      "answer": 1,
+      "explanation": "Neurons of the reticular formation give rise to the reticulospinal tract that descends to the spinal cord influencing posture and reflexes.",
+      "topic": "Reticular formation"
+    },
+    {
+      "question": "A patient who suffers extensive damage to the reticular formation is most likely to present with which condition?",
+      "options": [
+        "Loss of fine touch",
+        "Coma",
+        "Hemiplegia",
+        "Aphasia"
+      ],
+      "answer": 1,
+      "explanation": "Destruction of the reticular formation disrupts the arousal system, often resulting in a coma due to loss of cortical activation.",
+      "topic": "Reticular formation"
+    },
+    {
+      "question": "Which autonomic function is directly modulated by the reticular formation?",
+      "options": [
+        "Regulation of heart rate",
+        "Regulation of blood glucose",
+        "Regulation of bone growth",
+        "Regulation of hair growth"
+      ],
+      "answer": 0,
+      "explanation": "Reticular formation nuclei, such as the cardio‑inhibitory center, influence cardiovascular parameters including heart rate.",
+      "topic": "Reticular formation"
+    },
+    {
+      "question": "Which of the following nuclei is considered part of the reticular formation?",
+      "options": [
+        "Locus coeruleus",
+        "Substantia gelatinosa",
+        "Red nucleus",
+        "Caudate nucleus"
+      ],
+      "answer": 0,
+      "explanation": "The locus coeruleus, located in the pontine reticular formation, is a major noradrenergic nucleus involved in arousal.",
+      "topic": "Reticular formation"
+    },
+    {
+      "question": "During REM sleep, the reticular formation exerts its effect primarily through projections to which area?",
+      "options": [
+        "Ventral posterior nucleus of thalamus",
+        "Pontine tegmentum",
+        "Medial geniculate body",
+        "Inferior colliculus"
+      ],
+      "answer": 1,
+      "explanation": "The pontine tegmentum, especially the pontine reticular formation, generates the REM sleep EEG pattern and muscle atonia.",
+      "topic": "Reticular formation"
+    },
+    {
+      "question": "In a transverse section of the spinal cord, the grey matter is best described as:",
+      "options": [
+        "Butterfly-shaped with dorsal and ventral horns",
+        "Circular",
+        "Triangular",
+        "Rectangular"
+      ],
+      "answer": 0,
+      "explanation": "The grey matter appears as a butterfly or H-shaped region with dorsal (posterior) and ventral (anterior) horns in cross‑section.",
+      "topic": "Spinal cord"
+    },
+    {
+      "question": "The spinal cord segments that give rise to the phrenic nerve are:",
+      "options": [
+        "C3-C5",
+        "C5-C7",
+        "T1-T3",
+        "L2-L4"
+      ],
+      "answer": 0,
+      "explanation": "The phrenic nerve, which innervates the diaphragm, originates from the ventral rami of cervical spinal nerves C3, C4 and C5 (C3‑C5).",
+      "topic": "Spinal cord"
+    },
+    {
+      "question": "Which spinal tract transmits fine touch, vibration and proprioceptive information to the brain?",
+      "options": [
+        "Spinothalamic tract",
+        "Dorsal column‑medial lemniscal pathway",
+        "Corticospinal tract",
+        "Rubrospinal tract"
+      ],
+      "answer": 1,
+      "explanation": "The dorsal column‑medial lemniscal pathway carries discriminative touch, vibration and proprioception from peripheral receptors to the thalamus.",
+      "topic": "Spinal cord"
+    },
+    {
+      "question": "The primary arterial supply to the anterior two‑thirds of the spinal cord is provided by:",
+      "options": [
+        "Anterior spinal artery",
+        "Posterior spinal arteries",
+        "Radicular arteries",
+        "Vertebral arteries"
+      ],
+      "answer": 0,
+      "explanation": "The anterior spinal artery, reinforced by radicular (segmental) arteries, supplies the anterior portion of the cord, including the anterior horns and corticospinal tracts.",
+      "topic": "Spinal cord"
+    },
+    {
+      "question": "The lateral corticospinal tract is located in which region of the spinal cord white matter?",
+      "options": [
+        "Dorsal column",
+        "Lateral funiculus",
+        "Ventral funiculus",
+        "Central canal"
+      ],
+      "answer": 1,
+      "explanation": "The lateral corticospinal tract runs in the lateral funiculus (lateral white matter) of the spinal cord and mediates voluntary motor control.",
+      "topic": "Spinal cord"
+    },
+    {
+      "question": "Which meningeal layer is directly adherent to the surface of the spinal cord?",
+      "options": [
+        "Dura mater",
+        "Arachnoid mater",
+        "Pia mater",
+        "Subarachnoid space"
+      ],
+      "answer": 2,
+      "explanation": "The pia mater is a thin, delicate membrane that closely follows the contours of the spinal cord, adhering directly to its surface.",
+      "topic": "Spinal cord"
+    },
+    {
+      "question": "A lesion affecting the lumbar enlargement of the spinal cord would most likely produce:",
+      "options": [
+        "Loss of sensation in the upper limbs",
+        "Paralysis of the lower limbs",
+        "Loss of facial movements",
+        "Impaired hearing"
+      ],
+      "answer": 1,
+      "explanation": "The lumbar enlargement contains neuronal cell bodies and tracts that innervate the lower limbs; damage here leads to motor and sensory deficits of the legs.",
+      "topic": "Spinal cord"
+    },
+    {
+      "question": "Which of the following meninges is a thin, delicate membrane that closely follows the contours of the brain and spinal cord?",
+      "options": [
+        "Dura mater",
+        "Arachnoid mater",
+        "Pia mater",
+        "Tentorium cerebelli"
+      ],
+      "answer": 2,
+      "explanation": "The pia mater is a thin, vascularized membrane that adheres tightly to the surface of the brain and spinal cord, following all gyri and sulci.",
+      "topic": "Meninges"
+    },
+    {
+      "question": "The falx cerebri is a sickle‑shaped fold formed by a split of which meningeal layer?",
+      "options": [
+        "Dura mater",
+        "Arachnoid mater",
+        "Pia mater",
+        "None of these"
+      ],
+      "answer": 0,
+      "explanation": "The falx cerebri is a dural septum; it is formed by the division of the dura mater into periosteal and meningeal layers.",
+      "topic": "Meninges"
+    },
+    {
+      "question": "Cerebral arteries are located in which meningeal space?",
+      "options": [
+        "Epidural space",
+        "Subdural space",
+        "Subarachnoid space",
+        "Intracerebral space"
+      ],
+      "answer": 2,
+      "explanation": "The subarachnoid space, between the arachnoid mater and pia mater, contains cerebrospinal fluid and the major cerebral arteries and veins.",
+      "topic": "Meninges"
+    },
+    {
+      "question": "Pain from meningitis is primarily transmitted by sensory fibers of which cranial nerve that innervates the meninges?",
+      "options": [
+        "Facial (VII)",
+        "Trigeminal (V)",
+        "Glossopharyngeal (IX)",
+        "Vagus (X)"
+      ],
+      "answer": 1,
+      "explanation": "The dura mater is innervated by pain fibers of the trigeminal nerve (CN V), so headache in meningitis is conveyed via this nerve.",
+      "topic": "Meninges"
+    },
+    {
+      "question": "Dural venous sinuses are situated between which two layers of the dura mater?",
+      "options": [
+        "Periosteal and meningeal layers",
+        "Arachnoid and pia mater",
+        "Epidural fat and periosteal layer",
+        "Subarachnoid and subdural spaces"
+      ],
+      "answer": 0,
+      "explanation": "The dural sinuses lie in the potential space between the outer periosteal layer (attached to skull) and the inner meningeal layer of the dura mater.",
+      "topic": "Meninges"
+    },
+    {
+      "question": "The pia mater of the brain is continuous with which structure of the spinal cord?",
+      "options": [
+        "Epidural fascia",
+        "Arachnoid mater",
+        "Pia mater of spinal cord",
+        "Dural sac"
+      ],
+      "answer": 2,
+      "explanation": "The pia mater is a continuous membrane that covers both the brain and the spinal cord, merging seamlessly at the foramen magnum.",
+      "topic": "Meninges"
+    },
+    {
+      "question": "A subdural hematoma results from rupture of veins located in which meningeal space?",
+      "options": [
+        "Between dura and skull (epidural)",
+        "Between dura and arachnoid (subdural)",
+        "Within subarachnoid space",
+        "Within pia mater"
+      ],
+      "answer": 1,
+      "explanation": "Subdural hematomas arise from tearing of bridging veins that traverse the subdural space, i.e., the potential space between dura mater and arachnoid mater.",
+      "topic": "Meninges"
+    },
+    {
+      "question": "Which of the following brain regions is primarily composed of grey matter?",
+      "options": [
+        "Cerebral cortex",
+        "Corpus callosum",
+        "Internal capsule",
+        "Cerebellar white matter"
+      ],
+      "answer": 0,
+      "explanation": "The cerebral cortex consists mainly of neuronal cell bodies and dendrites, giving it the characteristic grey appearance.",
+      "topic": "Grey matter"
+    },
+    {
+      "question": "In a transverse section of the spinal cord, which region is primarily composed of neuronal cell bodies and is part of the grey matter?",
+      "options": [
+        "Central canal",
+        "Dorsal horn",
+        "Ventral horn",
+        "Lateral funiculus"
+      ],
+      "answer": 2,
+      "explanation": "The ventral (anterior) horn contains motor neuron cell bodies, a major component of spinal grey matter.",
+      "topic": "Grey matter"
+    },
+    {
+      "question": "Which cell type predominates in grey matter?",
+      "options": [
+        "Oligodendrocytes",
+        "Astrocytes",
+        "Neurons",
+        "Microglia"
+      ],
+      "answer": 2,
+      "explanation": "Grey matter is rich in neuronal cell bodies and their dendrites; glial cells are present but neurons are the dominant cell type.",
+      "topic": "Grey matter"
+    },
+    {
+      "question": "The main functional role of grey matter in the central nervous system is:",
+      "options": [
+        "Transmission of nerve impulses via myelinated axons",
+        "Integration and processing of neuronal information",
+        "Production of cerebrospinal fluid",
+        "Regulation of the blood‑brain barrier"
+      ],
+      "answer": 1,
+      "explanation": "Grey matter regions, such as the cerebral cortex, are sites where synaptic integration and processing of information occur.",
+      "topic": "Grey matter"
+    },
+    {
+      "question": "In neuroanatomical terminology, \"grey matter\" refers to regions that are rich in:",
+      "options": [
+        "Myelinated axons",
+        "Cell bodies and dendrites",
+        "Myelin sheaths",
+        "Blood vessels"
+      ],
+      "answer": 1,
+      "explanation": "The grey colour arises from the high concentration of neuronal somata and dendritic arborisations, which contain little myelin.",
+      "topic": "Grey matter"
+    },
+    {
+      "question": "Which statement correctly distinguishes grey matter from white matter?",
+      "options": [
+        "Grey matter contains more myelinated fibers than white matter",
+        "Grey matter is found only in the cerebellum",
+        "White matter consists mainly of neuronal cell bodies",
+        "Grey matter appears darker in fresh brain tissue due to lower myelin content"
+      ],
+      "answer": 3,
+      "explanation": "Because grey matter has fewer myelinated axons, it reflects less light and appears darker than the myelin‑rich white matter.",
+      "topic": "Grey matter"
+    },
+    {
+      "question": "During human development, the proportion of grey matter relative to white matter in the brain:",
+      "options": [
+        "Increases with age",
+        "Decreases with age",
+        "Remains constant throughout life",
+        "Peaks in early childhood then declines"
+      ],
+      "answer": 1,
+      "explanation": "Myelination of axons continues into adulthood, increasing white matter volume and thereby reducing the grey‑to‑white matter ratio with age.",
+      "topic": "Grey matter"
+    },
+    {
+      "question": "Which of the following best describes white matter in the central nervous system?",
+      "options": [
+        "Region containing neuronal cell bodies",
+        "Region composed mainly of myelinated axons",
+        "Region where synaptic integration occurs",
+        "Region rich in dendritic spines"
+      ],
+      "answer": 1,
+      "explanation": "White matter consists predominantly of myelinated axonal fibers that appear white due to the lipid-rich myelin.",
+      "topic": "White matter"
+    },
+    {
+      "question": "The primary function of white matter tracts is to:",
+      "options": [
+        "Process sensory information",
+        "Generate motor commands",
+        "Transmit nerve impulses between different brain regions",
+        "Produce cerebrospinal fluid"
+      ],
+      "answer": 2,
+      "explanation": "White matter tracts are bundles of myelinated axons that convey signals between distant parts of the brain and spinal cord.",
+      "topic": "White matter"
+    },
+    {
+      "question": "In the human brain, the corpus callosum is an example of:",
+      "options": [
+        "Grey matter nucleus",
+        "White matter tract connecting the cerebral hemispheres",
+        "Ventricular system structure",
+        "Meningeal layer"
+      ],
+      "answer": 1,
+      "explanation": "The corpus callosum is a large band of white matter that links the left and right cerebral hemispheres, allowing inter‑hemispheric communication.",
+      "topic": "White matter"
+    },
+    {
+      "question": "Which myelin protein is most abundant in CNS white matter?",
+      "options": [
+        "Myelin basic protein (MBP)",
+        "P0 protein",
+        "PMP22",
+        "Glycophorin"
+      ],
+      "answer": 0,
+      "explanation": "Myelin basic protein is the major structural protein of CNS myelin, whereas P0 and PMP22 are predominant in peripheral myelin.",
+      "topic": "White matter"
+    },
+    {
+      "question": "A lesion confined to the internal capsule would most likely affect:",
+      "options": [
+        "Sensory cortex processing",
+        "Motor pathway conduction",
+        "Autonomic regulation",
+        "Hormone secretion"
+      ],
+      "answer": 1,
+      "explanation": "The internal capsule contains densely packed corticospinal and other motor fibers; damage impairs motor signal transmission.",
+      "topic": "White matter"
+    },
+    {
+      "question": "During development, the proportion of white matter relative to grey matter in the cerebral cortex:",
+      "options": [
+        "Decreases after birth",
+        "Remains constant",
+        "Increases with age until adulthood",
+        "Is higher in newborns than adults"
+      ],
+      "answer": 2,
+      "explanation": "Myelination progresses post‑natally, so the white‑matter volume grows and the white‑to‑grey ratio rises until early adulthood.",
+      "topic": "White matter"
+    },
+    {
+      "question": "Which disease is characterized by demyelination of CNS white matter?",
+      "options": [
+        "Parkinson's disease",
+        "Multiple sclerosis",
+        "Myasthenia gravis",
+        "Amyotrophic lateral sclerosis"
+      ],
+      "answer": 1,
+      "explanation": "Multiple sclerosis involves immune‑mediated destruction of CNS myelin, leading to plaques in white matter.",
+      "topic": "White matter"
+    },
+    {
+      "question": "How many ventricles are present in the human brain and what are their names?",
+      "options": [
+        "Two lateral ventricles, one third ventricle and one fourth ventricle",
+        "Two lateral ventricles, two third ventricles and one fourth ventricle",
+        "One lateral ventricle, one third ventricle and two fourth ventricles",
+        "Four lateral ventricles, one third ventricle and one fourth ventricle"
+      ],
+      "answer": 0,
+      "explanation": "The brain contains four ventricles: a pair of lateral ventricles, a single third ventricle and a single fourth ventricle.",
+      "topic": "Ventricles"
+    },
+    {
+      "question": "Which structure is the primary site of cerebrospinal fluid (CSF) production?",
+      "options": [
+        "Choroid plexus of the lateral ventricles",
+        "Substantia nigra",
+        "Cerebellar cortex",
+        "Pineal gland"
+      ],
+      "answer": 0,
+      "explanation": "CSF is secreted by the choroid plexus, a vascular tissue that lines all ventricles, especially the lateral ventricles.",
+      "topic": "Ventricles"
+    },
+    {
+      "question": "What is the correct sequence of CSF flow through the ventricular system?",
+      "options": [
+        "Lateral ventricles → third ventricle → cerebral aqueduct → fourth ventricle → subarachnoid space",
+        "Third ventricle → lateral ventricles → fourth ventricle → cerebral aqueduct → subarachnoid space",
+        "Fourth ventricle → cerebral aqueduct → third ventricle → lateral ventricles → subarachnoid space",
+        "Lateral ventricles → fourth ventricle → third ventricle → cerebral aqueduct → subarachnoid space"
+      ],
+      "answer": 0,
+      "explanation": "CSF flows from the lateral ventricles through the interventricular foramina (foramina of Monro) into the third ventricle, down the cerebral aqueduct into the fourth ventricle, and then into the subarachnoid space via the foramina of Luschka and Magendie.",
+      "topic": "Ventricles"
+    },
+    {
+      "question": "The interventricular foramen (foramen of Monro) connects which two ventricles?",
+      "options": [
+        "Lateral ventricle and third ventricle",
+        "Third ventricle and fourth ventricle",
+        "Fourth ventricle and central canal of the spinal cord",
+        "Lateral ventricle and fourth ventricle"
+      ],
+      "answer": 0,
+      "explanation": "The foramen of Monro (interventricular foramen) provides a passage between each lateral ventricle and the third ventricle.",
+      "topic": "Ventricles"
+    },
+    {
+      "question": "The fourth ventricle is situated between which of the following structures?",
+      "options": [
+        "Pons and medulla on its floor and cerebellum forming its roof",
+        "Thalamus and hypothalamus",
+        "Corpus callosum and caudate nucleus",
+        "Midbrain and pons"
+      ],
+      "answer": 0,
+      "explanation": "The fourth ventricle lies dorsal to the pons and medulla (forming its floor) and ventral to the cerebellum (forming its roof).",
+      "topic": "Ventricles"
+    },
+    {
+      "question": "Marked enlargement of the lateral ventricles on neuroimaging is most commonly indicative of which condition?",
+      "options": [
+        "Hydrocephalus",
+        "Multiple sclerosis",
+        "Parkinson's disease",
+        "Myasthenia gravis"
+      ],
+      "answer": 0,
+      "explanation": "Hydrocephalus, due to impaired CSF absorption or flow, leads to dilatation of the ventricular system, especially the lateral ventricles.",
+      "topic": "Ventricles"
+    },
+    {
+      "question": "All of the following are functions of cerebrospinal fluid (CSF) EXCEPT:",
+      "options": [
+        "Providing buoyancy to the brain",
+        "Transporting hormones throughout the CNS",
+        "Supplying nutrients to neurons",
+        "Generating action potentials in neurons"
+      ],
+      "answer": 3,
+      "explanation": "CSF does not generate action potentials; it mainly cushions the brain, transports hormones, and supplies nutrients while removing waste.",
+      "topic": "Ventricles"
+    },
+    {
+      "question": "Where is cerebrospinal fluid (CSF) primarily produced in the adult brain?",
+      "options": [
+        "Choroid plexus of the lateral ventricles",
+        "Subarachnoid space",
+        "Central canal of the spinal cord",
+        "Ependymal lining of the fourth ventricle"
+      ],
+      "answer": 0,
+      "explanation": "The choroid plexus, especially in the lateral ventricles, secretes the bulk of CSF through ultrafiltration of plasma.",
+      "topic": "Cerebrospinal fluid"
+    },
+    {
+      "question": "What is the approximate total volume of CSF present in a healthy adult?",
+      "options": [
+        "25 mL",
+        "150 mL",
+        "500 mL",
+        "1000 mL"
+      ],
+      "answer": 1,
+      "explanation": "An adult typically contains about 150 mL of CSF, which is continuously renewed about three to four times a day.",
+      "topic": "Cerebrospinal fluid"
+    },
+    {
+      "question": "Which of the following is NOT a recognized function of CSF?",
+      "options": [
+        "Provides buoyancy to the brain",
+        "Acts as a shock absorber for the CNS",
+        "Regulates blood glucose levels",
+        "Removes metabolic waste from the brain"
+      ],
+      "answer": 2,
+      "explanation": "CSF does not play a role in regulating blood glucose; its main functions are buoyancy, protection, chemical stability, and waste removal.",
+      "topic": "Cerebrospinal fluid"
+    },
+    {
+      "question": "CSF is absorbed back into the venous circulation mainly through which structure?",
+      "options": [
+        "Arachnoid granulations (villi)",
+        "Choroid plexus",
+        "Central canal of the spinal cord",
+        "Dura mater"
+      ],
+      "answer": 0,
+      "explanation": "Arachnoid granulations protrude into the dural venous sinuses, allowing CSF to flow back into the bloodstream.",
+      "topic": "Cerebrospinal fluid"
+    },
+    {
+      "question": "Obstruction of the cerebral aqueduct (aqueduct of Sylvius) leads to dilation of which ventricular compartment first?",
+      "options": [
+        "Lateral ventricles",
+        "Third ventricle",
+        "Fourth ventricle",
+        "Cerebral aqueduct itself"
+      ],
+      "answer": 0,
+      "explanation": "Blockage of the aqueduct prevents CSF flow from the third to the fourth ventricle, causing proximal dilation of the lateral ventricles (and the third ventricle subsequently).",
+      "topic": "Cerebrospinal fluid"
+    },
+    {
+      "question": "The blood‑CSF barrier is formed primarily by which type of cells?",
+      "options": [
+        "Ependymal cells lining the ventricles",
+        "Epithelial cells of the choroid plexus",
+        "Astrocyte end‑feet surrounding capillaries",
+        "Oligodendrocytes"
+      ],
+      "answer": 1,
+      "explanation": "Tight junctions between choroid plexus epithelial cells constitute the blood‑CSF barrier, regulating substance entry into CSF.",
+      "topic": "Cerebrospinal fluid"
+    },
+    {
+      "question": "What is the normal opening pressure of CSF measured during a lumbar puncture in an adult lying in the lateral decubitus position?",
+      "options": [
+        "5–10 cm H₂O",
+        "10–15 cm H₂O",
+        "15–20 cm H₂O",
+        "20–25 cm H₂O"
+      ],
+      "answer": 1,
+      "explanation": "Typical CSF opening pressure in a relaxed adult is 10–15 cm H₂O; higher values suggest raised intracranial pressure.",
+      "topic": "Cerebrospinal fluid"
+    },
+    {
+      "question": "Which CSF cytological finding is most characteristic of acute bacterial meningitis?",
+      "options": [
+        "Elevated glucose concentration",
+        "Decreased protein concentration",
+        "Predominant neutrophils (polymorphonuclear leukocytes)",
+        "Predominant lymphocytes"
+      ],
+      "answer": 2,
+      "explanation": "Bacterial meningitis usually produces a neutrophil‑rich pleocytosis, low glucose, and high protein in CSF.",
+      "topic": "Cerebrospinal fluid"
+    }
+  ],
+  "generation": {
+    "model": "openai/gpt-oss-120b",
+    "strategy": "5-10 MCQs per exact syllabus topic",
+    "topicCount": 33,
+    "mcqCount": 232
+  }
+}
