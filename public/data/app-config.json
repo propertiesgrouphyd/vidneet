@@ -7,17 +7,17 @@
     "en"
   ],
   "totalDays": 365,
-  "programStartDateIST": "2026-09-05",
+  "programStartDateIST": "2026-09-15",
   "dailyGenerationHourIST": 1,
   "dailyActivationHourIST": 6,
   "contentDirectory": "data/days",
   "liveContent": true,
   "cacheContent": false,
   "version": "1.0.0",
-  "releaseStartDate": "2026-09-05",
+  "releaseStartDate": "2026-09-15",
   "timezone": "Asia/Kolkata",
   "generationTime": "01:00",
   "releaseTime": "06:00",
-  "courseStartDate": "2026-09-05",
+  "courseStartDate": "2026-09-15",
   "publishTime": "06:00"
 }
