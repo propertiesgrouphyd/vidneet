@@ -1,3 +1,4 @@
+
 const GROQ_API_URL =
   "https://api.groq.com/openai/v1/chat/completions";
 
@@ -15,6 +16,93 @@ function sleep(ms) {
 
 /*
  * ------------------------------------------------------
+ * API KEY MANAGEMENT
+ * ------------------------------------------------------
+ *
+ * Primary:
+ *   GROQ_API_KEY
+ *
+ * Secondary:
+ *   GROQ_API_KEY_2
+ *
+ * Switch to the secondary key ONLY when the primary
+ * key's DAILY REQUEST QUOTA (RPD) is exhausted.
+ *
+ * RPM / TPM limits continue using the existing
+ * wait-and-retry behavior.
+ */
+
+const API_KEYS = [
+  process.env.GROQ_API_KEY,
+  process.env.GROQ_API_KEY_2
+].filter(Boolean);
+
+let activeApiKeyIndex = 0;
+
+
+function getActiveApiKey() {
+  return API_KEYS[activeApiKeyIndex];
+}
+
+
+function isDailyQuotaExceeded(error) {
+  const response =
+    error?.response;
+
+  const remainingRequests =
+    response?.headers?.get(
+      "x-ratelimit-remaining-requests"
+    );
+
+  if (
+    remainingRequests !== null &&
+    remainingRequests !== undefined &&
+    Number(remainingRequests) <= 0
+  ) {
+    return true;
+  }
+
+  const message =
+    String(error?.message || "").toLowerCase();
+
+  return (
+    /\brequests per day\b/.test(message) ||
+    /\brequest per day\b/.test(message) ||
+    /\bdaily request limit\b/.test(message) ||
+    /\bdaily requests limit\b/.test(message) ||
+    /\brpd\b/.test(message)
+  );
+}
+
+
+function switchToSecondaryKey(label) {
+  if (activeApiKeyIndex !== 0) {
+    return false;
+  }
+
+  if (!API_KEYS[1]) {
+    throw new Error(
+      `${label}: Primary Groq daily request quota is exhausted, but GROQ_API_KEY_2 is not configured.`
+    );
+  }
+
+  activeApiKeyIndex = 1;
+
+  console.log("");
+  console.log(
+    `${label}: Primary API key daily request quota exhausted.`
+  );
+
+  console.log(
+    `${label}: Switching to GROQ_API_KEY_2.`
+  );
+
+  return true;
+}
+
+
+/*
+ * ------------------------------------------------------
  * GROQ RATE-LIMIT RESET DELAY
  * ------------------------------------------------------
  *
@@ -24,6 +112,7 @@ function sleep(ms) {
  * 2. x-ratelimit-reset-tokens
  * 3. safe 61-second fallback
  */
+
 function getResetDelay(response) {
   const retryAfter =
     response.headers.get(
@@ -98,6 +187,7 @@ function getResetDelay(response) {
    * Safe fallback when Groq does not provide
    * a usable reset header.
    */
+
   return 61000;
 }
 
@@ -107,14 +197,12 @@ function getResetDelay(response) {
  * GROQ API REQUEST
  * ------------------------------------------------------
  */
+
 async function request(
   prompt,
-  maxTokens
+  maxTokens,
+  apiKey
 ) {
-  const apiKey =
-    process.env.GROQ_API_KEY;
-
-
   if (!apiKey) {
     throw new Error(
       "GROQ_API_KEY is not set."
@@ -183,6 +271,7 @@ async function request(
    * HTTP ERROR
    * ----------------------------------------------------
    */
+
   if (!response.ok) {
     let message =
       text;
@@ -231,6 +320,7 @@ async function request(
    * PARSE GROQ API RESPONSE
    * ----------------------------------------------------
    */
+
   let result;
 
 
@@ -274,6 +364,7 @@ async function request(
  * Markdown fences are removed defensively if the model
  * ever returns them despite the system instruction.
  */
+
 function parseJson(text) {
   let cleaned =
     String(text).trim();
@@ -318,11 +409,13 @@ function parseJson(text) {
  * RETRY GROQ REQUEST
  * ------------------------------------------------------
  *
- * CRITICAL BEHAVIOR:
+ * DAILY REQUEST QUOTA:
+ *   Switch from primary to secondary key.
+ *   Retry the EXACT SAME request.
  *
- * 429:
- *   Wait for token reset.
- *   Retry EXACT SAME request.
+ * 429 — RPM / TPM:
+ *   Wait for reset.
+ *   Retry EXACT SAME request using the SAME key.
  *
  * Temporary server errors:
  *   Retry SAME request.
@@ -332,17 +425,14 @@ function parseJson(text) {
  *
  * 400:
  *   Fatal.
- *   Do NOT retry forever because the exact same
- *   malformed request will normally produce the
- *   exact same 400 response.
  *
  * 413:
- *   Fatal because the request is too large.
+ *   Fatal.
  *
  * Network/fetch errors:
- *   Retry SAME request because the request may never
- *   have reached Groq.
+ *   Retry SAME request.
  */
+
 async function callWithRetry(
   prompt,
   maxTokens,
@@ -356,6 +446,17 @@ async function callWithRetry(
 
 
     try {
+      const apiKey =
+        getActiveApiKey();
+
+
+      if (!apiKey) {
+        throw new Error(
+          "GROQ_API_KEY is not set."
+        );
+      }
+
+
       console.log(
         `${label}: Groq attempt ${attempt}`
       );
@@ -364,7 +465,8 @@ async function callWithRetry(
       const raw =
         await request(
           prompt,
-          maxTokens
+          maxTokens,
+          apiKey
         );
 
 
@@ -380,6 +482,43 @@ async function callWithRetry(
 
       /*
        * ------------------------------------------------
+       * DAILY REQUEST QUOTA EXHAUSTED
+       * ------------------------------------------------
+       *
+       * Switch only from primary to secondary.
+       *
+       * Do not switch for ordinary RPM / TPM limits.
+       *
+       * The same prompt is sent again.
+       */
+
+      if (
+        status === 429 &&
+        isDailyQuotaExceeded(error)
+      ) {
+        if (
+          activeApiKeyIndex === 0
+        ) {
+          switchToSecondaryKey(
+            label
+          );
+
+          console.log(
+            `${label}: Retrying the SAME request with the secondary API key...`
+          );
+
+          continue;
+        }
+
+
+        throw new Error(
+          `${label}: Daily request quota is exhausted for both configured API keys.`
+        );
+      }
+
+
+      /*
+       * ------------------------------------------------
        * 429 — RATE LIMIT / TPM
        * ------------------------------------------------
        *
@@ -388,6 +527,7 @@ async function callWithRetry(
        * Wait until tokens become available and send
        * the EXACT SAME prompt again.
        */
+
       if (
         status === 429
       ) {
@@ -434,6 +574,7 @@ async function callWithRetry(
        *
        * Retry the SAME request.
        */
+
       if (
         status === 408 ||
         status === 409 ||
@@ -478,6 +619,7 @@ async function callWithRetry(
        *
        * Retry the SAME request.
        */
+
       if (!status) {
         const delay =
           Math.min(
@@ -516,6 +658,7 @@ async function callWithRetry(
        *
        * The request itself must be corrected.
        */
+
       if (
         status === 400
       ) {
@@ -531,6 +674,7 @@ async function callWithRetry(
        * Retrying the identical request cannot solve
        * the size problem.
        */
+
       if (
         status === 413
       ) {
@@ -546,6 +690,7 @@ async function callWithRetry(
        * Retry the SAME request rather than silently
        * losing the current lesson/topic.
        */
+
       const delay =
         Math.min(
           60000,
@@ -574,6 +719,7 @@ async function callWithRetry(
  * LESSON GENERATION
  * ------------------------------------------------------
  */
+
 export async function generateLesson(
   prompt
 ) {
@@ -590,6 +736,7 @@ export async function generateLesson(
  * TOPIC MCQ GENERATION
  * ------------------------------------------------------
  */
+
 export async function generateTopicMcqs(
   prompt
 ) {
