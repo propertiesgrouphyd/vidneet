@@ -6,6 +6,7 @@ on:
 
 permissions:
   contents: write
+  actions: read
 
 concurrency:
   group: vidhwaan-neet-daily-generation
@@ -13,13 +14,15 @@ concurrency:
 
 jobs:
   generate:
-    name: Generate One NEET Lesson
+    name: Generate or Resume NEET Lesson
     runs-on: ubuntu-latest
 
     steps:
+
       # ------------------------------------------------------
       # CHECKOUT
       # ------------------------------------------------------
+
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
@@ -28,6 +31,7 @@ jobs:
       # ------------------------------------------------------
       # NODE
       # ------------------------------------------------------
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -37,12 +41,14 @@ jobs:
       # ------------------------------------------------------
       # DEPENDENCIES
       # ------------------------------------------------------
+
       - name: Install dependencies
         run: npm ci
 
       # ------------------------------------------------------
       # SYLLABUS VALIDATION
       # ------------------------------------------------------
+
       - name: Validate syllabus
         run: |
           set -euo pipefail
@@ -56,6 +62,7 @@ jobs:
       # ------------------------------------------------------
       # GROQ SECRET VALIDATION
       # ------------------------------------------------------
+
       - name: Validate Groq secrets
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
@@ -74,46 +81,177 @@ jobs:
           fi
 
           case "$GROQ_API_KEY" in
-            gsk_*)
-              echo "Primary Groq API key configured."
-              ;;
+            gsk_*) echo "Primary Groq API key configured." ;;
             *)
-              echo "ERROR: Unexpected primary Groq key format."
+              echo "ERROR: Invalid primary Groq key format."
               exit 1
               ;;
           esac
 
           case "$GROQ_API_KEY_2" in
-            gsk_*)
-              echo "Secondary Groq API key configured."
-              ;;
+            gsk_*) echo "Secondary Groq API key configured." ;;
             *)
-              echo "ERROR: Unexpected secondary Groq key format."
+              echo "ERROR: Invalid secondary Groq key format."
               exit 1
               ;;
           esac
 
       # ------------------------------------------------------
-      # GENERATE EXACTLY ONE DAY
+      # RESTORE PREVIOUS PROGRESS ARTIFACT
       # ------------------------------------------------------
-      - name: Generate next daily lesson
+
+      - name: Restore previous generation progress
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          CURRENT_RUN_ID: ${{ github.run_id }}
+          CURRENT_WORKFLOW: ${{ github.workflow }}
+        run: |
+          set -euo pipefail
+
+          mkdir -p generator-progress
+
+          echo "============================================================"
+          echo " VIDHWAAN NEET — RESTORING PREVIOUS PROGRESS"
+          echo "============================================================"
+
+          # Find earlier completed runs of this workflow.
+          RUNS=$(gh api \
+            "repos/${GH_REPO}/actions/workflows/daily-ai-lesson.yml/runs?branch=main&status=completed&per_page=30" \
+            --jq '.workflow_runs[] | select(.id != '"${CURRENT_RUN_ID}"') | .id')
+
+          FOUND=false
+
+          for RUN_ID in $RUNS; do
+
+            echo "Checking previous workflow run: $RUN_ID"
+
+            ARTIFACT_ID=$(gh api \
+              "repos/${GH_REPO}/actions/runs/${RUN_ID}/artifacts" \
+              --jq '.artifacts[] | select(.name == "neet-generation-progress" and .expired == false) | .id' \
+              | head -n 1)
+
+            if [ -z "$ARTIFACT_ID" ]; then
+              continue
+            fi
+
+            echo "Previous progress artifact found."
+
+            mkdir -p /tmp/neet-progress-artifact
+
+            gh api \
+              "repos/${GH_REPO}/actions/artifacts/${ARTIFACT_ID}/zip" \
+              > /tmp/neet-progress-artifact/progress.zip
+
+            unzip -o \
+              /tmp/neet-progress-artifact/progress.zip \
+              -d generator-progress
+
+            FOUND=true
+
+            echo "Progress restored from run: $RUN_ID"
+
+            break
+
+          done
+
+          if [ "$FOUND" = false ]; then
+            echo "No previous progress artifact found."
+            echo "Starting a new generation."
+          fi
+
+          echo ""
+          echo "Restored progress files:"
+
+          find generator-progress \
+            -maxdepth 2 \
+            -type f \
+            -print
+
+      # ------------------------------------------------------
+      # GENERATE OR RESUME LESSON
+      # ------------------------------------------------------
+
+      - name: Generate or resume daily lesson
+        id: generate
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           GROQ_API_KEY_2: ${{ secrets.GROQ_API_KEY_2 }}
           GROQ_MODEL: openai/gpt-oss-120b
         run: |
-          set -euo pipefail
+          set -uo pipefail
 
           echo "============================================================"
           echo " VIDHWAAN NEET — DAILY AI GENERATION"
           echo "============================================================"
 
+          set +e
+
           node generator/generate-day.js
+
+          EXIT_CODE=$?
+
+          set -e
+
+          if [ "$EXIT_CODE" -eq 0 ]; then
+
+            echo "quota_exhausted=false" >> "$GITHUB_OUTPUT"
+
+            echo "Generation completed successfully."
+
+          elif [ "$EXIT_CODE" -eq 2 ]; then
+
+            echo "quota_exhausted=true" >> "$GITHUB_OUTPUT"
+
+            echo "Groq daily quota exhausted."
+            echo "Progress will be uploaded as an artifact."
+            echo "The incomplete lesson will NOT be pushed."
+
+          else
+
+            echo "Generation failed with exit code: $EXIT_CODE"
+
+            exit "$EXIT_CODE"
+
+          fi
+
+      # ------------------------------------------------------
+      # SAVE PROGRESS ARTIFACT
+      # ------------------------------------------------------
+
+      - name: Save generation progress artifact
+        if: steps.generate.outputs.quota_exhausted == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: neet-generation-progress
+          path: generator-progress/
+          if-no-files-found: error
+          retention-days: 90
+          compression-level: 6
+
+      # ------------------------------------------------------
+      # STOP SUCCESSFULLY AFTER QUOTA PAUSE
+      # ------------------------------------------------------
+
+      - name: Report paused generation
+        if: steps.generate.outputs.quota_exhausted == 'true'
+        run: |
+          echo "============================================================"
+          echo " VIDHWAAN NEET — GENERATION PAUSED"
+          echo "============================================================"
+          echo ""
+          echo "Progress artifact uploaded successfully."
+          echo "Run this workflow again after the Groq daily quota resets."
+          echo "Generation will resume from the saved checkpoint."
+          echo ""
+          echo "No incomplete lesson was pushed to the repository."
 
       # ------------------------------------------------------
       # VERIFY GENERATED FILES
       # ------------------------------------------------------
+
       - name: Verify generated lesson
+        if: steps.generate.outputs.quota_exhausted != 'true'
         run: |
           set -euo pipefail
 
@@ -219,9 +357,11 @@ jobs:
           PY
 
       # ------------------------------------------------------
-      # VERIFY ONLY EXPECTED FILE CHANGED
+      # VERIFY GIT CHANGES
       # ------------------------------------------------------
+
       - name: Verify Git changes
+        if: steps.generate.outputs.quota_exhausted != 'true'
         run: |
           set -euo pipefail
 
@@ -246,7 +386,9 @@ jobs:
       # ------------------------------------------------------
       # COMMIT + PUSH
       # ------------------------------------------------------
+
       - name: Commit generated lesson
+        if: steps.generate.outputs.quota_exhausted != 'true'
         run: |
           set -euo pipefail
 
@@ -258,6 +400,7 @@ jobs:
           fi
 
           git config user.name "github-actions[bot]"
+
           git config user.email \
             "41898282+github-actions[bot]@users.noreply.github.com"
 
