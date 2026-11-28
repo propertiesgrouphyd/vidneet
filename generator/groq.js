@@ -13,6 +13,11 @@ const API_KEYS = [
 
 let activeApiKeyIndex = 0;
 
+const DAILY_QUOTA_ERROR =
+  "GROQ_DAILY_QUOTA_EXHAUSTED";
+
+const MAX_RETRIES = 10;
+
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -24,28 +29,10 @@ function getActiveApiKey() {
 /*
  * DAILY QUOTA DETECTION
  *
- * Detect:
- * - Requests per day (RPD)
- * - Tokens per day (TPD)
- *
- * Do not mistake TPM for TPD.
+ * Do not confuse requests-per-minute or
+ * tokens-per-minute limits with daily limits.
  */
 function isDailyQuotaExceeded(error) {
-  const response = error?.response;
-
-  const remainingRequests =
-    response?.headers?.get(
-      "x-ratelimit-remaining-requests"
-    );
-
-  if (
-    remainingRequests !== null &&
-    remainingRequests !== undefined &&
-    Number(remainingRequests) <= 0
-  ) {
-    return true;
-  }
-
   const message = [
     error?.message,
     error?.responseBody,
@@ -65,28 +52,19 @@ function isDailyQuotaExceeded(error) {
   );
 }
 
-/*
- * SIGNAL TO THE GENERATION WORKFLOW
- *
- * generate-day.js will catch this error,
- * save progress, and stop the run.
- */
 function createDailyQuotaError(label, reason) {
   const error = new Error(
     `${label}: Daily Groq quota exhausted. ${reason}`
   );
 
   error.name = "GroqDailyQuotaError";
-  error.code = "GROQ_DAILY_QUOTA_EXHAUSTED";
+  error.code = DAILY_QUOTA_ERROR;
 
   return error;
 }
 
 /*
- * SWITCH API KEY
- *
- * Only switch from primary to secondary
- * when the primary daily quota is exhausted.
+ * SWITCH TO SECONDARY API KEY
  */
 function switchToSecondaryKey(label) {
   if (activeApiKeyIndex !== 0) {
@@ -115,21 +93,57 @@ function switchToSecondaryKey(label) {
 }
 
 /*
- * RESET DELAY
+ * RATE LIMIT RESET DELAY
  */
+function parseResetTime(value) {
+  if (!value) return null;
+
+  const match = String(value).match(
+    /(\d+(?:\.\d+)?)(ms|s|m|h)?/i
+  );
+
+  if (!match) return null;
+
+  const number = Number(match[1]);
+  const unit = (match[2] || "s").toLowerCase();
+
+  if (!Number.isFinite(number)) return null;
+
+  let milliseconds = number * 1000;
+
+  if (unit === "ms") {
+    milliseconds = number;
+  } else if (unit === "m") {
+    milliseconds = number * 60 * 1000;
+  } else if (unit === "h") {
+    milliseconds = number * 60 * 60 * 1000;
+  }
+
+  return Math.max(
+    1000,
+    Math.ceil(milliseconds) + 1000
+  );
+}
+
 function getResetDelay(response) {
   const retryAfter =
     response?.headers?.get("retry-after");
 
-  if (retryAfter) {
-    const seconds = Number.parseFloat(retryAfter);
+  const retryDelay = parseResetTime(retryAfter);
 
-    if (Number.isFinite(seconds)) {
-      return Math.max(
-        1000,
-        Math.ceil(seconds * 1000) + 1000
-      );
-    }
+  if (retryDelay) {
+    return retryDelay;
+  }
+
+  const resetRequests =
+    response?.headers?.get(
+      "x-ratelimit-reset-requests"
+    );
+
+  const requestDelay = parseResetTime(resetRequests);
+
+  if (requestDelay) {
+    return requestDelay;
   }
 
   const resetTokens =
@@ -137,30 +151,10 @@ function getResetDelay(response) {
       "x-ratelimit-reset-tokens"
     );
 
-  if (resetTokens) {
-    const match = resetTokens.match(
-      /(\d+(?:\.\d+)?)(ms|s|m|h)?/
-    );
+  const tokenDelay = parseResetTime(resetTokens);
 
-    if (match) {
-      const value = Number.parseFloat(match[1]);
-      const unit = match[2] || "s";
-
-      let milliseconds = value * 1000;
-
-      if (unit === "ms") {
-        milliseconds = value;
-      } else if (unit === "m") {
-        milliseconds = value * 60 * 1000;
-      } else if (unit === "h") {
-        milliseconds = value * 60 * 60 * 1000;
-      }
-
-      return Math.max(
-        1000,
-        Math.ceil(milliseconds) + 1000
-      );
-    }
+  if (tokenDelay) {
+    return tokenDelay;
   }
 
   return 61000;
@@ -174,9 +168,10 @@ async function request(prompt, maxTokens, apiKey) {
     throw new Error("GROQ_API_KEY is not set.");
   }
 
-  const response = await fetch(
-    GROQ_API_URL,
-    {
+  let response;
+
+  try {
+    response = await fetch(GROQ_API_URL, {
       method: "POST",
 
       headers: {
@@ -213,8 +208,11 @@ async function request(prompt, maxTokens, apiKey) {
           }
         ]
       })
-    }
-  );
+    });
+  } catch (error) {
+    error.isNetworkError = true;
+    throw error;
+  }
 
   const responseText = await response.text();
 
@@ -228,9 +226,8 @@ async function request(prompt, maxTokens, apiKey) {
         parsed?.error?.message ||
         parsed?.error?.code ||
         responseText;
-
     } catch {
-      // Retain original response text.
+      // Keep original response text.
     }
 
     const error = new Error(
@@ -258,7 +255,10 @@ async function request(prompt, maxTokens, apiKey) {
   const content =
     result?.choices?.[0]?.message?.content;
 
-  if (!content || !content.trim()) {
+  if (
+    typeof content !== "string" ||
+    !content.trim()
+  ) {
     throw new Error(
       "Groq returned empty content."
     );
@@ -276,7 +276,7 @@ function parseJson(text) {
   if (cleaned.startsWith("```")) {
     cleaned = cleaned
       .replace(/^```json\s*/i, "")
-      .replace(/^```\s*/, "")
+      .replace(/^```\s*/i, "")
       .replace(/\s*```$/, "")
       .trim();
   }
@@ -291,18 +291,17 @@ function parseJson(text) {
 }
 
 /*
- * RETRY GROQ REQUEST
+ * GROQ REQUEST WITH RETRIES
  *
  * Daily quota:
  *   Switch to secondary key.
- *   If both keys are exhausted, stop with
- *   GROQ_DAILY_QUOTA_EXHAUSTED.
+ *   If both keys are exhausted, stop immediately.
  *
  * RPM / TPM:
  *   Wait and retry the same request.
  *
- * Temporary server errors:
- *   Retry the same request.
+ * Temporary errors:
+ *   Retry a limited number of times.
  */
 async function callWithRetry(
   prompt,
@@ -311,7 +310,7 @@ async function callWithRetry(
 ) {
   let attempt = 0;
 
-  while (true) {
+  while (attempt < MAX_RETRIES) {
     attempt++;
 
     try {
@@ -319,12 +318,12 @@ async function callWithRetry(
 
       if (!apiKey) {
         throw new Error(
-          "GROQ_API_KEY is not set."
+          "GROQ_API_KEY is not configured."
         );
       }
 
       console.log(
-        `${label}: Groq attempt ${attempt}`
+        `${label}: Groq attempt ${attempt}/${MAX_RETRIES}`
       );
 
       const raw = await request(
@@ -349,7 +348,7 @@ async function callWithRetry(
           switchToSecondaryKey(label);
 
           console.log(
-            `${label}: Retrying the SAME request with the secondary key.`
+            `${label}: Retrying the same request with the secondary key.`
           );
 
           continue;
@@ -363,9 +362,6 @@ async function callWithRetry(
 
       /*
        * ORDINARY RATE LIMIT
-       *
-       * Do not switch keys for ordinary
-       * requests-per-minute or tokens-per-minute limits.
        */
       if (status === 429) {
         const delay =
@@ -373,15 +369,18 @@ async function callWithRetry(
 
         console.log("");
         console.log(
-          `${label}: Groq rate limit reached.`
+          `${label}: Groq temporary rate limit reached.`
         );
 
         console.log(
-          `${label}: Waiting ${Math.ceil(delay / 1000)} seconds before retrying the same request...`
+          `${label}: Waiting ${Math.ceil(delay / 1000)} seconds.`
         );
 
-        await sleep(delay);
+        if (attempt >= MAX_RETRIES) {
+          throw error;
+        }
 
+        await sleep(delay);
         continue;
       }
 
@@ -391,73 +390,39 @@ async function callWithRetry(
       if (
         status === 408 ||
         status === 409 ||
-        status === 422 ||
         status === 500 ||
         status === 502 ||
         status === 503 ||
-        status === 504
+        status === 504 ||
+        error?.isNetworkError
       ) {
+        if (attempt >= MAX_RETRIES) {
+          throw error;
+        }
+
         const delay = Math.min(
           60000,
           Math.max(5000, attempt * 5000)
         );
 
         console.log(
-          `${label}: Temporary Groq error (${status}). Waiting ${Math.ceil(delay / 1000)} seconds...`
+          `${label}: Temporary error. Retrying in ${Math.ceil(delay / 1000)} seconds.`
         );
 
         await sleep(delay);
-
         continue;
       }
 
       /*
-       * NETWORK / FETCH ERRORS
+       * INVALID REQUEST / FATAL ERRORS
        */
-      if (!status) {
-        const delay = Math.min(
-          60000,
-          Math.max(5000, attempt * 5000)
-        );
-
-        console.log(
-          `${label}: ${error.message}`
-        );
-
-        console.log(
-          `${label}: Retrying the same request after ${Math.ceil(delay / 1000)} seconds...`
-        );
-
-        await sleep(delay);
-
-        continue;
-      }
-
-      /*
-       * FATAL REQUEST ERRORS
-       */
-      if (
-        status === 400 ||
-        status === 413
-      ) {
-        throw error;
-      }
-
-      /*
-       * OTHER HTTP ERRORS
-       */
-      const delay = Math.min(
-        60000,
-        Math.max(5000, attempt * 5000)
-      );
-
-      console.log(
-        `${label}: Groq HTTP ${status}. Retrying after ${Math.ceil(delay / 1000)} seconds...`
-      );
-
-      await sleep(delay);
+      throw error;
     }
   }
+
+  throw new Error(
+    `${label}: Maximum Groq retry attempts reached.`
+  );
 }
 
 /*
