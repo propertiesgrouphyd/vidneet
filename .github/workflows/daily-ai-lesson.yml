@@ -46,7 +46,7 @@ jobs:
         run: npm ci
 
       # ------------------------------------------------------
-      # SYLLABUS VALIDATION
+      # VALIDATE SYLLABUS
       # ------------------------------------------------------
 
       - name: Validate syllabus
@@ -60,7 +60,7 @@ jobs:
           npm run validate
 
       # ------------------------------------------------------
-      # GROQ SECRET VALIDATION
+      # VALIDATE GROQ SECRETS
       # ------------------------------------------------------
 
       - name: Validate Groq secrets
@@ -71,33 +71,33 @@ jobs:
           set -euo pipefail
 
           if [ -z "${GROQ_API_KEY:-}" ]; then
-            echo "ERROR: GROQ_API_KEY GitHub Secret is missing."
+            echo "ERROR: GROQ_API_KEY is missing."
             exit 1
           fi
 
           if [ -z "${GROQ_API_KEY_2:-}" ]; then
-            echo "ERROR: GROQ_API_KEY_2 GitHub Secret is missing."
+            echo "ERROR: GROQ_API_KEY_2 is missing."
             exit 1
           fi
 
           case "$GROQ_API_KEY" in
-            gsk_*) echo "Primary Groq API key configured." ;;
+            gsk_*) echo "Primary API key configured." ;;
             *)
-              echo "ERROR: Invalid primary Groq key format."
+              echo "ERROR: Invalid primary API key format."
               exit 1
               ;;
           esac
 
           case "$GROQ_API_KEY_2" in
-            gsk_*) echo "Secondary Groq API key configured." ;;
+            gsk_*) echo "Secondary API key configured." ;;
             *)
-              echo "ERROR: Invalid secondary Groq key format."
+              echo "ERROR: Invalid secondary API key format."
               exit 1
               ;;
           esac
 
       # ------------------------------------------------------
-      # RESTORE PREVIOUS PROGRESS ARTIFACT
+      # RESTORE PREVIOUS CHECKPOINT
       # ------------------------------------------------------
 
       - name: Restore previous generation progress
@@ -105,17 +105,15 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
           CURRENT_RUN_ID: ${{ github.run_id }}
-          CURRENT_WORKFLOW: ${{ github.workflow }}
         run: |
           set -euo pipefail
 
           mkdir -p generator-progress
 
           echo "============================================================"
-          echo " VIDHWAAN NEET — RESTORING PREVIOUS PROGRESS"
+          echo " VIDHWAAN NEET — RESTORE GENERATION PROGRESS"
           echo "============================================================"
 
-          # Find earlier completed runs of this workflow.
           RUNS=$(gh api \
             "repos/${GH_REPO}/actions/workflows/daily-ai-lesson.yml/runs?branch=main&status=completed&per_page=30" \
             --jq '.workflow_runs[] | select(.id != '"${CURRENT_RUN_ID}"') | .id')
@@ -124,7 +122,7 @@ jobs:
 
           for RUN_ID in $RUNS; do
 
-            echo "Checking previous workflow run: $RUN_ID"
+            echo "Checking run: $RUN_ID"
 
             ARTIFACT_ID=$(gh api \
               "repos/${GH_REPO}/actions/runs/${RUN_ID}/artifacts" \
@@ -135,13 +133,15 @@ jobs:
               continue
             fi
 
-            echo "Previous progress artifact found."
+            echo "Progress artifact found in run: $RUN_ID"
 
             mkdir -p /tmp/neet-progress-artifact
 
-            gh api \
-              "repos/${GH_REPO}/actions/artifacts/${ARTIFACT_ID}/zip" \
-              > /tmp/neet-progress-artifact/progress.zip
+            curl --fail --silent --show-error --location \
+              -H "Authorization: Bearer ${GH_TOKEN}" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/${GH_REPO}/actions/artifacts/${ARTIFACT_ID}/zip" \
+              --output /tmp/neet-progress-artifact/progress.zip
 
             unzip -o \
               /tmp/neet-progress-artifact/progress.zip \
@@ -149,7 +149,7 @@ jobs:
 
             FOUND=true
 
-            echo "Progress restored from run: $RUN_ID"
+            echo "Progress restored successfully."
 
             break
 
@@ -161,15 +161,15 @@ jobs:
           fi
 
           echo ""
-          echo "Restored progress files:"
+          echo "Restored checkpoint files:"
 
           find generator-progress \
-            -maxdepth 2 \
+            -maxdepth 3 \
             -type f \
             -print
 
       # ------------------------------------------------------
-      # GENERATE OR RESUME LESSON
+      # GENERATE OR RESUME
       # ------------------------------------------------------
 
       - name: Generate or resume daily lesson
@@ -204,8 +204,7 @@ jobs:
             echo "quota_exhausted=true" >> "$GITHUB_OUTPUT"
 
             echo "Groq daily quota exhausted."
-            echo "Progress will be uploaded as an artifact."
-            echo "The incomplete lesson will NOT be pushed."
+            echo "Saving generation progress."
 
           else
 
@@ -216,7 +215,7 @@ jobs:
           fi
 
       # ------------------------------------------------------
-      # SAVE PROGRESS ARTIFACT
+      # UPLOAD CHECKPOINT
       # ------------------------------------------------------
 
       - name: Save generation progress artifact
@@ -230,7 +229,7 @@ jobs:
           compression-level: 6
 
       # ------------------------------------------------------
-      # STOP SUCCESSFULLY AFTER QUOTA PAUSE
+      # REPORT PAUSED GENERATION
       # ------------------------------------------------------
 
       - name: Report paused generation
@@ -239,15 +238,14 @@ jobs:
           echo "============================================================"
           echo " VIDHWAAN NEET — GENERATION PAUSED"
           echo "============================================================"
-          echo ""
-          echo "Progress artifact uploaded successfully."
-          echo "Run this workflow again after the Groq daily quota resets."
-          echo "Generation will resume from the saved checkpoint."
-          echo ""
-          echo "No incomplete lesson was pushed to the repository."
+
+          echo "Checkpoint uploaded successfully."
+          echo "Run this workflow again after quota resets."
+          echo "The generator will resume using the saved checkpoint."
+          echo "No incomplete lesson was pushed."
 
       # ------------------------------------------------------
-      # VERIFY GENERATED FILES
+      # VERIFY GENERATED LESSON FILES
       # ------------------------------------------------------
 
       - name: Verify generated lesson
@@ -256,10 +254,8 @@ jobs:
           set -euo pipefail
 
           echo "============================================================"
-          echo " VIDHWAAN NEET — GENERATED LESSON VERIFICATION"
+          echo " VIDHWAAN NEET — LESSON VERIFICATION"
           echo "============================================================"
-
-          mkdir -p public/data
 
           python3 <<'PY'
           import json
@@ -275,82 +271,83 @@ jobs:
 
           if len(files) > 365:
               raise SystemExit(
-                  f"ERROR: More than 365 lesson files exist: {len(files)}"
+                  f"ERROR: More than 365 lesson files: {len(files)}"
               )
 
           if not files:
               raise SystemExit(
-                  "ERROR: No lesson files exist after generation."
+                  "ERROR: No lesson files found."
               )
 
           expected = 1
 
-          for f in files:
-              match = re.fullmatch(r"day-(\d{3})", f.stem)
+          for file in files:
+
+              match = re.fullmatch(
+                  r"day-(\d{3})",
+                  file.stem
+              )
 
               if not match:
                   raise SystemExit(
-                      f"ERROR: Invalid lesson filename: {f.name}"
+                      f"ERROR: Invalid filename: {file.name}"
                   )
 
               day = int(match.group(1))
 
               if day != expected:
                   raise SystemExit(
-                      f"ERROR: Lesson sequence broken. "
-                      f"Expected Day {expected}, found Day {day}"
+                      f"ERROR: Expected Day {expected}, found Day {day}"
                   )
 
               try:
                   content = json.loads(
-                      f.read_text(encoding="utf-8")
+                      file.read_text(encoding="utf-8")
                   )
-              except Exception as e:
+              except Exception as error:
                   raise SystemExit(
-                      f"ERROR: Invalid JSON in {f}: {e}"
+                      f"ERROR: Invalid JSON in {file.name}: {error}"
                   )
 
               if int(content.get("day", 0)) != day:
                   raise SystemExit(
-                      f"ERROR: {f}: day metadata mismatch."
+                      f"ERROR: {file.name}: day mismatch."
                   )
 
               if not content.get("courseDate"):
                   raise SystemExit(
-                      f"ERROR: {f}: missing courseDate."
+                      f"ERROR: {file.name}: missing courseDate."
                   )
 
               if not content.get("publishAt"):
                   raise SystemExit(
-                      f"ERROR: {f}: missing publishAt."
+                      f"ERROR: {file.name}: missing publishAt."
                   )
 
               if not isinstance(content.get("sections"), list):
                   raise SystemExit(
-                      f"ERROR: {f}: sections must be an array."
+                      f"ERROR: {file.name}: sections must be an array."
                   )
 
               if not isinstance(content.get("mcqs"), list):
                   raise SystemExit(
-                      f"ERROR: {f}: mcqs must be an array."
+                      f"ERROR: {file.name}: mcqs must be an array."
                   )
 
-              if len(content["sections"]) == 0:
+              if not content["sections"]:
                   raise SystemExit(
-                      f"ERROR: {f}: lesson contains no sections."
+                      f"ERROR: {file.name}: no lesson sections."
                   )
 
-              if len(content["mcqs"]) == 0:
+              if not content["mcqs"]:
                   raise SystemExit(
-                      f"ERROR: {f}: lesson contains no MCQs."
+                      f"ERROR: {file.name}: no MCQs."
                   )
 
               expected += 1
 
-          latest = files[-1]
-
           print(f"Lesson files : {len(files)}")
-          print(f"Latest lesson: {latest.name}")
+          print(f"Latest lesson: {files[-1].name}")
           print("Sequence     : VALID")
           print("JSON         : VALID")
           print("Content      : VALID")
@@ -365,10 +362,6 @@ jobs:
         run: |
           set -euo pipefail
 
-          echo "============================================================"
-          echo " VIDHWAAN NEET — GIT CHANGE VERIFICATION"
-          echo "============================================================"
-
           git status --short
 
           CHANGED="$(git status --porcelain -- \
@@ -376,15 +369,14 @@ jobs:
 
           if [ -z "$CHANGED" ]; then
             echo "No new lesson file was generated."
-            echo "Nothing to commit."
             exit 0
           fi
 
-          echo "Generated lesson change:"
+          echo "Generated lesson changes:"
           echo "$CHANGED"
 
       # ------------------------------------------------------
-      # COMMIT + PUSH
+      # COMMIT AND PUSH
       # ------------------------------------------------------
 
       - name: Commit generated lesson
